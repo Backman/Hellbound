@@ -19,7 +19,7 @@ public class ThirdPersonController : MonoBehaviour {
 	private Transform r_Camera;							// A reference to the main camera in the scenes transform
 	private Vector3 m_CameraForward;					// The current forward direction of the camera
 	private Vector3 m_Move;								// the world-relative desired move direction, calculated from the camForward and user input.
-
+	private bool m_Zoomed = false;
 	// Use this for initialization
 	void Start () {
 		// get the transform of the main camera
@@ -33,11 +33,26 @@ public class ThirdPersonController : MonoBehaviour {
 
 		r_Character = GetComponent<ThirdPersonCharacter>();	
 	}
-	
+
+	void Update(){
+		bool zoom = Input.GetButtonDown ("Zoom");
+		if(zoom) {
+			m_Zoomed = !m_Zoomed;
+			Debug.Log("Zoomed: " + m_Zoomed);
+			r_Character.zoomed(m_Zoomed);
+		}
+	}
+
 	// FixedUpdate is called in sync with physics
 	void FixedUpdate () {
 		// Read inputs
 		bool crouch = Input.GetKey(KeyCode.C);
+
+
+		if(m_Zoomed) {
+			r_Character.move (Vector3.zero, false, transform.position + r_Camera.forward * 100.0f);
+			return;
+		}
 
 		float h = Input.GetAxis("Horizontal");
 		float v = Input.GetAxis("Vertical");
@@ -58,7 +73,7 @@ public class ThirdPersonController : MonoBehaviour {
 		// Walk/Run speed is modified by a key press.
 		bool walkToggle = Input.GetKey(KeyCode.LeftShift);
 		// We select appropriate speed based on whether we're walking by default, and whether the walk/run toggle button is pressed:
-		float walkMultiplier = (m_WalkByDefault ? walkToggle ? 0.8f : 0.5f : walkToggle ? 0.5f : 0.8f);
+		float walkMultiplier = (m_WalkByDefault ? walkToggle ? 1.0f : 0.5f : walkToggle ? 0.5f : 1.0f);
 		m_Move *= walkMultiplier;
 
 		m_LookDirection = m_LookInCameraDirection && r_Camera ? transform.position + r_Camera.forward * 100.0f : transform.position + transform.forward * 100.0f;

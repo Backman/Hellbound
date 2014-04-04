@@ -41,6 +41,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	const float c_Half = 0.5f;
 	Vector3 m_MoveInput;
 	bool m_CrouchInput;
+	bool m_ZoomInput;
 	float m_TurnAmount;
 	float m_ForwardAmount;
 	Vector3 m_Velocity;
@@ -65,6 +66,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	// This function is designed to be called from a seperate component(script)
 	// Handles user input
 	public void move(Vector3 move, bool crouch, Vector3 lookDirection){
+
 		if(move.magnitude > 1.0f){
 			move.Normalize();
 		}
@@ -72,6 +74,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		m_MoveInput = move;
 		m_CrouchInput = crouch;
 		m_LookDirection = lookDirection;
+
 
 		m_Velocity = rigidbody.velocity;
 
@@ -98,6 +101,10 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		updateAnimator();
 
 		rigidbody.velocity = m_Velocity;
+	}
+
+	public void zoomed(bool zoomed){
+		m_ZoomInput = zoomed;
 	}
 
 	void convertMoveInput(){
@@ -272,7 +279,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		// We implement this function to override the default root motion.
 		// this allows us to modify the positional speed before it's applied.
 		rigidbody.rotation = r_Animator.rootRotation;
-		if (m_OnGround && Time.deltaTime > 0) {
+		if (m_OnGround && !m_ZoomInput && Time.deltaTime > 0) {
 			Vector3 v = (r_Animator.deltaPosition * m_MoveSpeedMultiplier) / Time.deltaTime;
 			
 			// we preserve the existing y part of the current velocity.

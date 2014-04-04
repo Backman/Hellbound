@@ -5,8 +5,8 @@ using UnityEditor;
 using System.Collections;
 
 /// <summary>
-/// This script is designed to be placed on the root object of a camera rig,
-/// 
+/// Script that gives a camera a pivot point.
+/// This script is designed to be placed on the root object of a camera rig
 /// </summary>
 
 // Camera Rig

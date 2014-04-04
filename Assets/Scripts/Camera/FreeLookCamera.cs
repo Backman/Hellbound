@@ -5,6 +5,7 @@ using UnityEditor;
 using System.Collections;
 
 /// <summary>
+/// Script gives the camera a "Free look"
 /// This script is designed to be placed on the root object of a camera rig
 /// </summary>
 
@@ -29,6 +30,8 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	private float m_LookAngle;
 	private float m_TiltAngle;
 
+	private float m_OriginalFollowSpeed;
+
 	private const float c_LookDistance = 100.0f;
 	private float m_SmoothX = 0.0f;
 	private float m_SmoothY = 0.0f;
@@ -48,6 +51,8 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		m_ZoomPosition = m_Camera.localPosition;
 		// Find the pivot in the object hierarchy, should ALWAYS be the parent to the camera
 		m_Pivot = m_Camera.parent;
+
+		m_OriginalFollowSpeed = m_FollowSpeed;
 	}
 
 	protected override void Update() {
@@ -104,17 +109,40 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		bool zoom = Input.GetKeyDown(KeyCode.Tab);
 
 		if(zoom && !m_Zoomed) {
-			Debug.Log("Zooming in");
 			m_ZoomPosition = m_Pivot.localPosition;
 			m_Zoomed = true;
 		} else if(zoom && m_Zoomed) {
-			Debug.Log ("Zooming out");
 			m_ZoomPosition = m_CameraOriginPosition;
 			m_Zoomed = false;
 		}
+		m_ZoomPosition.y = 0.0f;
 		Vector3 newPos = Vector3.MoveTowards(m_Camera.localPosition, m_ZoomPosition, m_ZoomSpeed * Time.deltaTime);
-		newPos.y = 0.0f;
 		m_Camera.localPosition = newPos;
+
+		if((m_Camera.localPosition - m_ZoomPosition).magnitude <= 0.4f && m_Zoomed){
+			DisableMeshRendererOnTarget();
+		}
+		if((m_Camera.localPosition - m_ZoomPosition).magnitude >= 0.4f  && !m_Zoomed) {
+			EnableMeshRendererOnTarget();
+		}
+	}
+
+	void DisableMeshRendererOnTarget(){
+		SkinnedMeshRenderer[] renderers = m_Target.GetComponentsInChildren<SkinnedMeshRenderer>();
+
+		foreach(SkinnedMeshRenderer m in renderers){
+			m.enabled = false;
+		}
+		m_FollowSpeed = 0.0f;
+	}
+
+	void EnableMeshRendererOnTarget(){
+		SkinnedMeshRenderer[] renderers = m_Target.GetComponentsInChildren<SkinnedMeshRenderer>();
+		
+		foreach(SkinnedMeshRenderer m in renderers){
+			m.enabled = true;
+		}
+		m_FollowSpeed = m_OriginalFollowSpeed;
 	}
 }
 

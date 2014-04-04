@@ -2,6 +2,10 @@ using System;
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Checks if the camera is colliding with something and handles it.
+/// </summary>
+
 public class CameraCollision : MonoBehaviour {
 
 	public float m_ClipMoveTime = 0.05f;
@@ -36,6 +40,9 @@ public class CameraCollision : MonoBehaviour {
 	}
 
 	void LateUpdate() {
+		if(m_Camera.localPosition.magnitude != m_OriginalDistance) {
+			m_OriginalDistance = m_Camera.localPosition.magnitude;
+		}
 		// Set target distance
 		float targetDistance = m_OriginalDistance;
 
@@ -87,13 +94,13 @@ public class CameraCollision : MonoBehaviour {
 		// Visualise the camera clip effect in the editor
 		if(hitSomething) {
 			Debug.DrawRay(m_Ray.origin, -m_Pivot.forward * (targetDistance + m_SphereCastRadius), Color.red);
+			m_Camera.localPosition = -Vector3.forward * m_CurrentDistance;
 		}
 
 		// Hit something so move the camera to a better position
 		Protecting = hitSomething;
 		m_CurrentDistance = Mathf.SmoothDamp(m_CurrentDistance, targetDistance, ref m_MoveVelocity, m_CurrentDistance > targetDistance ? m_ClipMoveTime : m_ReturnTime);
 		m_CurrentDistance = Mathf.Clamp(m_CurrentDistance, m_ClosestDistance, m_OriginalDistance);
-		//m_Camera.localPosition = -Vector3.forward * m_CurrentDistance;
 	}
 
 	public class RayHitComparer : IComparer {

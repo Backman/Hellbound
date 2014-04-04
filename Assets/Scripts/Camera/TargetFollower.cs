@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Abstract class that is meant to follow a target
+/// </summary>
+
 public abstract class TargetFollower : MonoBehaviour {
 
 	public enum EUpdateType {
