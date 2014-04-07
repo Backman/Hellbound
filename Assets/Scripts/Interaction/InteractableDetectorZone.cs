@@ -13,17 +13,20 @@ public class InteractableDetectorZone : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
-		if( r_InFocus != null && Input.GetButtonDown( "Fire1" ) ){
-			// r_InFocus.do("activate");
-			r_InFocus.activate();
-		}
+		if( r_InFocus != null ) {
 
-		if( r_InFocus != null && Input.GetButtonDown( "Fire2" ) ){
-			r_InFocus.examine();
-		}
-
-		if( r_InFocus != null && Input.GetKeyDown( KeyCode.E ) ){
-			r_InFocus.pickUp();
+			if( Input.GetButtonDown( "Fire1" ) && r_InFocus.m_ActivateType == Interactable.ActivateType.OnClick ){
+				// r_InFocus.do("activate");
+				r_InFocus.activate();
+			}
+			
+			if( Input.GetButtonDown( "Fire2" ) ){
+				r_InFocus.examine();
+			}
+			
+			if( Input.GetKeyDown( KeyCode.E ) ){
+				r_InFocus.pickUp();
+			}
 		}
 
 	}
@@ -31,8 +34,9 @@ public class InteractableDetectorZone : MonoBehaviour {
 	//If an interactable is in front of the players, this function is called as the interactable enters the players interact zone
 	void OnTriggerEnter( Collider col ){
 		//TODO: Add detection for which interactable is in focus.
-		if( col.tag == "Interactable" ){
-			Interactable ii = col.gameObject.GetComponent<Interactable>();
+
+		Interactable ii = col.gameObject.GetComponent<Interactable>();
+		if( ii != null ){
 			r_InFocus = ii;
 			r_InFocus.gainFocus();
 		}
@@ -41,11 +45,11 @@ public class InteractableDetectorZone : MonoBehaviour {
 	//This function is called as an interactable leaves the players interact zone
 	void OnTriggerExit( Collider col  ){
 		//TODO: Detect wheter the left  trigger was the interactalbe actually in focus 
-		if( col.tag == "Interactable" ){
-			if( col.gameObject == r_InFocus.gameObject ){
+
+		if( col.gameObject == r_InFocus.gameObject ){
 				r_InFocus.loseFocus();
 				r_InFocus = null;
-			}
 		}
 	}
+
 }

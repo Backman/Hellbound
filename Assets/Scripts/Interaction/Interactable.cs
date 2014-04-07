@@ -2,91 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class ConditionDictionary {
-	[SerializeField] private List<Condition> m_Conditions;
-	[SerializeField] private List<bool> m_Values;
-
-	public ConditionDictionary() {
-		m_Conditions = new List<Condition>();
-		m_Values = new List<bool>();
-	}
-
-	public Condition[] Keys
-	{
-		get { return m_Conditions.ToArray(); }
-	}
-
-	public bool[] Values
-	{
-		get { return m_Values.ToArray(); }
-	}
-}
-
-[System.Serializable]
-public class State {
-	public bool		m_CanBeFocused = true;
-	public Component m_FocusScript 	= null;
-
-	public bool m_CanBeUsed = false;
-	public Component m_ActivateScript = null;
-
-	public bool m_CanBeExamined = true;
-	public Component m_ExamineScript = null;
-
-	public bool		 m_CanBePickedUp = false;
-	public Component m_PickUpScript = null;
-
-	public void pickUp()  { 
-		if(m_CanBePickedUp && m_PickUpScript != null) {
-			/*m_PickUpScript.action();*/
-		}
-	}
-	public void examine() {
-		if(m_CanBeExamined && m_ExamineScript != null) {
-			/*m_ExamineScript.action();*/
-		}
-	}
-	public void activate(){
-		if(m_CanBeUsed && m_ActivateScript != null) {
-			/*m_ActivateScript.action();*/
-		}
-	}
-
-	public void gainFocus(){ 
-		if( m_FocusScript != null ){
-			//TODO: Run focus script
-			// m_FocusScript.action();
-			Debug.Log("Run focus script");
-		}
-	}
-
-	public void loseFocus(){ }
-}
-
-[System.Serializable]
-public class PrerequisiteState : State {
-	public ConditionDictionary m_Prerequisites;
-	// public Dictionary<Condition, bool> m_Prerequisites;
-
-	public bool conditionsMet() {
-		int i = 0;
-		foreach(Condition c in m_Prerequisites.Keys) {
-			if(c.isMet != m_Prerequisites.Values[i]){
-				return false;
-			}
-			i++;
-		}
-		return true;
-	}
-}
-
-[ExecuteInEditMode]
 public class Interactable: MonoBehaviour{
+	public enum ActivateType{ OnTrigger, OnClick };
+	public ActivateType m_ActivateType = ActivateType.OnClick;
+
 	public State m_DefaultState;
 	protected State m_CurrentState;
 	[SerializeField] private List<PrerequisiteState> m_PrerequisiteStates;
-	
+
+
 
 	protected void Start() {
 		m_CurrentState = m_DefaultState;
@@ -147,4 +71,12 @@ public class Interactable: MonoBehaviour{
 			}
 		}*/
 	}
+
+	void OnTriggerEnter(Collider col){
+		//TODO: Detect type of collider
+		if( m_ActivateType == ActivateType.OnTrigger ){
+			m_CurrentState.activate();
+		}
+	}
+
 }
