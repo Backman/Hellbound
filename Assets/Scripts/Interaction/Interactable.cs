@@ -26,16 +26,16 @@ public class ConditionDictionary {
 [System.Serializable]
 public class State {
 	public bool		m_CanBeFocused = true;
-	public Component m_FocusScript 	= null;
+	public MonoBehaviour m_FocusScript 	= null;
 
 	public bool m_CanBeUsed = false;
-	public Component m_ActivateScript = null;
+	public MonoBehaviour m_ActivateScript = null;
 
 	public bool m_CanBeExamined = true;
-	public Component m_ExamineScript = null;
+	public MonoBehaviour m_ExamineScript = null;
 
 	public bool		 m_CanBePickedUp = false;
-	public Component m_PickUpScript = null;
+	public MonoBehaviour m_PickUpScript = null;
 
 	public void pickUp()  { 
 		if(m_CanBePickedUp && m_PickUpScript != null) {
