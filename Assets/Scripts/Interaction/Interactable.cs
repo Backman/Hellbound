@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
+<<<<<<< HEAD
 [System.Serializable]
 public class ConditionDictionary {
 	[SerializeField] private List<Condition> m_Conditions;
@@ -82,11 +84,17 @@ public class PrerequisiteState : State {
 }
 
 [ExecuteInEditMode]
+=======
+>>>>>>> c6171193ef3d67ff225c1fe400623d2a2700db9c
 public class Interactable: MonoBehaviour{
+	public enum ActivateType{ OnTrigger, OnClick };
+	public ActivateType m_ActivateType = ActivateType.OnClick;
+
 	public State m_DefaultState;
 	protected State m_CurrentState;
 	[SerializeField] private List<PrerequisiteState> m_PrerequisiteStates;
-	
+
+
 
 	protected void Start() {
 		m_CurrentState = m_DefaultState;
@@ -147,4 +155,12 @@ public class Interactable: MonoBehaviour{
 			}
 		}*/
 	}
+
+	void OnTriggerEnter(Collider col){
+		//TODO: Detect type of collider
+		if( m_ActivateType == ActivateType.OnTrigger ){
+			m_CurrentState.activate();
+		}
+	}
+
 }
