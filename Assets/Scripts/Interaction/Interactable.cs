@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 public class Interactable: MonoBehaviour{
 	public enum ActivateType{ OnTrigger, OnClick };
