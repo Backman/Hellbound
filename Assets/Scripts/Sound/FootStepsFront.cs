@@ -25,30 +25,35 @@ public class FootStepsFront : MonoBehaviour {
 		BackScript = FootBack.GetComponent<FootStepsBack> ();
 		OtherFootScript = OtherFootBack.GetComponent<FootStepsBack> ();
 		f_Parameter = f_Emitter.getParameter("Surface");
-		string d = "AudioReverbZone";
 	}
 
 	void OnTriggerStay(Collider other)
 	{
-		f_Parameter.setValue(other.gameObject.GetComponent<FootstepSurface> ().f_Surface);
-
-		if(BackScript.b_IsHitting && m_Once && !OtherFootScript.b_IsHitting)
+		if(other.GetComponent<FootstepSurface>() != null)
 		{
-			Debug.Log(other.gameObject.GetComponent<FootstepSurface> ().f_Surface.ToString());
-			m_Once = false;
-			f_Emitter.Stop();
-			f_Emitter.Play();
-		}
-		if(BackScript.b_IsHitting && OtherFootScript.b_IsHitting)
-		{
-			m_Once = false;
-		}
+			if(other.GetComponent<FootstepSurface>().AlterSurface == true)
+			{
+				f_Parameter.setValue(other.gameObject.GetComponent<FootstepSurface> ().f_Surface);
+			}
+			if(BackScript.b_IsHitting && m_Once && !OtherFootScript.b_IsHitting)
+			{
+				m_Once = false;
+				f_Emitter.Stop();
+				f_Emitter.Play();
+			}
+			if(BackScript.b_IsHitting && OtherFootScript.b_IsHitting)
+			{
+				m_Once = false;
+			}
 
+		}
 	}
 
 	void OnTriggerExit(Collider other)
 	{
 		m_Once = true;
 	}
+
+
 
 }

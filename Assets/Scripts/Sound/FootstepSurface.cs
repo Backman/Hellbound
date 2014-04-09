@@ -10,6 +10,8 @@ public class FootstepSurface : MonoBehaviour {
 	
 	public float f_Surface = 0f;
 
+	public bool AlterSurface = true;
+
 	void Start()
 	{
 
