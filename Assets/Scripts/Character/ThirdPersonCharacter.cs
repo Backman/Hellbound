@@ -47,6 +47,8 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	Vector3 m_Velocity;
 	IComparer m_RayHitComparer;
 
+	Vector3 m_PreviousPosition;
+	Vector3 m_DeltaPosition;
 	// Use this for initialization
 	void Start () {
 		r_Animator = GetComponentInChildren<Animator>();
@@ -59,8 +61,14 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			Debug.LogError("Collider cannot be cast to CapsuleCollider");
 		}
 
+		m_PreviousPosition = transform.position;
 		m_RayHitComparer = new RayHitComparer();
 		setUpAnimator();
+	}
+
+	void Update() {
+		m_DeltaPosition = transform.position - m_PreviousPosition;
+		m_PreviousPosition = transform.position;
 	}
 
 	// This function is designed to be called from a seperate component(script)
@@ -74,7 +82,6 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		m_MoveInput = move;
 		m_CrouchInput = crouch;
 		m_LookDirection = lookDirection;
-
 
 		m_Velocity = rigidbody.velocity;
 
@@ -205,6 +212,10 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			// When not moving this prevents sliding on slopes
 			m_Velocity.x = 0.0f;
 			m_Velocity.z = 0.0f;
+		} else {
+			Vector3 v = m_MoveInput * m_ForwardAmount * m_MoveSpeedMultiplier;
+			v.y = 0.0f;
+			m_Velocity = v  * 5.0f;
 		}
 	}
 
@@ -226,7 +237,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		r_Animator.applyRootMotion = m_OnGround;
 
 		// update the animator parameters
-		r_Animator.SetFloat ("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
+		//r_Animator.SetFloat ("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
 		r_Animator.SetFloat ("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
 		r_Animator.SetBool ("Crouch", m_CrouchInput);
 		r_Animator.SetBool ("OnGround", m_OnGround);
@@ -275,7 +286,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		}
 	}
 
-	public void OnAnimatorMove(){
+	/*public void OnAnimatorMove(){
 		// We implement this function to override the default root motion.
 		// this allows us to modify the positional speed before it's applied.
 		rigidbody.rotation = r_Animator.rootRotation;
@@ -286,7 +297,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			v.y = rigidbody.velocity.y;
 			rigidbody.velocity = v;
 		}
-	}
+	}*/
 
 	class RayHitComparer : IComparer {
 		public int Compare(object x, object y){
