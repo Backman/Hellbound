@@ -1,33 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AlterSoundParameter : MonoBehaviour {
 
-	public FMOD_StudioEventEmitter FMOD_Emitter;
+	public string s_Parameter = "";
+	public float f_InsideValue = 0f;
+	public float f_OutSideValue = 0f;
 
-	public string s_Parameter;
-
-	public float f_NewValueWhenInside = 0f;
-
-	public float f_NewValueWhenOutside = 0f;
-
-	private FMOD.Studio.ParameterInstance FMOD_Parameter;
-
-
-	void Start()
-	{
-		FMOD_Emitter.Play ();
-		FMOD_Parameter = FMOD_Emitter.getParameter(s_Parameter);
-		FMOD_Parameter.setValue(f_NewValueWhenOutside);
-	}
+	private List<FMOD_StudioEventEmitter> m_Emitters = new List<FMOD_StudioEventEmitter>();
 
 	void OnTriggerEnter(Collider other)
 	{
-		FMOD_Parameter.setValue (f_NewValueWhenInside);
+		FMOD_StudioEventEmitter[] allEmitters = other.gameObject.GetComponentsInChildren<FMOD_StudioEventEmitter>();
+
+		foreach(FMOD_StudioEventEmitter f in allEmitters)
+		{
+			m_Emitters.Add(f);
+			if(f.getParameter(s_Parameter) != null)
+			{
+				f.getParameter(s_Parameter).setValue(f_InsideValue);
+			}
+		}
 	}
 
 	void OnTriggerExit(Collider other)
 	{
-		FMOD_Parameter.setValue (f_NewValueWhenOutside);
+		FMOD_StudioEventEmitter[] itterate = m_Emitters.ToArray ();
+		foreach(FMOD_StudioEventEmitter f in itterate)
+		{
+			if(f.getParameter(s_Parameter) != null)
+			{
+				f.getParameter(s_Parameter).setValue(f_OutSideValue);
+			}
+			m_Emitters.Remove(f);
+		}
 	}
 }

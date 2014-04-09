@@ -24,69 +24,34 @@ public class VolumeControl : MonoBehaviour {
 		return m_instance;
 	}
 
-	private List<KeyValuePair<string, FMOD.Studio.ParameterInstance>> m_SoundObjects = new List<KeyValuePair<string, FMOD.Studio.ParameterInstance>>();
+	Dictionary<string, FMOD.Studio.MixerStrip> m_Volume = new Dictionary<string, FMOD.Studio.MixerStrip>();
 
-	private Dictionary<string, float> m_Volume = new Dictionary<string, float>();
-
-	// Use this for initialization
 	void Start () 
 	{
+		FMOD.GUID guid;
+		FMOD.Studio.System system = FMOD_StudioSystem.instance.System;
 
+		FMOD.Studio.MixerStrip bus;
 
-		m_Volume.Add ("Master", 100f);
-		m_Volume.Add ("SFX", 100f);
-		m_Volume.Add ("Voice", 100f);
-		m_Volume.Add ("Music", 100f);
+		system.lookupID("bus:/", out guid);
+		system.getMixerStrip (guid, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus);
+		m_Volume.Add ("Master", bus);
 
+		system.lookupID ("bus:/SFX", out guid);
+		system.getMixerStrip (guid, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus);
+		m_Volume.Add ("SFX", bus);
 
-		GameObject[] allSounds = GameObject.FindGameObjectsWithTag ("Sound");
-		foreach(GameObject g in allSounds)
-		{
-			SoundObject testThis = g.GetComponent<SoundObject>();
+		system.lookupID ("bus:/Voice", out guid);
+		system.getMixerStrip (guid, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus);
+		m_Volume.Add ("Voice", bus);
 
-			FMOD_StudioEventEmitter Emitter = testThis.FMOD_Emitter;
-
-			if(testThis.s_Tag == "Master")
-			{
-				KeyValuePair<string, FMOD.Studio.ParameterInstance> saveThis = 
-					new KeyValuePair<string, FMOD.Studio.ParameterInstance>("Master", Emitter.getParameter("Master"));
-				m_SoundObjects.Add (saveThis);
-			}
-
-			if(testThis.s_Tag == "SFX")
-			{
-				KeyValuePair<string, FMOD.Studio.ParameterInstance> saveThis = 
-					new KeyValuePair<string, FMOD.Studio.ParameterInstance>("SFX", Emitter.getParameter("SFX"));
-				m_SoundObjects.Add (saveThis);			
-			}
-
-			if(testThis.s_Tag == "Voice")
-			{
-				KeyValuePair<string, FMOD.Studio.ParameterInstance> saveThis = 
-					new KeyValuePair<string, FMOD.Studio.ParameterInstance>("Voice", Emitter.getParameter("Voice"));
-				m_SoundObjects.Add (saveThis);				
-			}
-			
-			if(testThis.s_Tag == "Music")
-			{
-				KeyValuePair<string, FMOD.Studio.ParameterInstance> saveThis = 
-					new KeyValuePair<string, FMOD.Studio.ParameterInstance>("Music", Emitter.getParameter("Music"));
-				m_SoundObjects.Add (saveThis);
-			}
-		}
+		system.lookupID ("bus:/Music", out guid);
+		system.getMixerStrip (guid, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus);
+		m_Volume.Add ("Music", bus);
 	}
 
-	void ChangeVolume(float newVolume, string tagToBeChanged)
+	public void ChangeVolume(float newVolume, string tagToBeChanged)
 	{
-
-		m_Volume [tagToBeChanged] = newVolume;
-
-		foreach(KeyValuePair<string, FMOD.Studio.ParameterInstance> g in m_SoundObjects)
-		{
-			if(g.Key == tagToBeChanged)
-			{
-				g.Value.setValue(newVolume);
-			}
-		}
+		m_Volume[tagToBeChanged].setFaderLevel (newVolume);
 	}
 }
