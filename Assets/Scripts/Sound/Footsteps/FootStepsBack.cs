@@ -13,15 +13,22 @@ public class FootStepsBack : MonoBehaviour {
 	public bool b_IsHitting = false;
 
 
-	//if we hit anything, the bool becomes true
+	//if we hit anything that have footstepsurface as a component, the bool becomes true
 	void OnTriggerEnter(Collider other)
 	{
-		b_IsHitting = true;
+		if(other.GetComponent<FootstepSurface>() != null)
+		{
+			b_IsHitting = true;
+		}
 	}
 
-	//if we leave the thing we hit, the bool becomes false (durr)
+	//if we leave the thing we hit that have footstepsurface as a component, 
+	///the bool becomes false (durr)
 	void OnTriggerExit(Collider other)
 	{
-		b_IsHitting = false;
+		if(other.GetComponent<FootstepSurface>() != null)
+		{
+			b_IsHitting = false;
+		}
 	}
 }

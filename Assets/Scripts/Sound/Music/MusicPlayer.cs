@@ -24,7 +24,7 @@ public class MusicPlayer : MonoBehaviour {
 
 	void Start () 
 	{
-		f_Parameter = gameObject.GetComponent<FMOD_StudioEventEmitter> ().getParameter("");
+		f_Parameter = gameObject.GetComponent<FMOD_StudioEventEmitter> ().getParameter("something");
 	}
 
 	void OnTriggerEnter(Collider other)
@@ -93,6 +93,7 @@ public class MusicPlayer : MonoBehaviour {
 			{
 				b_AlterSound = false;
 			}
+			//f_Parameter.setValue(f_ActualParameter);
 		}
 	}
 }
