@@ -6,6 +6,8 @@ using System.Linq;
 
 public class GUIManager : Singleton<GUIManager> {
 	private bool m_Busy = false;
+	private bool m_QuickSkip = false;
+	private UILabel r_CurrentLabel;
 
 	[SerializeField]
 	private UISprite r_DescriptionWindow;
@@ -14,23 +16,26 @@ public class GUIManager : Singleton<GUIManager> {
 
 	[SerializeField] [Range (0, 1)]
 	private float m_WindowFadeTime = 0.0f;
-	[SerializeField]
+	[SerializeField] [Range (0, 0.1f)]
 	private float m_TextSpeed = 0.0f;
-	private UILabel r_CurrentDescriptionLabel;
+	[SerializeField] [Range (0, 1)]
+	private float m_NewLineWait = 0.0f;
+	[SerializeField]
+	private bool m_doLinePadding = false;
+
 	public void Awake(){
 		if( r_DescriptionWindow == null ){
 			Debug.LogError("Error! No description window present!");
 		}
-		if( r_DescriptionLabels[0] == null ){
-			Debug.LogError("Error! No description label present!");
+		foreach ( UILabel label in r_DescriptionLabels ){
+			if( label == null ){
+				Debug.LogError("Error! A label reference is invalid!");
+			} else {
+				label.text = "";
+			}
 		}
 		r_DescriptionWindow.alpha = 0.0f;
 		r_DescriptionWindow.transform.localScale = new Vector3(1.0f, 0.0f, 1.0f);
-		r_CurrentDescriptionLabel = r_DescriptionLabels[0];
-
-		foreach( UILabel label in r_DescriptionLabels ){
-			label.text = "";
-		}
 	}
 
 	public void simpleShowText(string text){
@@ -45,14 +50,20 @@ public class GUIManager : Singleton<GUIManager> {
 	IEnumerator simpleShowText_CR(string text){
 		//TODO: Lock controllers
 		yield return StartCoroutine( "showWindow" );
-		StartCoroutine( "feedText", text );
-		//TODO: Unlock controllers
-	
-		yield return StartCoroutine ("awaitInput", "Fire1");
-	
-		//TODO: Lock controllers			
+
+		StartCoroutine ("listenForQuickSkip");
+
+		yield return StartCoroutine( "feedText", text );
+			
 		yield return StartCoroutine( "hideWindow" );
 		StopCoroutine( "feedText" );
+		StopCoroutine( "feedLine" );
+		StopCoroutine( "listenForQuickSkip" );
+
+		foreach( UILabel label in r_DescriptionLabels ){
+			label.text = "";
+		}
+
 		m_Busy = false;
 		//TODO: Unlock controllers
 	}
@@ -77,14 +88,6 @@ public class GUIManager : Singleton<GUIManager> {
 		r_DescriptionWindow.transform.localScale = scale;
 	}
 
-	IEnumerator awaitInput(string button){
-		while( true ){
-			if( Input.GetButtonDown(button) )
-				break;
-			yield return null;
-		}
-	}
-
 	IEnumerator feedText( string text ){
 		//Place all words in a stack
 		string[] w = Regex.Split( text, @"(\s)" ); 
@@ -93,57 +96,97 @@ public class GUIManager : Singleton<GUIManager> {
 			words.Push(word);
 		}
 
-		int currLabel = 0;
-		bool modified;
-
-		//TODO: Write a getNextLine function!
-		while( words.Count > 0 ){
-			modified = false;
-			string currWord = words.Pop();
-			string nextWord = words.Peek();
-			yield return StartCoroutine("feedWord", currWord);
-
-			//These are used in calculating wheter the next word fits
-			//in the current row or not
-			r_DescriptionLabels[currLabel].UpdateNGUIText();
-			Vector2 size = NGUIText.CalculatePrintedSize(nextWord);
-			r_CurrentDescriptionLabel = r_DescriptionLabels[currLabel];
-
-			if( currWord.Contains("\n") ){
-				currLabel++;
-				modified = true;
+		m_QuickSkip = false;
+		foreach( UILabel label in r_DescriptionLabels ){
+			if( words.Count == 0 ){
+				break;
 			}
-			else if(r_CurrentDescriptionLabel.width <= size.x + r_CurrentDescriptionLabel.printedSize.x) {
-				currLabel++;
-				modified = true;
+			r_CurrentLabel = label;
+			string line = getLine( words, r_CurrentLabel );
 
-				if( string.IsNullOrEmpty( nextWord ) ){
-					words.Pop();
-					Debug.Log("Ate2: " + nextWord);
-				}
-			}
-
-			//If the currLabel variable's been modified this word
-			//we must handle it by either incrementing label nr or clearing old
-			if( modified ){
-				if( currLabel >= r_DescriptionLabels.Length ){
-					yield return StartCoroutine("awaitInput", "Fire2");
-					foreach( UILabel label in r_DescriptionLabels){
-						label.text = "";
-					}
-					currLabel = 0;
-				}
-
-				r_CurrentDescriptionLabel = r_DescriptionLabels[currLabel];
+			if( m_QuickSkip ){
+				label.text = line;
+			} else {
+				yield return StartCoroutine( "feedLine", line);
 			}
 		}
+
+		yield return StartCoroutine("awaitInput", "Fire2");
+		m_QuickSkip = false;
+
+		while( words.Count > 0 ){
+			foreach( UILabel l in r_DescriptionLabels ){
+				if( words.Count == 0 ){
+					break;
+				}
+				for( int i = 0; i < r_DescriptionLabels.Count() - 1; ++i ){
+					r_DescriptionLabels[i].text = r_DescriptionLabels[i+1].text;
+				}	
+				r_CurrentLabel.text = "";
+				string line = getLine( words, r_CurrentLabel );
+				if( m_QuickSkip ){
+					r_CurrentLabel.text = line;
+				} else {
+					yield return StartCoroutine( "feedLine", line);
+					yield return m_QuickSkip ? null : new WaitForSeconds( m_NewLineWait );
+				}
+			}
+			yield return StartCoroutine("awaitInput", "Fire2" );
+			m_QuickSkip = false;
+		}
+
+		Debug.Log("Done printing text");
 	}
 
-	IEnumerator feedWord( string text ){
-		Debug.Log(text);
-		for( int i = 0; i < text.Length; ++i){
-			r_CurrentDescriptionLabel.text += text[i];
-			yield return new WaitForSeconds(m_TextSpeed);
+	/// <summary>
+	/// Returns a line composed of the words in the stack that would
+	/// fit into the label.
+	/// The line is returned when the next word wouldn't fit or the last poped
+	/// word was a newline.
+	/// 
+	/// The stack is requiered to have all characters and all whitespaces in
+	/// separate elements. The labels text must be blank.
+	/// </summary>
+	private string getLine( Stack<string> words, UILabel targetLabel ){
+		string line = "";
+		string currWord = "";
+		Vector2 labelSize = new Vector2( targetLabel.width, targetLabel.height );
+		Vector2 textSize  = new Vector2();
+		targetLabel.UpdateNGUIText();
+
+		//Add next word to the current line as long as the line would fit in the label
+		//and not cause a newline.
+		while( words.Count > 0 ){
+			currWord = words.Peek();
+			textSize = NGUIText.CalculatePrintedSize(line + currWord);
+
+			if( textSize.y > labelSize.y ){	
+				//Check if the current word is a whitespace. If it is, remove it
+				if( currWord.Trim() == string.Empty ){
+					words.Pop();
+					line.Trim();
+				}
+				textSize = NGUIText.CalculatePrintedSize(line + " ");
+				while( textSize.y < labelSize.y && m_doLinePadding ){
+					line += " ";
+					textSize = NGUIText.CalculatePrintedSize(line + " ");
+				}
+				return line;
+			}
+			line += words.Pop();
+		}
+
+		return line;
+	}
+
+	IEnumerator feedLine( string line ){
+		for( int i = 0; i < line.Length; ++i){
+			if( m_QuickSkip ){
+				r_CurrentLabel.text = line;
+			} else {
+				r_CurrentLabel.text += line[i];
+				yield return new WaitForSeconds(m_TextSpeed);
+			}
 		}
 	}
 
@@ -163,12 +206,30 @@ public class GUIManager : Singleton<GUIManager> {
 		}
 		col.a = 0.0f;
 		scale.y = 0.0f;
-		foreach( UILabel label in r_DescriptionLabels ){
-			label.text = "";
-		}
+
 		r_DescriptionWindow.color = col;
 		r_DescriptionWindow.transform.localScale = scale;
-		r_CurrentDescriptionLabel = r_DescriptionLabels[0];
 	}
+
+	IEnumerator listenForQuickSkip(){
+		while( true ){
+			if( Input.GetButtonDown("Fire2") ){
+				m_QuickSkip = true;
+			}
+			yield return null;
+		}
+	}
+
+	IEnumerator awaitInput(string button){
+		yield return null;
+		while( true ){
+			if( Input.GetButtonDown(button) ){
+				break;
+			}
+			yield return null;
+		}
+		yield return null;
+	}
+
 	#endregion
 }
