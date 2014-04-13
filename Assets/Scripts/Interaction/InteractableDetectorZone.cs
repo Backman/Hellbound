@@ -46,7 +46,7 @@ public class InteractableDetectorZone : MonoBehaviour {
 	void OnTriggerExit( Collider col  ){
 		//TODO: Detect wheter the left  trigger was the interactalbe actually in focus 
 
-		if( col.gameObject == r_InFocus.gameObject ){
+		if( r_InFocus != null && col.gameObject == r_InFocus.gameObject ){
 				r_InFocus.loseFocus();
 				r_InFocus = null;
 		}
