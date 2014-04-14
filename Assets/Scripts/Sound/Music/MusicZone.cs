@@ -9,6 +9,8 @@ public class MusicZone : MonoBehaviour {
 	/// Anton Thorsell
 	/// </summary>
 
+	public FMOD_StudioEventEmitter[] derp;
+
 	public float m_Insidevalue = 0f;
 	public float m_Outstidevalue = 0f;
 	public bool m_ReturnOutsideValue = false;

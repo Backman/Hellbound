@@ -41,7 +41,6 @@ public class AlterSoundParameter : MonoBehaviour {
 				}
 			}
 		}
-
 	}
 
 	//when something exits this function will return the value it originally had 

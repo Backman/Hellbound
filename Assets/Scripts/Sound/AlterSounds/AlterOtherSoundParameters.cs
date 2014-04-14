@@ -11,7 +11,7 @@ public class AlterOtherSoundParameters : MonoBehaviour {
 	/// </summary>
 
 	public GameObject[] g_GameObjects;
-	public string s_Parameter;
+	public string s_Parameter = "";
 
 	public float m_InsideParameter = 0f;
 
@@ -22,24 +22,31 @@ public class AlterOtherSoundParameters : MonoBehaviour {
 	//the amount of frames untill the fade is complete
 	public float m_FadeSpeed = 100f;
 
-	private List<FMOD.Studio.ParameterInstance> r_Parameters = new List<FMOD.Studio.ParameterInstance>();
+	private bool m_Inside = false;
+
+	private List<FMOD.Studio.ParameterInstance> r_ParameterCollection = new List<FMOD.Studio.ParameterInstance>();
 	
 	void Start () 
 	{
 		foreach(GameObject g in g_GameObjects){
-			r_Parameters.Add(g.GetComponent<FMOD_StudioEventEmitter>().getParameter(s_Parameter));
-			r_Parameters[r_Parameters.Count-1].setValue(m_OutsideParameter);
+			if(g.GetComponent<FMOD_StudioEventEmitter>() != null)
+			r_ParameterCollection.Add(g.GetComponent<FMOD_StudioEventEmitter>().getParameter(s_Parameter));
+
+			int derp = r_ParameterCollection.Count;
+
+			r_ParameterCollection[r_ParameterCollection.Count-1].setValue(m_OutsideParameter);
 		}
 	}
 
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (m_UseFade) {
-			FadeIn();
+		if (m_UseFade && !m_Inside) {
+			m_Inside = true;
+			StartCoroutine(FadeIn());
 		}
-		else{
-			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
+		else if (!m_UseFade && !m_Inside){
+			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
 				p.setValue(m_InsideParameter);
 			}
 		}
@@ -47,11 +54,12 @@ public class AlterOtherSoundParameters : MonoBehaviour {
 
 	void OnTriggerExit(Collider other)
 	{
-		if (m_UseFade) {
-			FadeOut();
+		if (m_UseFade && m_Inside) {
+			m_Inside = false;
+			StartCoroutine(FadeOut());
 		}
-		else{
-			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
+		else if (!m_UseFade && m_Inside){
+			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
 				p.setValue(m_OutsideParameter);
 			}
 		}
@@ -59,14 +67,17 @@ public class AlterOtherSoundParameters : MonoBehaviour {
 
 	private IEnumerator FadeIn()
 	{
+		Debug.Log ("123");
+		StopCoroutine("FadeOut");
 		float speed = (m_InsideParameter - m_OutsideParameter) / m_FadeSpeed;
 		float currentValue = m_OutsideParameter;
 
-		while (currentValue == m_InsideParameter) {
+		while (currentValue != m_InsideParameter) {
+			yield return new WaitForSeconds (0.01f);
 
 			currentValue += speed;
-			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
-				p.setValue(currentValue);
+			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
+				p.setValue(currentValue);	
 			}
 		}
 		yield return 0;
@@ -74,13 +85,16 @@ public class AlterOtherSoundParameters : MonoBehaviour {
 
 	private IEnumerator FadeOut()
 	{
+		Debug.Log ("321");
+		StopCoroutine("FadeIn");
 		float speed = (m_OutsideParameter - m_InsideParameter) / m_FadeSpeed;
-		float currentValue = m_OutsideParameter;
+		float currentValue = m_InsideParameter;
 
-		while (currentValue == m_OutsideParameter) {
+		while (currentValue != m_OutsideParameter) {
+			yield return new WaitForSeconds (0.01f);
 
 			currentValue += speed;
-			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
+			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
 				p.setValue(currentValue);
 			}
 		}

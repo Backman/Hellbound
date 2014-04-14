@@ -43,7 +43,7 @@ public class MusicPlayer : MonoBehaviour {
 				FadeIn(desiredComponent);
 			}
 			else{
-				r_Parameter[desiredComponent.m_parametername].setValue(desiredComponent.m_Insidevalue)
+				r_Parameter[desiredComponent.m_parametername].setValue(desiredComponent.m_Insidevalue);
 			}
 		}
 	}
@@ -56,38 +56,39 @@ public class MusicPlayer : MonoBehaviour {
 				FadeOut(desiredComponent);
 			}
 			else{
-				r_Parameter[desiredComponent.m_parametername].setValue(desiredComponent.m_Insidevalue)
+				r_Parameter[desiredComponent.m_parametername].setValue(desiredComponent.m_Insidevalue);
 			}
 		}
 	}
 
 	private IEnumerator FadeIn(MusicZone zone)
 	{
-		float speed = (zone.m_Insidevalue - zone.m_Outstidevalue) / m_FadeSpeed;
+		/*float speed = (zone.m_Insidevalue - zone.m_Outstidevalue) / m_FadeSpeed;
 		float currentValue = zone.m_Outstidevalue;
 		
 		while (currentValue == zone.m_Insidevalue) {
 			
 			currentValue += speed;
-			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
+			foreach(FMOD.Studio.ParameterInstance p in r_Parameter){
 				p.setValue(currentValue);
 			}
-		}
+		}*/
 		yield return 0;
 	}
-	
+
+
 	private IEnumerator FadeOut(MusicZone zone)
 	{
-		float speed = (m_OutsideParameter - m_InsideParameter) / m_FadeSpeed;
-		float currentValue = m_OutsideParameter;
+		/*float speed = (0 - 0) / m_FadeSpeed;
+		float currentValue = 0;
 		
-		while (currentValue == m_OutsideParameter) {
+		while (currentValue == 0) {
 			
 			currentValue += speed;
-			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
+			foreach(FMOD.Studio.ParameterInstance p in r_Parameter){
 				p.setValue(currentValue);
 			}
-		}
+		}*/
 		yield return 0;
 	}
 
