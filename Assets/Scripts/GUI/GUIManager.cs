@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
 
+/// <summary>
+/// This class handles the GUI window that displays text messages
+/// to the player as the player for example examines items.
+/// 
+/// Created by Simon
+/// </summary>
 public class GUIManager : Singleton<GUIManager> {
 	private bool m_Busy = false;
 	private bool m_QuickSkip = false;
@@ -38,36 +44,22 @@ public class GUIManager : Singleton<GUIManager> {
 		r_DescriptionWindow.transform.localScale = new Vector3(1.0f, 0.0f, 1.0f);
 	}
 
+	/// <summary>
+	/// This function will display the passed text in a small box
+	/// at the lower part of the screen. All formating of the text
+	/// is handled internaly.
+	/// </summary>
 	public void simpleShowText(string text){
 		if( !m_Busy ){
 			m_Busy = true;
 			StartCoroutine("simpleShowText_CR", text);
-		} else {
-			Debug.Log("GUI manager is busy at the moment");
-		}
-	}
-	#region Coroutines
-	IEnumerator simpleShowText_CR(string text){
-		//TODO: Lock controllers
-		yield return StartCoroutine( "showWindow" );
-
-		StartCoroutine ("listenForQuickSkip");
-
-		yield return StartCoroutine( "feedText", text );
-			
-		yield return StartCoroutine( "hideWindow" );
-		StopCoroutine( "feedText" );
-		StopCoroutine( "feedLine" );
-		StopCoroutine( "listenForQuickSkip" );
-
-		foreach( UILabel label in r_DescriptionLabels ){
-			label.text = "";
-		}
-
-		m_Busy = false;
-		//TODO: Unlock controllers
+		} 
 	}
 
+	#region General Coroutines
+	/// <summary>
+	/// Causes the text box to appera smoothly.
+	/// </summary>
 	IEnumerator showWindow(){
 		Color col = new Color();
 		Vector3 scale = new Vector3();
@@ -88,97 +80,9 @@ public class GUIManager : Singleton<GUIManager> {
 		r_DescriptionWindow.transform.localScale = scale;
 	}
 
-	IEnumerator feedText( string text ){
-		//Place all words in a stack
-		string[] w = Regex.Split( text, @"(\s)" ); 
-		Stack<string> words = new Stack<string>();
-		foreach( string word in w.Reverse<string>()){
-			words.Push(word);
-		}
-
-		m_QuickSkip = false;
-		foreach( UILabel label in r_DescriptionLabels ){
-			if( words.Count == 0 ){
-				break;
-			}
-			r_CurrentLabel = label;
-			string line = getLine( words, r_CurrentLabel );
-
-			if( m_QuickSkip ){
-				label.text = line;
-			} else {
-				yield return StartCoroutine( "feedLine", line);
-			}
-		}
-
-		yield return StartCoroutine("awaitInput", "Fire2");
-		m_QuickSkip = false;
-
-		while( words.Count > 0 ){
-			foreach( UILabel l in r_DescriptionLabels ){
-				if( words.Count == 0 ){
-					break;
-				}
-				for( int i = 0; i < r_DescriptionLabels.Count() - 1; ++i ){
-					r_DescriptionLabels[i].text = r_DescriptionLabels[i+1].text;
-				}	
-				r_CurrentLabel.text = "";
-				string line = getLine( words, r_CurrentLabel );
-				if( m_QuickSkip ){
-					r_CurrentLabel.text = line;
-				} else {
-					yield return StartCoroutine( "feedLine", line);
-					yield return m_QuickSkip ? null : new WaitForSeconds( m_NewLineWait );
-				}
-			}
-			yield return StartCoroutine("awaitInput", "Fire2" );
-			m_QuickSkip = false;
-		}
-
-		Debug.Log("Done printing text");
-	}
-
 	/// <summary>
-	/// Returns a line composed of the words in the stack that would
-	/// fit into the label.
-	/// The line is returned when the next word wouldn't fit or the last poped
-	/// word was a newline.
-	/// 
-	/// The stack is requiered to have all characters and all whitespaces in
-	/// separate elements. The labels text must be blank.
+	/// Displays the actual line of text to the player, character by character
 	/// </summary>
-	private string getLine( Stack<string> words, UILabel targetLabel ){
-		string line = "";
-		string currWord = "";
-		Vector2 labelSize = new Vector2( targetLabel.width, targetLabel.height );
-		Vector2 textSize  = new Vector2();
-		targetLabel.UpdateNGUIText();
-
-		//Add next word to the current line as long as the line would fit in the label
-		//and not cause a newline.
-		while( words.Count > 0 ){
-			currWord = words.Peek();
-			textSize = NGUIText.CalculatePrintedSize(line + currWord);
-
-			if( textSize.y > labelSize.y ){	
-				//Check if the current word is a whitespace. If it is, remove it
-				if( currWord.Trim() == string.Empty ){
-					words.Pop();
-					line.Trim();
-				}
-				textSize = NGUIText.CalculatePrintedSize(line + " ");
-				while( textSize.y < labelSize.y && m_doLinePadding ){
-					line += " ";
-					textSize = NGUIText.CalculatePrintedSize(line + " ");
-				}
-				return line;
-			}
-			line += words.Pop();
-		}
-
-		return line;
-	}
-
 	IEnumerator feedLine( string line ){
 		for( int i = 0; i < line.Length; ++i){
 			if( m_QuickSkip ){
@@ -190,6 +94,9 @@ public class GUIManager : Singleton<GUIManager> {
 		}
 	}
 
+	/// <summary>
+	/// Hides the window in a smooth way
+	/// </summary>
 	IEnumerator hideWindow(){
 		Color col = new Color();
 		Vector3 scale = new Vector3();
@@ -211,6 +118,13 @@ public class GUIManager : Singleton<GUIManager> {
 		r_DescriptionWindow.transform.localScale = scale;
 	}
 
+	/// <summary>
+	/// This function detects if the player wishes to speed up
+	/// the text display. IF the player clicks "Fire2" as the text
+	/// is being printed, all text of that "frame" is displayed
+	/// instantaniously
+	/// </summary>
+	/// <returns>The for quick skip.</returns>
 	IEnumerator listenForQuickSkip(){
 		while( true ){
 			if( Input.GetButtonDown("Fire2") ){
@@ -220,6 +134,10 @@ public class GUIManager : Singleton<GUIManager> {
 		}
 	}
 
+	/// <summary>
+	/// This function locks further progress until the player pushes
+	/// the button (that is passed as parameter)
+	/// </summary>
 	IEnumerator awaitInput(string button){
 		yield return null;
 		while( true ){
@@ -229,6 +147,126 @@ public class GUIManager : Singleton<GUIManager> {
 			yield return null;
 		}
 		yield return null;
+	}
+
+	#endregion
+
+	#region Examine Monologue Coroutines
+
+	IEnumerator simpleShowText_CR(string text){
+		
+		//TODO: Lock controllers
+		yield return StartCoroutine( "showWindow" );
+		
+		StartCoroutine ("listenForQuickSkip");
+		
+		yield return StartCoroutine( "feedText", text );
+		
+		yield return StartCoroutine( "hideWindow" );
+		StopCoroutine( "feedText" );
+		StopCoroutine( "feedLine" );
+		StopCoroutine( "listenForQuickSkip" );
+		
+		foreach( UILabel label in r_DescriptionLabels ){
+			label.text = "";
+		}
+		
+		m_Busy = false;
+		//TODO: Unlock controllers
+	}
+	/// <summary>
+	/// This function handles the logic about which line of text
+	/// should be displayed to the player
+	/// </summary>
+	IEnumerator feedText( string text ){
+		//Place all words in a stack
+		string[] w = Regex.Split( text, @"(\s)" ); 
+		Stack<string> words = new Stack<string>();
+		foreach( string word in w.Reverse<string>()){
+			words.Push(word);
+		}
+		
+		m_QuickSkip = false;
+		foreach( UILabel label in r_DescriptionLabels ){
+			if( words.Count == 0 ){
+				break;
+			}
+			r_CurrentLabel = label;
+			string line = getLine( words, r_CurrentLabel );
+			
+			if( m_QuickSkip ){
+				label.text = line;
+			} else {
+				yield return StartCoroutine( "feedLine", line);
+			}
+		}
+		
+		yield return StartCoroutine("awaitInput", "Fire2");
+		m_QuickSkip = false;
+		
+		while( words.Count > 0 ){
+			foreach( UILabel l in r_DescriptionLabels ){
+				if( words.Count == 0 ){
+					break;
+				}
+				for( int i = 0; i < r_DescriptionLabels.Count() - 1; ++i ){
+					r_DescriptionLabels[i].text = r_DescriptionLabels[i+1].text;
+				}	
+				r_CurrentLabel.text = "";
+				string line = getLine( words, r_CurrentLabel );
+				if( m_QuickSkip ){
+					r_CurrentLabel.text = line;
+				} else {
+					yield return StartCoroutine( "feedLine", line);
+					yield return m_QuickSkip ? null : new WaitForSeconds( m_NewLineWait );
+				}
+			}
+			yield return StartCoroutine("awaitInput", "Fire2" );
+			m_QuickSkip = false;
+		}
+		
+		Debug.Log("Done printing text");
+	}
+	
+	/// <summary>
+	/// Returns a line composed of the words in the stack that would
+	/// fit into the label.
+	/// The line is returned when the next word wouldn't fit or the last poped
+	/// word was a newline.
+	/// 
+	/// The stack is requiered to have all characters and all whitespaces in
+	/// separate elements. The labels text must be blank.
+	/// </summary>
+	private string getLine( Stack<string> words, UILabel targetLabel ){
+		string line = "";
+		string currWord = "";
+		Vector2 labelSize = new Vector2( targetLabel.width, targetLabel.height );
+		Vector2 textSize  = new Vector2();
+		targetLabel.UpdateNGUIText();
+		
+		//Add next word to the current line as long as the line would fit in the label
+		//and not cause a newline.
+		while( words.Count > 0 ){
+			currWord = words.Peek();
+			textSize = NGUIText.CalculatePrintedSize(line + currWord);
+			
+			if( textSize.y > labelSize.y ){	
+				//Check if the current word is a whitespace. If it is, remove it
+				if( currWord.Trim() == string.Empty ){
+					words.Pop();
+					line.Trim();
+				}
+				textSize = NGUIText.CalculatePrintedSize(line + " ");
+				while( textSize.y < labelSize.y && m_doLinePadding ){
+					line += " ";
+					textSize = NGUIText.CalculatePrintedSize(line + " ");
+				}
+				return line;
+			}
+			line += words.Pop();
+		}
+		
+		return line;
 	}
 
 	#endregion
