@@ -13,7 +13,9 @@ using System.Linq;
 public class GUIManager : Singleton<GUIManager> {
 	private bool m_Busy = false;
 	private bool m_QuickSkip = false;
+
 	private UILabel r_CurrentLabel;
+	private UISprite r_NextSprite;
 
 	[SerializeField]
 	private UISprite r_DescriptionWindow;
@@ -29,9 +31,13 @@ public class GUIManager : Singleton<GUIManager> {
 	[SerializeField]
 	private bool m_doLinePadding = false;
 
-	public void Awake(){
+	public void Start(){
 		if( r_DescriptionWindow == null ){
 			Debug.LogError("Error! No description window present!");
+		}
+		r_NextSprite = gameObject.GetComponentInChildren<UISprite>() as UISprite;
+		if( r_NextSprite == null ){
+			Debug.LogError("Error! No sprite for the 'next' icon present!");
 		}
 		foreach ( UILabel label in r_DescriptionLabels ){
 			if( label == null ){
@@ -40,6 +46,8 @@ public class GUIManager : Singleton<GUIManager> {
 				label.text = "";
 			}
 		}
+
+		r_NextSprite.alpha = 0.0f;
 		r_DescriptionWindow.alpha = 0.0f;
 		r_DescriptionWindow.transform.localScale = new Vector3(1.0f, 0.0f, 1.0f);
 	}
@@ -48,114 +56,32 @@ public class GUIManager : Singleton<GUIManager> {
 	/// This function will display the passed text in a small box
 	/// at the lower part of the screen. All formating of the text
 	/// is handled internaly.
+	/// 
+	/// This will lock the players movement and ability to rotate the camera
+	/// </summary>
+	public void simpleShowTextLockMovement(string text, bool lockMovement){
+		Messenger.Broadcast("lock player input", lockMovement );
+		simpleShowText( text );
+	}
+
+	/// <summary>
+	/// This function will display the passed text in a small box
+	/// at the lower part of the screen. All formating of the text
+	/// is handled internaly.
+	/// 
+	/// This will not lock the players movement
 	/// </summary>
 	public void simpleShowText(string text){
 		if( !m_Busy ){
-			m_Busy = true;
+			m_Busy = true;			
 			StartCoroutine("simpleShowText_CR", text);
 		} 
 	}
-
-	#region General Coroutines
-	/// <summary>
-	/// Causes the text box to appera smoothly.
-	/// </summary>
-	IEnumerator showWindow(){
-		Color col = new Color();
-		Vector3 scale = new Vector3();
-		while( r_DescriptionWindow.color.a < 0.99f ){
-			col = r_DescriptionWindow.color;
-			col.a +=  Time.deltaTime / m_WindowFadeTime;
-			r_DescriptionWindow.color = col; 
-				
-			scale = r_DescriptionWindow.transform.localScale;
-			scale.y += Time.deltaTime / m_WindowFadeTime;
-			r_DescriptionWindow.transform.localScale = scale;
-
-			yield return null;
-		}
-		col.a = 1.0f;
-		scale = Vector3.one;
-		r_DescriptionWindow.color = col;		
-		r_DescriptionWindow.transform.localScale = scale;
-	}
-
-	/// <summary>
-	/// Displays the actual line of text to the player, character by character
-	/// </summary>
-	IEnumerator feedLine( string line ){
-		for( int i = 0; i < line.Length; ++i){
-			if( m_QuickSkip ){
-				r_CurrentLabel.text = line;
-			} else {
-				r_CurrentLabel.text += line[i];
-				yield return new WaitForSeconds(m_TextSpeed);
-			}
-		}
-	}
-
-	/// <summary>
-	/// Hides the window in a smooth way
-	/// </summary>
-	IEnumerator hideWindow(){
-		Color col = new Color();
-		Vector3 scale = new Vector3();
-		while( r_DescriptionWindow.color.a > 0.01f ){
-			col = r_DescriptionWindow.color;
-			col.a -=  Time.deltaTime / m_WindowFadeTime;
-			r_DescriptionWindow.color = col; 
-
-			scale = r_DescriptionWindow.transform.localScale;
-			scale.y -= Time.deltaTime / m_WindowFadeTime;
-			r_DescriptionWindow.transform.localScale = scale;
-
-			yield return null;
-		}
-		col.a = 0.0f;
-		scale.y = 0.0f;
-
-		r_DescriptionWindow.color = col;
-		r_DescriptionWindow.transform.localScale = scale;
-	}
-
-	/// <summary>
-	/// This function detects if the player wishes to speed up
-	/// the text display. IF the player clicks "Fire2" as the text
-	/// is being printed, all text of that "frame" is displayed
-	/// instantaniously
-	/// </summary>
-	/// <returns>The for quick skip.</returns>
-	IEnumerator listenForQuickSkip(){
-		while( true ){
-			if( Input.GetButtonDown("Fire2") ){
-				m_QuickSkip = true;
-			}
-			yield return null;
-		}
-	}
-
-	/// <summary>
-	/// This function locks further progress until the player pushes
-	/// the button (that is passed as parameter)
-	/// </summary>
-	IEnumerator awaitInput(string button){
-		yield return null;
-		while( true ){
-			if( Input.GetButtonDown(button) ){
-				break;
-			}
-			yield return null;
-		}
-		yield return null;
-	}
-
-	#endregion
-
+	
 	#region Examine Monologue Coroutines
 
 	IEnumerator simpleShowText_CR(string text){
-		
-		//TODO: Lock controllers
+
 		yield return StartCoroutine( "showWindow" );
 		
 		StartCoroutine ("listenForQuickSkip");
@@ -170,9 +96,10 @@ public class GUIManager : Singleton<GUIManager> {
 		foreach( UILabel label in r_DescriptionLabels ){
 			label.text = "";
 		}
-		
+
+		Messenger.Broadcast("lock player input", false );
 		m_Busy = false;
-		//TODO: Unlock controllers
+
 	}
 	/// <summary>
 	/// This function handles the logic about which line of text
@@ -269,5 +196,102 @@ public class GUIManager : Singleton<GUIManager> {
 		return line;
 	}
 
+	#endregion
+
+	#region General Coroutines
+	/// <summary>
+	/// Causes the text box to appera smoothly.
+	/// </summary>
+	IEnumerator showWindow(){
+		Color col = new Color();
+		Vector3 scale = new Vector3();
+		while( r_DescriptionWindow.color.a < 0.99f ){
+			col = r_DescriptionWindow.color;
+			col.a +=  Time.deltaTime / m_WindowFadeTime;
+			r_DescriptionWindow.color = col; 
+			
+			scale = r_DescriptionWindow.transform.localScale;
+			scale.y += Time.deltaTime / m_WindowFadeTime;
+			r_DescriptionWindow.transform.localScale = scale;
+			
+			yield return null;
+		}
+		col.a = 1.0f;
+		scale = Vector3.one;
+		r_DescriptionWindow.color = col;		
+		r_DescriptionWindow.transform.localScale = scale;
+	}
+	
+	/// <summary>
+	/// Displays the actual line of text to the player, character by character
+	/// </summary>
+	IEnumerator feedLine( string line ){
+		for( int i = 0; i < line.Length; ++i){
+			if( m_QuickSkip ){
+				r_CurrentLabel.text = line;
+			} else {
+				r_CurrentLabel.text += line[i];
+				yield return new WaitForSeconds(m_TextSpeed);
+			}
+		}
+	}
+	
+	/// <summary>
+	/// Hides the window in a smooth way
+	/// </summary>
+	IEnumerator hideWindow(){
+		Color col = new Color();
+		Vector3 scale = new Vector3();
+		while( r_DescriptionWindow.color.a > 0.01f ){
+			col = r_DescriptionWindow.color;
+			col.a -=  Time.deltaTime / m_WindowFadeTime;
+			r_DescriptionWindow.color = col; 
+			
+			scale = r_DescriptionWindow.transform.localScale;
+			scale.y -= Time.deltaTime / m_WindowFadeTime;
+			r_DescriptionWindow.transform.localScale = scale;
+			
+			yield return null;
+		}
+		col.a = 0.0f;
+		scale.y = 0.0f;
+		
+		r_DescriptionWindow.color = col;
+		r_DescriptionWindow.transform.localScale = scale;
+	}
+	
+	/// <summary>
+	/// This function detects if the player wishes to speed up
+	/// the text display. IF the player clicks "Fire2" as the text
+	/// is being printed, all text of that "frame" is displayed
+	/// instantaniously
+	/// </summary>
+	/// <returns>The for quick skip.</returns>
+	IEnumerator listenForQuickSkip(){
+		while( true ){
+			if( Input.GetButtonDown("Fire2") ){
+				m_QuickSkip = true;
+			}
+			yield return null;
+		}
+	}
+	
+	/// <summary>
+	/// This function locks further progress until the player pushes
+	/// the button (that is passed as parameter)
+	/// </summary>
+	IEnumerator awaitInput(string button){
+		yield return null;
+		r_NextSprite.alpha = 1.0f;
+		while( true ){
+			if( Input.GetButtonDown(button) ){
+				break;
+			}
+			yield return null;
+		}
+		yield return null;
+		r_NextSprite.alpha = 0.0f;
+	}
+	
 	#endregion
 }
