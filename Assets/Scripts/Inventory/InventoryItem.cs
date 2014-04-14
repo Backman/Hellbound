@@ -45,8 +45,8 @@ public abstract class InventoryItem : UIDragDropItem{
 
 	void Update(){
 		if(m_FixedToGrid){
-			//gameObject.transform.localPosition = new Vector3(-100.0f + m_InventoryPos*100.0f, 180.0f, 0.0f);
-			gameObject.transform.position = new Vector3(-1.9f + m_InventoryPos*0.3f, 0.65f, 0.0f);
+			gameObject.transform.localPosition = new Vector3(m_InventoryPos*100.0f, 0, 0.0f);
+			//gameObject.transform.position = new Vector3(-1.9f + m_InventoryPos*0.3f, 0.65f, 0.0f);
 		}
 	}
 

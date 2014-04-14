@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class InventoryItem_Usage : UISprite {
+public class InventoryItem_Usage : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {

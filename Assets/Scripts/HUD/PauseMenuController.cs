@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PauseMenuController : UISprite {
+public class PauseMenuController : MonoBehaviour {
 
 	private UISprite m_Sprite;
 	void Start(){
 		PauseMenu.getInstance().add(this);
-		m_Sprite = gameObject.GetComponent<UISprite>();
+		//m_Sprite = gameObject.GetComponent<UISprite>();
 		// Because NGUI is buggy shit
-		m_Sprite.alpha = 1.0f;
+		//m_Sprite.alpha = 1.0f;
 		//gameObject.SetActive(true);
-		Debug.Log("Start: "+gameObject.name);
-		if(gameObject.name != "Inventory"){
-			gameObject.SetActive(false);
-			Debug.Log("Hide: "+gameObject.name);
-		}
+        //Debug.Log("Start: "+gameObject.name);
+        //if(gameObject.name != "Inventory"){
+        //    gameObject.SetActive(false);
+        //    Debug.Log("Hide: "+gameObject.name);
+        //}
 	}
 	
 	void Update(){

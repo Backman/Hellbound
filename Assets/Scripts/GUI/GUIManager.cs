@@ -17,6 +17,8 @@ public class GUIManager : Singleton<GUIManager> {
 	private UILabel r_CurrentLabel;
 	private UISprite r_NextSprite;
 
+    [SerializeField]
+    private GameObject r_PauseWindow;
 	[SerializeField]
 	private UISprite r_DescriptionWindow;
 	[SerializeField]
@@ -31,11 +33,13 @@ public class GUIManager : Singleton<GUIManager> {
 	[SerializeField]
 	private bool m_doLinePadding = false;
 
+    private bool m_GamePaused = false;
+
 	public void Start(){
 		if( r_DescriptionWindow == null ){
 			Debug.LogError("Error! No description window present!");
 		}
-		r_NextSprite = gameObject.GetComponentInChildren<UISprite>() as UISprite;
+		r_NextSprite = r_DescriptionWindow.transform.FindChild("NextSprite").GetComponent<UISprite>();
 		if( r_NextSprite == null ){
 			Debug.LogError("Error! No sprite for the 'next' icon present!");
 		}
@@ -81,6 +85,26 @@ public class GUIManager : Singleton<GUIManager> {
 	public void simpleShowTextAutoScroll( string text, int scollSpeed){
 
 	}
+
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            m_GamePaused = !m_GamePaused;
+            Messenger.Broadcast<bool>("lock player input", m_GamePaused);
+            pauseGame(m_GamePaused);
+        }
+    }
+
+    public void pauseGame(bool pause) {
+        if (pause) {
+            r_PauseWindow.SetActive(true);
+            r_PauseWindow.GetComponent<TweenScale>().PlayForward();
+            r_PauseWindow.GetComponent<TweenPosition>().PlayForward();
+        } else {
+            r_PauseWindow.GetComponent<TweenScale>().PlayReverse();
+            r_PauseWindow.GetComponent<TweenPosition>().PlayReverse();
+        }
+        
+    }
 	
 	#region Examine Monologue Coroutines
 
