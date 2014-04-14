@@ -47,6 +47,8 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	Vector3 m_Velocity;
 	IComparer m_RayHitComparer;
 
+	Vector3 m_PreviousPosition;
+	Vector3 m_DeltaPosition;
 	// Use this for initialization
 	void Start () {
 		r_Animator = GetComponentInChildren<Animator>();
@@ -59,8 +61,14 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			Debug.LogError("Collider cannot be cast to CapsuleCollider");
 		}
 
+		m_PreviousPosition = transform.position;
 		m_RayHitComparer = new RayHitComparer();
 		setUpAnimator();
+	}
+
+	void Update() {
+		m_DeltaPosition = transform.position - m_PreviousPosition;
+		m_PreviousPosition = transform.position;
 	}
 
 	// This function is designed to be called from a seperate component(script)
@@ -74,7 +82,6 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		m_MoveInput = move;
 		m_CrouchInput = crouch;
 		m_LookDirection = lookDirection;
-
 
 		m_Velocity = rigidbody.velocity;
 
@@ -116,10 +123,15 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		m_ForwardAmount = localMove.z;
 	}
 
+	public void turnCharacter(Vector3 move) {
+		Vector3 localMove = transform.InverseTransformDirection(move);
+		m_TurnAmount = Mathf.Atan2(localMove.x, localMove.z);
+	}
+
 	void turnTowardsCameraForward(){
 		// automatically turn to face camera direction,
 		// when not moving, and beyond the specified angle threshold
-		if(Mathf.Abs(m_ForwardAmount) < 0.01f){
+		if(Mathf.Abs(m_ForwardAmount) < 0.1f){
 			Vector3 lookDelta = transform.InverseTransformDirection(m_LookDirection - transform.position);
 			float lookAngle = Mathf.Atan2(lookDelta.x, lookDelta.z) * Mathf.Rad2Deg;
 
@@ -205,7 +217,11 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			// When not moving this prevents sliding on slopes
 			m_Velocity.x = 0.0f;
 			m_Velocity.z = 0.0f;
-		}
+		}/* else {
+			Vector3 v = m_MoveInput * m_ForwardAmount * m_MoveSpeedMultiplier;
+			v.y = 0.0f;
+			m_Velocity = v  * 5.0f;
+		}*/
 	}
 
 	void handleAirborneVelocities(){
