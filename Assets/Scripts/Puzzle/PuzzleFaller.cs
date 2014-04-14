@@ -15,7 +15,7 @@ public class PuzzleFaller : Puzzle {
 				return false;
 			}
 		}
-		//GameEvent.trigger("onPuzzleFallerConditionSet", gameObject);
+		Messenger.Broadcast("onPuzzleFallerConditionSet", gameObject);
 		return true;
 	}
 }

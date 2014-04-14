@@ -9,17 +9,17 @@ public class Inventory {
 	private int m_GridWidth, m_GridHeight;
 	private static InventoryItem m_CurrentSelectedInventoryItem = null;
 
-	private UISprite m_InventoryMenu = null;
+	private GameObject m_InventoryMenu = null;
 	private int m_InventoryIndex;
 	private Dictionary<InventoryItem.Type, int> m_InventoryItemIndex = new Dictionary<InventoryItem.Type, int>();
 	
-	private Inventory() : base(){
+	private Inventory(){
 		m_InvItems = new List<InventoryItem>();
 		m_GridWidth = 16;
 		m_GridHeight = 6;
 
-		m_InventoryMenu = GameObject.FindGameObjectWithTag ("ExamineWindow").GetComponent<UISprite>();
-		m_InventoryMenu.alpha = 0.0f;
+		m_InventoryMenu = GameObject.FindGameObjectWithTag("ExamineWindow");
+		m_InventoryMenu.SetActive(false);
 		Debug.Log("Initialize Inventory");
 		
 		// Same types of objects should be placed on same space in inventory
@@ -51,10 +51,10 @@ public class Inventory {
 	}
 
 	public void showInventoryMenu(){
-		m_InventoryMenu.alpha = 1.0f;
+		m_InventoryMenu.SetActive(true);
 	}
 
 	public void hideInventoryMenu(){
-		m_InventoryMenu.alpha = 0.0f;
+		m_InventoryMenu.SetActive(false);
 	}
 }

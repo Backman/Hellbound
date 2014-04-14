@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SettingsMenuControl : UISprite {
 	
-	private UISprite m_Sprite;
-	private bool m_Visible;
+	private static List<SettingsMenuControl> m_Settings = new List<SettingsMenuControl>();
 	// Use this for initialization
 	void Start() {
-		m_Sprite = gameObject.GetComponent<UISprite>();
-		hide();
+		m_Settings.Add(this);
+		gameObject.SetActive(true);
+		gameObject.GetComponent<UISprite>().alpha = 1.0f;
+		if(gameObject.name != "GraphicsMenu"){
+			//hide();
+		}
 	}
 	
 	// Update is called once per frame
@@ -18,31 +22,24 @@ public class SettingsMenuControl : UISprite {
 	
 	// Called by Unity
 	public void show(){
-		foreach(var obj in GameObject.FindGameObjectsWithTag("SettingsMenu")){
-			SettingsMenuControl control = obj.GetComponent<SettingsMenuControl>();
-			control.setVisible(false);
+		foreach(SettingsMenuControl menuControl in m_Settings){
+			Debug.Log ("Hide setting menu: "+menuControl.name);
+			menuControl.setVisible(false);
 		}
-		m_Sprite.alpha = 1.0f;
-		m_Visible = true;
+		setVisible(true);
 	}
 	
 	// Called by Unity
 	public void hide(){
-		m_Sprite.alpha = 0.0f;
-		m_Visible = false;
+		gameObject.SetActive(false);
 	}
 	
 	public void setVisible(bool visible){
 		if(visible){
-			m_Sprite.alpha = 1.0f;
+			gameObject.SetActive(true);
 		}
 		else{
-			m_Sprite.alpha = 0.0f;
+			gameObject.SetActive(false);
 		}
-		m_Visible = visible;
-	}
-	
-	public bool isVisible(){
-		return m_Visible;
 	}
 }
