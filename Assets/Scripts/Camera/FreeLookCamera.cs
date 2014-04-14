@@ -40,6 +40,8 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	private float m_SmoothYVelocity = 0.0f;
 	private bool m_Zoomed = false;
 
+	private bool m_LockedInput = false;
+
 	protected override void Awake () {
 		base.Awake ();
 
@@ -56,8 +58,16 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		m_OriginalFollowSpeed = m_FollowSpeed;
 	}
 
+	protected void Start(){
+		Messenger.AddListener<bool>("lock player input", lockInput);
+	}
+
 	protected override void Update() {
 		base.Update ();
+
+		if(m_LockedInput){
+			return;
+		}
 
 		handleZoomInput();
 
@@ -149,6 +159,10 @@ public class FreeLookCamera : PivotBasedCameraRig {
 			m.enabled = true;
 		}
 		m_FollowSpeed = m_OriginalFollowSpeed;
+	}
+
+	public void lockInput(bool lockInput){
+		m_LockedInput = lockInput;
 	}
 }
 
