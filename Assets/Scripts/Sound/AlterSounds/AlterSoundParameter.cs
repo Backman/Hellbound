@@ -28,11 +28,12 @@ public class AlterSoundParameter : MonoBehaviour {
 		if(other.GetComponent<Rigidbody>() != null)
 		{
 			FMOD_StudioEventEmitter[] allEmitters = other.gameObject.GetComponentsInChildren<FMOD_StudioEventEmitter>();
-			foreach(FMOD_StudioEventEmitter f in allEmitters)
-			{
+			foreach(FMOD_StudioEventEmitter f in allEmitters){
+
 				m_Emitters.Add(f);
-				if(f.getParameter(s_Parameter) != null)
-				{
+
+				if(f.getParameter(s_Parameter) != null){
+
 					float noPointerPlease = 0f;
 					f.getParameter(s_Parameter).getValue(out noPointerPlease);
 					f_OutValue = noPointerPlease;
@@ -50,14 +51,15 @@ public class AlterSoundParameter : MonoBehaviour {
 		if(other.GetComponent<Rigidbody>() != null)
 		{
 			FMOD_StudioEventEmitter[] itterate = m_Emitters.ToArray ();
-			foreach(FMOD_StudioEventEmitter f in itterate)
-			{
-				if(f.getParameter(s_Parameter) != null)
-				{
+			foreach(FMOD_StudioEventEmitter f in itterate){
+
+				if(f.getParameter(s_Parameter) != null){
+
 					f.getParameter(s_Parameter).setValue(f_OutValue);
 				}
 				m_Emitters.Remove(f);
 			}
 		}
+
 	}
 }

@@ -10,6 +10,8 @@ public class AlterSoundPlay : MonoBehaviour {
 	/// Anton Thorsell
 	/// </summary>
 
+	public GameObject[] r_GameObjects;
+
 	//variables if something should happen when the player enters/exits the collider
 	public bool b_Enter = false;
 	public bool b_Exit = false;
@@ -33,12 +35,10 @@ public class AlterSoundPlay : MonoBehaviour {
 	{
 		if(b_Enter)
 		{
-			if(b_Once && b_HavePlayedOnce)
-			{
+			if(b_Once && b_HavePlayedOnce){
 				Destroy(gameObject);
 			}
-			else
-			{
+			else{				
 				m_Emitter.Stop();
 				m_Emitter.Play();
 				b_HavePlayedOnce = true;

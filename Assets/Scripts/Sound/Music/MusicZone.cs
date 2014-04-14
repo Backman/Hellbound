@@ -9,7 +9,12 @@ public class MusicZone : MonoBehaviour {
 	/// Anton Thorsell
 	/// </summary>
 
-	public int m_Zone = 0;
+	public float m_Insidevalue = 0f;
+	public float m_Outstidevalue = 0f;
+	public bool m_ReturnOutsideValue = false;
+	public bool m_FadeSound = true;
+
+	public string m_parametername = "";
 
 	void Start () {
 	

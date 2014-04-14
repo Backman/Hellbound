@@ -13,57 +13,77 @@ public class AlterOtherSoundParameters : MonoBehaviour {
 	public GameObject[] g_GameObjects;
 	public string s_Parameter;
 
-	public float f_InsideParameter = 0f;
+	public float m_InsideParameter = 0f;
 
-	public float f_OutsideParameter = 0f;
+	public float m_OutsideParameter = 0f;
 
-	private List<FMOD.Studio.ParameterInstance> m_Parameters = new List<FMOD.Studio.ParameterInstance>();
+
+	public bool m_UseFade = false;
+	//the amount of frames untill the fade is complete
+	public float m_FadeSpeed = 100f;
+
+	private List<FMOD.Studio.ParameterInstance> r_Parameters = new List<FMOD.Studio.ParameterInstance>();
 	
 	void Start () 
 	{
-		foreach(GameObject g in g_GameObjects)
-		{
-			m_Parameters.Add(g.GetComponent<FMOD_StudioEventEmitter>().getParameter(s_Parameter));
-			m_Parameters[m_Parameters.Count-1].setValue(f_OutsideParameter);
+		foreach(GameObject g in g_GameObjects){
+			r_Parameters.Add(g.GetComponent<FMOD_StudioEventEmitter>().getParameter(s_Parameter));
+			r_Parameters[r_Parameters.Count-1].setValue(m_OutsideParameter);
 		}
 	}
 
 
 	void OnTriggerEnter(Collider other)
 	{
-		FadeIn ();
-	}
-
-	void OnTriggerExit(Collider other)
-	{
-		FadeOut ();
-	}
-
-	private IEnumerator FadeIn()
-	{
-		//this fade is currently retarded
-		float newValue = f_OutsideParameter;
-		while(newValue != f_InsideParameter)
-		{
-			foreach(FMOD.Studio.ParameterInstance f in m_Parameters)
-			{
-				f.setValue(newValue);
+		if (m_UseFade) {
+			FadeIn();
+		}
+		else{
+			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
+				p.setValue(m_InsideParameter);
 			}
 		}
 	}
 
+	void OnTriggerExit(Collider other)
+	{
+		if (m_UseFade) {
+			FadeOut();
+		}
+		else{
+			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
+				p.setValue(m_OutsideParameter);
+			}
+		}
+	}
+
+	private IEnumerator FadeIn()
+	{
+		float speed = (m_InsideParameter - m_OutsideParameter) / m_FadeSpeed;
+		float currentValue = m_OutsideParameter;
+
+		while (currentValue == m_InsideParameter) {
+
+			currentValue += speed;
+			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
+				p.setValue(currentValue);
+			}
+		}
+		yield return 0;
+	}
+
 	private IEnumerator FadeOut()
 	{
-		//this fade is currently retarded
-		float newValue = f_InsideParameter;
-		float addThis = (f_InsideParameter - f_OutsideParameter) / 100f;
-		while(newValue != f_OutsideParameter)
-		{
+		float speed = (m_OutsideParameter - m_InsideParameter) / m_FadeSpeed;
+		float currentValue = m_OutsideParameter;
 
-			foreach(FMOD.Studio.ParameterInstance f in m_Parameters)
-			{
-				f.setValue(newValue);
-			}			
+		while (currentValue == m_OutsideParameter) {
+
+			currentValue += speed;
+			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
+				p.setValue(currentValue);
+			}
 		}
+		yield return 0;
 	}
 }

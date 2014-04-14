@@ -9,91 +9,86 @@ public class MusicPlayer : MonoBehaviour {
 	/// </summary>
 
 
-	public float f_AlterationSpeed = 0.25f;
+	public float m_FadeSpeed = 100f;
 
-	private FMOD.Studio.ParameterInstance f_Parameter;
+	public GameObject[] r_GameObjects;
+	public string[] m_ParameterNames;
 
-	private List<int> i_AllInts = new List<int>();
-	private List<int> i_UniqueInts = new List<int>();
-	private int i_CurrentInt = 0;
+	private Dictionary<string, FMOD.Studio.ParameterInstance> r_Parameter;
 
-	private float f_DesiredParameter = 0f;
-	private float f_ActualParameter = 0f;
 
 	private bool b_AlterSound = false;
 
 	void Start () 
 	{
-		f_Parameter = gameObject.GetComponent<FMOD_StudioEventEmitter> ().getParameter("something");
+		if (m_FadeSpeed == 0)
+						m_FadeSpeed = 1;
+		foreach (GameObject g in r_GameObjects) {
+			foreach(string s in m_ParameterNames){
+
+				if(g.GetComponent<FMOD_StudioEventEmitter>().getParameter(s) != null){
+					r_Parameter.Add(s, g.GetComponent<FMOD_StudioEventEmitter>().getParameter(s));
+				}
+			}
+		}
 	}
 
+
+	//have not implemented "save value"
 	void OnTriggerEnter(Collider other)
 	{
-		if(other.GetComponent<MusicZone>() != null)
-		{
-			i_AllInts.Add(other.GetComponent<MusicZone>().m_Zone);
-
-			CheckValues();
+		MusicZone desiredComponent = collider.GetComponent<MusicZone> ();
+		if (desiredComponent != null) {
+			if(desiredComponent.m_FadeSound){
+				FadeIn(desiredComponent);
+			}
+			else{
+				r_Parameter[desiredComponent.m_parametername].setValue(desiredComponent.m_Insidevalue)
+			}
 		}
 	}
-
+	
 	void OnTriggerExit(Collider other)
 	{
-		if(other.GetComponent<MusicZone>() != null)
-		{
-			i_AllInts.Remove(other.GetComponent<MusicZone>().m_Zone);
-
-			CheckValues();
+		MusicZone desiredComponent = collider.GetComponent<MusicZone> ();
+		if (desiredComponent != null) {
+			if(desiredComponent.m_FadeSound){
+				FadeOut(desiredComponent);
+			}
+			else{
+				r_Parameter[desiredComponent.m_parametername].setValue(desiredComponent.m_Insidevalue)
+			}
 		}
 	}
 
-	private void CheckValues()
+	private IEnumerator FadeIn(MusicZone zone)
 	{
-		i_UniqueInts.Clear ();
-		foreach(int i in i_AllInts)
-		{
-			if(!i_UniqueInts.Contains(i))
-				i_UniqueInts.Add(i);
-		}
-
-		if(i_UniqueInts.Count == 1)
-		{
-			if(i_UniqueInts[0] == 0)
-			{
-				f_DesiredParameter = 0f;
-				b_AlterSound = true;
-			}
-			else if(i_UniqueInts[0] == 1)
-			{
-				f_DesiredParameter = 100f;
-				b_AlterSound = true;
+		float speed = (zone.m_Insidevalue - zone.m_Outstidevalue) / m_FadeSpeed;
+		float currentValue = zone.m_Outstidevalue;
+		
+		while (currentValue == zone.m_Insidevalue) {
+			
+			currentValue += speed;
+			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
+				p.setValue(currentValue);
 			}
 		}
-		else if(i_UniqueInts.Count > 1)
-		{
-			f_DesiredParameter = 50f;
-			b_AlterSound = true;
-		}
+		yield return 0;
 	}
-
-	void Update()
+	
+	private IEnumerator FadeOut(MusicZone zone)
 	{
-		if(b_AlterSound)
-		{
-			float moveTo = f_DesiredParameter - f_ActualParameter;
-			if(moveTo > 0)
-			{
-				f_ActualParameter += f_AlterationSpeed;
+		float speed = (m_OutsideParameter - m_InsideParameter) / m_FadeSpeed;
+		float currentValue = m_OutsideParameter;
+		
+		while (currentValue == m_OutsideParameter) {
+			
+			currentValue += speed;
+			foreach(FMOD.Studio.ParameterInstance p in r_Parameters){
+				p.setValue(currentValue);
 			}
-			else if(moveTo < 0)
-			{
-				f_ActualParameter -= f_AlterationSpeed;
-			}
-			else 
-			{
-				b_AlterSound = false;
-			}
-			//f_Parameter.setValue(f_ActualParameter);
 		}
+		yield return 0;
 	}
+
 }
