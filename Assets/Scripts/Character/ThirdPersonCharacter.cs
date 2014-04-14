@@ -123,10 +123,15 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		m_ForwardAmount = localMove.z;
 	}
 
+	public void turnCharacter(Vector3 move) {
+		Vector3 localMove = transform.InverseTransformDirection(move);
+		m_TurnAmount = Mathf.Atan2(localMove.x, localMove.z);
+	}
+
 	void turnTowardsCameraForward(){
 		// automatically turn to face camera direction,
 		// when not moving, and beyond the specified angle threshold
-		if(Mathf.Abs(m_ForwardAmount) < 0.01f){
+		if(Mathf.Abs(m_ForwardAmount) < 0.1f){
 			Vector3 lookDelta = transform.InverseTransformDirection(m_LookDirection - transform.position);
 			float lookAngle = Mathf.Atan2(lookDelta.x, lookDelta.z) * Mathf.Rad2Deg;
 
@@ -212,11 +217,11 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			// When not moving this prevents sliding on slopes
 			m_Velocity.x = 0.0f;
 			m_Velocity.z = 0.0f;
-		} else {
+		}/* else {
 			Vector3 v = m_MoveInput * m_ForwardAmount * m_MoveSpeedMultiplier;
 			v.y = 0.0f;
 			m_Velocity = v  * 5.0f;
-		}
+		}*/
 	}
 
 	void handleAirborneVelocities(){
@@ -237,7 +242,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		r_Animator.applyRootMotion = m_OnGround;
 
 		// update the animator parameters
-		//r_Animator.SetFloat ("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
+		r_Animator.SetFloat ("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
 		r_Animator.SetFloat ("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
 		r_Animator.SetBool ("Crouch", m_CrouchInput);
 		r_Animator.SetBool ("OnGround", m_OnGround);
@@ -286,7 +291,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		}
 	}
 
-	/*public void OnAnimatorMove(){
+	public void OnAnimatorMove(){
 		// We implement this function to override the default root motion.
 		// this allows us to modify the positional speed before it's applied.
 		rigidbody.rotation = r_Animator.rootRotation;
@@ -297,7 +302,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			v.y = rigidbody.velocity.y;
 			rigidbody.velocity = v;
 		}
-	}*/
+	}
 
 	class RayHitComparer : IComparer {
 		public int Compare(object x, object y){
