@@ -3,7 +3,7 @@ using System.Collections;
 
 public class InventoryItem_Oil : InventoryItem{
 	public override void examine(){
-		
+		Debug.Log("It's just oil goddamnit!");
 	}
 	
 	public override void use(){
@@ -19,6 +19,10 @@ public class InventoryItem_Oil : InventoryItem{
 				Debug.Log("Unable to combine oil with oil!");
 				break;
 		}
+	}
+
+	public override void drop(){
+		
 	}
 
 	public override InventoryItem.Type getType(){
