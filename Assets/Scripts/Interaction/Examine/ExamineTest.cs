@@ -1,20 +1,29 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class ExamineTest : MonoBehaviour {
+public class ExamineTest : Interactable {
 
+	public ExamineState1 state1;
+	public ExamineState2 state2;
 
+	private StateMachine<ExamineTest> m_FSM;
 
-	// Use this for initialization
-	void Start () {
-	
+	void Start(){
+		//state1 = new ExamineState1();
+		//state2 = new ExamineState2();
+
+		m_FSM = new StateMachine<ExamineTest>(this, state1);
+		m_FSM.addState(state2);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-		if( Input.GetKeyDown(KeyCode.A) ){
 
+	public override void examine () {
+	
+		m_FSM.CurrentState.examine (this);
+	}
+
+	void Update(){
+		if(Input.GetKeyDown(KeyCode.Space)){
+			m_FSM.changeState<ExamineState2>();
 		}
 	}
 }

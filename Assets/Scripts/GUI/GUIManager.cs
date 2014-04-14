@@ -59,8 +59,8 @@ public class GUIManager : Singleton<GUIManager> {
 	/// 
 	/// This will lock the players movement and ability to rotate the camera
 	/// </summary>
-	public void simpleShowTextLockMovement(string text, bool lockMovement){
-		Messenger.Broadcast("lock player input", lockMovement );
+	public void simpleShowTextLockMovement(string text){
+		Messenger.Broadcast("lock player input", true );
 		simpleShowText( text );
 	}
 
@@ -74,21 +74,26 @@ public class GUIManager : Singleton<GUIManager> {
 	public void simpleShowText(string text){
 		if( !m_Busy ){
 			m_Busy = true;			
-			StartCoroutine("simpleShowText_CR", text);
+			StartCoroutine("simpleShowText_Manual", text);
 		} 
+	}
+
+	public void simpleShowTextAutoScroll( string text, int scollSpeed){
+
 	}
 	
 	#region Examine Monologue Coroutines
 
-	IEnumerator simpleShowText_CR(string text){
+	IEnumerator simpleShowText_Manual(string text){
+		m_QuickSkip = false;
 
 		yield return StartCoroutine( "showWindow" );
-		
+
 		StartCoroutine ("listenForQuickSkip");
-		
-		yield return StartCoroutine( "feedText", text );
-		
+
+		yield return StartCoroutine( "feedText", text );	
 		yield return StartCoroutine( "hideWindow" );
+
 		StopCoroutine( "feedText" );
 		StopCoroutine( "feedLine" );
 		StopCoroutine( "listenForQuickSkip" );
@@ -101,6 +106,7 @@ public class GUIManager : Singleton<GUIManager> {
 		m_Busy = false;
 
 	}
+
 	/// <summary>
 	/// This function handles the logic about which line of text
 	/// should be displayed to the player
@@ -112,8 +118,7 @@ public class GUIManager : Singleton<GUIManager> {
 		foreach( string word in w.Reverse<string>()){
 			words.Push(word);
 		}
-		
-		m_QuickSkip = false;
+
 		foreach( UILabel label in r_DescriptionLabels ){
 			if( words.Count == 0 ){
 				break;
