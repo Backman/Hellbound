@@ -3,15 +3,18 @@ using System.Collections;
 
 public class EventSound : MonoBehaviour {
 
-	public string m_Path = "event:/";
-
-	public bool pickUp = false;
+	public string m_PathPickUp = "event:/";
+	public bool m_PickUp = false;
 	
-	public bool examine = false;
+	public string m_PathExamine = "event:/";
+	public bool m_Examine = false;
 	
-	public bool activate = false;
+	public string m_PathActivate = "event:/";
+	public bool m_Activate = false;
 	
-	public bool gainFocus = false;
+	public string m_PathGainFocus = "event:/";
+	public bool m_GainFocus = false;
 	
-	public bool loseFocus = false;
+	public string m_PathLoseFocus = "event:/";
+	public bool m_LoseFocus = false;
 }
