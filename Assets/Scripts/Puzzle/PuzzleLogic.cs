@@ -4,7 +4,7 @@ using System.Collections;
 public abstract class PuzzleLogic : MonoBehaviour {
 	[SerializeField] string m_EventToHandle;
 	// Use this for initialization
-	void Start () {
+	protected virtual void Start () {
 		Messenger.AddListener<GameObject>(m_EventToHandle, onEvent);
 	}
 	
