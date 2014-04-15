@@ -16,18 +16,23 @@ public class InventoryItem_Usage : MonoBehaviour {
 	public void use(){
 		InventoryItem invItem = Inventory.getInstance().getSelectedItem();
 		invItem.use();
-		Inventory.getInstance().hideInventoryMenu();
+		//Inventory.getInstance().hideInventoryMenu();
 	}
 
 	public void examine(){
 		InventoryItem invItem = Inventory.getInstance().getSelectedItem();
 		invItem.examine();
-		Inventory.getInstance().hideInventoryMenu();
+		//Inventory.getInstance().hideInventoryMenu();
 	}
 
 	public void drop(){
 		InventoryItem invItem = Inventory.getInstance().getSelectedItem();
 		invItem.drop();
-		Inventory.getInstance().hideInventoryMenu();
+		//Inventory.getInstance().hideInventoryMenu();
+	}
+	
+	public void combine(){
+		InventoryItem invItem = Inventory.getInstance().getSelectedItem();
+		Inventory.getInstance().addCombineItem(invItem, true);
 	}
 }

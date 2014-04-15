@@ -26,4 +26,15 @@ public class PauseMenu{
 	public void add(PauseMenuController controller){
 		m_Controllers.Add(controller);
 	}
+	
+	public void showInventory(){
+		foreach(PauseMenuController controller in m_Controllers){
+			if(controller.name == "Inventory"){
+				controller.show();
+			}
+			else{
+				controller.hide();
+			}
+		}
+	}
 }

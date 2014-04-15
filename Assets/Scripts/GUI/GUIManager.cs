@@ -97,7 +97,8 @@ public class GUIManager : Singleton<GUIManager> {
     public void pauseGame(bool pause) {
         if (pause) {
             r_PauseWindow.SetActive(true);
-            r_PauseWindow.GetComponent<TweenScale>().PlayForward();
+            PauseMenu.getInstance().showInventory();
+			r_PauseWindow.GetComponent<TweenScale>().PlayForward();
             r_PauseWindow.GetComponent<TweenPosition>().PlayForward();
         } else {
             r_PauseWindow.GetComponent<TweenScale>().PlayReverse();
