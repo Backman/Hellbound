@@ -4,6 +4,18 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
 
+/*[System.Serializable]
+struct DialogSettings{
+	[SerializeField] [Range (0, 1)]
+	public float m_WindowFadeTime = 0.0f;
+	[SerializeField] [Range (0, 0.1f)]
+	public float m_TextSpeed = 0.0f;
+	[SerializeField] [Range (0, 1)]
+	public float m_NewLineWait = 0.0f;
+	[SerializeField]
+	public bool m_doLinePadding = false;
+}*/
+
 /// <summary>
 /// This class handles the GUI window that displays text messages
 /// to the player as the player for example examines items.
@@ -14,6 +26,7 @@ public class GUIManager : Singleton<GUIManager> {
 	private bool m_Busy = false;
 	private bool m_QuickSkip = false;
 
+
 	private UILabel r_CurrentLabel;
 	private UISprite r_NextSprite;
 
@@ -22,16 +35,16 @@ public class GUIManager : Singleton<GUIManager> {
 	[SerializeField]
 	private UISprite r_DescriptionWindow;
 	[SerializeField]
-	private UILabel[] r_DescriptionLabels;
+	private UILabel[] r_DescriptionLabels; 
 
 	[SerializeField] [Range (0, 1)]
-	private float m_WindowFadeTime = 0.0f;
+	public float m_WindowFadeTime = 0.0f;
 	[SerializeField] [Range (0, 0.1f)]
-	private float m_TextSpeed = 0.0f;
+	public float m_TextSpeed = 0.0f;
 	[SerializeField] [Range (0, 1)]
-	private float m_NewLineWait = 0.0f;
+	public float m_NewLineWait = 0.0f;
 	[SerializeField]
-	private bool m_doLinePadding = false;
+	public bool m_doLinePadding = false;
 
     private bool m_GamePaused = false;
 
@@ -39,9 +52,11 @@ public class GUIManager : Singleton<GUIManager> {
 		if( r_DescriptionWindow == null ){
 			Debug.LogError("Error! No description window present!");
 		}
-		r_NextSprite = r_DescriptionWindow.transform.FindChild("NextSprite").GetComponent<UISprite>();
-		if( r_NextSprite == null ){
+		Transform t = r_DescriptionWindow.transform.Find("NextSprite");
+		if( t == null ){
 			Debug.LogError("Error! No sprite for the 'next' icon present!");
+		} else {
+			r_NextSprite = t.GetComponent<UISprite>();
 		}
 		foreach ( UILabel label in r_DescriptionLabels ){
 			if( label == null ){
@@ -77,13 +92,28 @@ public class GUIManager : Singleton<GUIManager> {
 	/// </summary>
 	public void simpleShowText(string text){
 		if( !m_Busy ){
-			m_Busy = true;			
-			StartCoroutine("simpleShowText_Manual", text);
+			m_Busy = true;	
+
+			object[] args = new object[4];
+			args[0] = text;
+			args[1] = true;
+			args[2] = "awaitInput";
+			args[3] = "Fire2";
+			StartCoroutine("simpleShowText_Manual", args);
 		} 
 	}
 
-	public void simpleShowTextAutoScroll( string text, int scollSpeed){
-
+	public void simpleShowTextAutoScroll( string text, float scollSpeed){
+		if( !m_Busy ){
+			m_Busy = true;	
+			
+			object[] args = new object[4];
+			args[0] = text;
+			args[1] = false;
+			args[2] = "awaitTime";
+			args[3] = scollSpeed;
+			StartCoroutine("simpleShowText_Manual", args);
+		} 
 	}
 
     void Update() {
@@ -95,6 +125,7 @@ public class GUIManager : Singleton<GUIManager> {
     }
 
     public void pauseGame(bool pause) {
+		
         if (pause) {
             r_PauseWindow.SetActive(true);
             r_PauseWindow.GetComponent<TweenScale>().PlayForward();
@@ -108,14 +139,16 @@ public class GUIManager : Singleton<GUIManager> {
 	
 	#region Examine Monologue Coroutines
 
-	IEnumerator simpleShowText_Manual(string text){
+	IEnumerator simpleShowText_Manual(object[] args){
 		m_QuickSkip = false;
 
 		yield return StartCoroutine( "showWindow" );
 
-		StartCoroutine ("listenForQuickSkip");
+		if( (bool)args[1] == true ){
+			StartCoroutine ("listenForQuickSkip", args[3]);
+		}
 
-		yield return StartCoroutine( "feedText", text );	
+		yield return StartCoroutine( "feedText", args );	
 		yield return StartCoroutine( "hideWindow" );
 
 		StopCoroutine( "feedText" );
@@ -134,15 +167,20 @@ public class GUIManager : Singleton<GUIManager> {
 	/// <summary>
 	/// This function handles the logic about which line of text
 	/// should be displayed to the player
+	/// 
+	/// Args[0] = (string) the text
+	/// Args[1] = (bool)  allow quick skip
+	/// Args[2] = (string) scroll method
+	/// Args[3] = (obj) scroll method argument
 	/// </summary>
-	IEnumerator feedText( string text ){
+	IEnumerator feedText( object[] args ){
 		//Place all words in a stack
-		string[] w = Regex.Split( text, @"(\s)" ); 
+		string[] w = Regex.Split( (string)args[0] , @"(\s)" ); 
 		Stack<string> words = new Stack<string>();
 		foreach( string word in w.Reverse<string>()){
 			words.Push(word);
 		}
-
+		Debug.Log( args[0] );
 		foreach( UILabel label in r_DescriptionLabels ){
 			if( words.Count == 0 ){
 				break;
@@ -157,7 +195,7 @@ public class GUIManager : Singleton<GUIManager> {
 			}
 		}
 		
-		yield return StartCoroutine("awaitInput", "Fire2");
+		yield return StartCoroutine( (string) args[2], args[3]);
 		m_QuickSkip = false;
 		
 		while( words.Count > 0 ){
@@ -177,7 +215,7 @@ public class GUIManager : Singleton<GUIManager> {
 					yield return m_QuickSkip ? null : new WaitForSeconds( m_NewLineWait );
 				}
 			}
-			yield return StartCoroutine("awaitInput", "Fire2" );
+			yield return StartCoroutine( (string) args[2], args[3]);
 			m_QuickSkip = false;
 		}
 		
@@ -296,9 +334,9 @@ public class GUIManager : Singleton<GUIManager> {
 	/// instantaniously
 	/// </summary>
 	/// <returns>The for quick skip.</returns>
-	IEnumerator listenForQuickSkip(){
+	IEnumerator listenForQuickSkip(string button){
 		while( true ){
-			if( Input.GetButtonDown("Fire2") ){
+			if( Input.GetButtonDown(button) ){
 				m_QuickSkip = true;
 			}
 			yield return null;
@@ -309,7 +347,7 @@ public class GUIManager : Singleton<GUIManager> {
 	/// This function locks further progress until the player pushes
 	/// the button (that is passed as parameter)
 	/// </summary>
-	IEnumerator awaitInput(string button){
+	IEnumerator awaitInput( string button){
 		yield return null;
 		r_NextSprite.alpha = 1.0f;
 		while( true ){
@@ -321,6 +359,12 @@ public class GUIManager : Singleton<GUIManager> {
 		yield return null;
 		r_NextSprite.alpha = 0.0f;
 	}
-	
+
+	/// <summary>
+	/// Will wait for waitTime seconds before returning
+	/// </summary>
+	IEnumerator awaitTime( float waitTime ){
+		yield return new WaitForSeconds( waitTime );
+	}	
 	#endregion
 }
