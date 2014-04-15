@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AlterSoundPlay : MonoBehaviour {
 	/// <summary>
@@ -10,57 +11,52 @@ public class AlterSoundPlay : MonoBehaviour {
 	/// Anton Thorsell
 	/// </summary>
 
-	public GameObject[] r_GameObjects;
+	public string m_Path = "event:/";
 
 	//variables if something should happen when the player enters/exits the collider
-	public bool b_Enter = false;
-	public bool b_Exit = false;
+	public bool m_Enter = false;
+	public bool m_Exit = false;
+	public bool m_Once = false;
 
-	//should it play once?
-	public bool b_Once = false;
-	private bool b_HavePlayedOnce = false;
-
-	//the soundSource
-	private FMOD_StudioEventEmitter m_Emitter;
-
-	//makes a pointer to the emitter that is on this object
-	void Start () 
-	{
-		m_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
-	}
+	private bool m_HavePlayedOnce = false;
+	private bool m_Inside = false;
 
 	//if something enters the collider, depending on the variables 
 	//stuff happens
 	void OnTriggerEnter(Collider other)
 	{
-		if(b_Enter)
-		{
-			if(b_Once && b_HavePlayedOnce){
-				Destroy(gameObject);
+		if(other.GetComponent<Rigidbody>() != null){
+
+			if(m_Enter && !m_Inside)
+			{
+				if(m_Once && m_HavePlayedOnce){
+					Destroy(gameObject);
+				}
+				else{
+					FMOD_StudioSystem.instance.PlayOneShot(m_Path, transform.position);
+					m_HavePlayedOnce = true;
+				}
 			}
-			else{				
-				m_Emitter.Stop();
-				m_Emitter.Play();
-				b_HavePlayedOnce = true;
-			}
+			m_Inside = true;
 		}
 	}
 
 	//see the comments above
 	void OnTriggerExit(Collider other)
 	{
-		if(b_Exit)
-		{
-			if(b_Once && b_HavePlayedOnce)
+		if(other.GetComponent<Rigidbody>() != null){
+			
+			if(m_Exit && m_Inside)
 			{
-				Destroy(gameObject);			
+				if(m_Once && m_HavePlayedOnce){
+					Destroy(gameObject);
+				}
+				else{
+					FMOD_StudioSystem.instance.PlayOneShot(m_Path, transform.position);
+					m_HavePlayedOnce = true;
+				}
 			}
-			else
-			{
-				m_Emitter.Stop();
-				m_Emitter.Play();
-				b_HavePlayedOnce = true;
-			}
+			m_Inside = false;
 		}
 	}
 }

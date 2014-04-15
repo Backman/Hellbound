@@ -6,10 +6,15 @@ using System.Reflection;
 public abstract class Interactable : MonoBehaviour{
 	public enum ActivateType{ OnTrigger, OnClick };
 	public ActivateType m_ActivateType = ActivateType.OnClick;
+	private EventSound m_EventSound;
 
-//	public virtual void Start() {
-//	}
-//
+	public virtual void Start() {
+		m_EventSound = gameObject.GetComponent<EventSound> ();
+		if (m_EventSound == null) {
+			m_EventSound = new EventSound();
+		}
+	}
+
 //	public virtual void Update() {
 //
 //	}
@@ -22,6 +27,9 @@ public abstract class Interactable : MonoBehaviour{
 	public virtual void pickUp()  { 
 		//Object is picked up
 		Debug.Log("Is picked up: " + gameObject.name );
+		if (m_EventSound.pickUp) {
+			FMOD_StudioSystem.instance.PlayOneShot( m_EventSound.m_Path, gameObject.transform.position);
+		}
 	}
 
 	public virtual void examine() { 
