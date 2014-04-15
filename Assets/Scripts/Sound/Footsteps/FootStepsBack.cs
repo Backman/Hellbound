@@ -37,4 +37,6 @@ public class FootStepsBack : MonoBehaviour {
 			*/b_IsHitting = false;
 		}
 	}
+
+	//TODO: find out a way to figure out the texture this box hits.
 }
