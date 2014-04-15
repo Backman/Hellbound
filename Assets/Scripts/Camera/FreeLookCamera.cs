@@ -21,6 +21,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	[SerializeField] private float m_TurnSmoothing = 0.1f;
 	[SerializeField] private float m_TiltMax = 75.0f;
 	[SerializeField] private float m_TiltMin = 45.0f;
+	[SerializeField] private float m_ZoomedMaxRotation = 45.0f;
 	[SerializeField] private float m_ZoomSpeed = 0.3f;
 	[SerializeField] private bool m_LockCursor = false;
 
@@ -39,6 +40,8 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	private float m_SmoothYVelocity = 0.0f;
 	private bool m_Zoomed = false;
 
+	private bool m_LockedInput = false;
+
 	protected override void Awake () {
 		base.Awake ();
 
@@ -55,8 +58,16 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		m_OriginalFollowSpeed = m_FollowSpeed;
 	}
 
+	protected void Start(){
+		Messenger.AddListener<bool>("lock player input", lockInput);
+	}
+
 	protected override void Update() {
 		base.Update ();
+
+		if(m_LockedInput){
+			return;
+		}
 
 		handleZoomInput();
 
@@ -91,7 +102,9 @@ public class FreeLookCamera : PivotBasedCameraRig {
 
 		// Adjust the look angle by an amount proportional to the turn speed and horizontal input
 		m_LookAngle += m_SmoothX * m_TurnSpeed;
-
+		/*if(m_Zoomed) {
+			m_LookAngle = Mathf.Clamp (m_LookAngle, -m_ZoomedMaxRotation, m_ZoomedMaxRotation);
+		}*/
 		// Rotate the rig (the root object) around Y axis only
 		transform.rotation = Quaternion.Euler(0.0f, m_LookAngle, 0.0f);
 
@@ -101,19 +114,22 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		m_TiltAngle = Mathf.Clamp(m_TiltAngle, -m_TiltMin, m_TiltMax);
 
 
+
 		// Tilt input around X is applied to the pivot (the child of this object)
 		m_Pivot.localRotation = Quaternion.Euler(m_TiltAngle, 0.0f, 0.0f);
 	}
 
 	void handleZoomInput() {
-		bool zoom = Input.GetKeyDown(KeyCode.Tab);
+		bool zoom = Input.GetButtonDown("Zoom");
 
 		if(zoom && !m_Zoomed) {
 			m_ZoomPosition = m_Pivot.localPosition;
 			m_Zoomed = true;
+			Messenger.Broadcast<bool>("lock player input", m_Zoomed);
 		} else if(zoom && m_Zoomed) {
 			m_ZoomPosition = m_CameraOriginPosition;
 			m_Zoomed = false;
+			Messenger.Broadcast<bool>("lock player input", m_Zoomed);
 		}
 		m_ZoomPosition.y = 0.0f;
 		Vector3 newPos = Vector3.MoveTowards(m_Camera.localPosition, m_ZoomPosition, m_ZoomSpeed * Time.deltaTime);
@@ -143,6 +159,10 @@ public class FreeLookCamera : PivotBasedCameraRig {
 			m.enabled = true;
 		}
 		m_FollowSpeed = m_OriginalFollowSpeed;
+	}
+
+	public void lockInput(bool lockInput){
+		m_LockedInput = lockInput;
 	}
 }
 

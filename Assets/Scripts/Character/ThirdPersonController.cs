@@ -20,11 +20,14 @@ public class ThirdPersonController : MonoBehaviour {
 	private Vector3 m_CameraForward;					// The current forward direction of the camera
 	private Vector3 m_Move;								// the world-relative desired move direction, calculated from the camForward and user input.
 	private bool m_Zoomed = false;
+	private bool m_Crouched = false;
+	private bool m_LockedInput = false;
+    private bool m_PauseGame = false;
 	// Use this for initialization
 	void Start () {
+		Messenger.AddListener<bool>("lock player input", lockInput);
 		// get the transform of the main camera
-		if (Camera.main)
-		{
+		if (Camera.main) {
 			r_Camera = Camera.main.transform;
 		} else {
 			Debug.LogWarning("Warning: no main camera found. Third person character needs a Camera tagged \"MainCamera\", for camera-relative controls.");
@@ -35,25 +38,22 @@ public class ThirdPersonController : MonoBehaviour {
 	}
 
 	void Update(){
-		bool zoom = Input.GetButtonDown ("Zoom");
-		if(zoom) {
-			m_Zoomed = !m_Zoomed;
-			Debug.Log("Zoomed: " + m_Zoomed);
-			r_Character.zoomed(m_Zoomed);
-		}
+		m_Crouched = Input.GetButton("Crouch");
+	}
+
+	public void lockInput(bool lockInput) {
+		m_LockedInput = lockInput;
 	}
 
 	// FixedUpdate is called in sync with physics
 	void FixedUpdate () {
-		// Read inputs
-		bool crouch = Input.GetKey(KeyCode.C);
 
-
-		if(m_Zoomed) {
+		if(m_LockedInput) {
 			r_Character.move (Vector3.zero, false, transform.position + r_Camera.forward * 100.0f);
 			return;
 		}
-
+		
+		// Read inputs
 		float h = Input.GetAxis("Horizontal");
 		float v = Input.GetAxis("Vertical");
 
@@ -78,7 +78,7 @@ public class ThirdPersonController : MonoBehaviour {
 
 		m_LookDirection = m_LookInCameraDirection && r_Camera ? transform.position + r_Camera.forward * 100.0f : transform.position + transform.forward * 100.0f;
 
-		r_Character.move (m_Move, crouch, m_LookDirection);
+		r_Character.move (m_Move, m_Crouched, m_LookDirection);
 	}
 }
 

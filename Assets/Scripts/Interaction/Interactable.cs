@@ -7,7 +7,6 @@ public abstract class Interactable : MonoBehaviour{
 	public enum ActivateType{ OnTrigger, OnClick };
 	public ActivateType m_ActivateType = ActivateType.OnClick;
 
-
 //	public virtual void Start() {
 //	}
 //
