@@ -1,16 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Interactable detector zone.
+/// This class handles the logic for the zone infront of the player that scans for interactable objects
+/// 
+/// Created by Simon
+/// </summary>
 public class InteractableDetectorZone : MonoBehaviour {
 
 	private Interactable r_InFocus = null;
-
-	// Use this for initialization
+	
 	void Start () {
 		//TODO: Find the avatar and position this in the appropriate spot
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 	
 		if( r_InFocus != null ) {
@@ -31,7 +35,9 @@ public class InteractableDetectorZone : MonoBehaviour {
 
 	}
 
-	//If an interactable is in front of the players, this function is called as the interactable enters the players interact zone
+	/// <summary>
+	/// This function is called on the Interactable as the interactable enters the players interact zone
+	/// </summary>
 	void OnTriggerEnter( Collider col ){
 		//TODO: Add detection for which interactable is in focus.
 
@@ -41,8 +47,10 @@ public class InteractableDetectorZone : MonoBehaviour {
 			r_InFocus.gainFocus();
 		}
 	}
-	
-	//This function is called as an interactable leaves the players interact zone
+
+	/// <summary>
+	///This function is called on the Interactable as it leaves the players interact zone
+	/// </summary>
 	void OnTriggerExit( Collider col  ){
 		//TODO: Detect wheter the left  trigger was the interactalbe actually in focus 
 
@@ -50,6 +58,15 @@ public class InteractableDetectorZone : MonoBehaviour {
 				r_InFocus.loseFocus();
 				r_InFocus = null;
 		}
+	}
+
+	/// <summary>
+	/// Returns the interactable in focus.
+	/// This must be controlled, might be null.
+	/// </summary>
+	/// <returns>The interactable in focus.</returns>
+	public Interactable getInteractableInFocus(){
+		return r_InFocus;
 	}
 
 }

@@ -82,6 +82,14 @@ public class GUIManager : Singleton<GUIManager> {
 		} 
 	}
 
+	/// <summary>
+	/// This function will display the passed text in a small box
+	/// at the lower part of the screen. All formating of the text
+	/// is handled internaly.
+	/// 
+	/// The text will automatically scroll without the players
+	/// involvement. The player can move while the text is displayed.
+	/// </summary>
 	public void simpleShowTextAutoScroll( string text, int scollSpeed){
 
 	}

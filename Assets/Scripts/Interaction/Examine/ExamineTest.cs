@@ -8,7 +8,8 @@ public class ExamineTest : Interactable {
 
 	private StateMachine<ExamineTest> m_FSM;
 
-	void Start(){
+	protected override void Start(){
+		base.Start();
 		//state1 = new ExamineState1();
 		//state2 = new ExamineState2();
 
