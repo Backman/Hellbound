@@ -104,6 +104,5 @@ public class Inventory {
 		float x = m_RealInventoryItems * 150;
 		copy.transform.localPosition = new Vector3(x, 0.0f, 0.0f);
 		copy.SetActive(true);
-
 	}
 }

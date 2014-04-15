@@ -106,11 +106,9 @@ public class GUIManager : Singleton<GUIManager> {
         if (pause) {
             r_PauseWindow.SetActive(true);
             PauseMenu.getInstance().showInventory();
-			r_PauseWindow.GetComponent<TweenScale>().PlayForward();
-            r_PauseWindow.GetComponent<TweenPosition>().PlayForward();
-        } else {
-            r_PauseWindow.GetComponent<TweenScale>().PlayReverse();
-            r_PauseWindow.GetComponent<TweenPosition>().PlayReverse();
+			r_PauseWindow.GetComponent<UIPlayTween>().Play(true);
+		} else {
+			r_PauseWindow.GetComponent<UIPlayTween>().Play(false);
         }
         
     }

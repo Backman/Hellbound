@@ -19,8 +19,6 @@ public abstract class InventoryItem : MonoBehaviour{
 	protected virtual void Awake()
 	{
 		Inventory.getInstance().add(this, gameObject);
-		//gameObject.SetActive(false);
-		//Debug.Log ("Created an inventory item: " + m_InventoryPos);
 	}
 
 	public void setInventoryPosition(int position){
