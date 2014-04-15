@@ -2,6 +2,15 @@
 using System.Collections;
 
 public class InventoryItem_Key : InventoryItem{
+	private static bool m_Initialized = false;
+	protected override void Awake(){
+		base.Awake();
+		if(!m_Initialized){
+			m_Initialized = true;
+			gameObject.SetActive(false);
+		}
+	}
+
 	public override void examine(){
 		Debug.Log("It's just a key goddamnit!");
 	}

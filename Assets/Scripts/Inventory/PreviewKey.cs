@@ -5,7 +5,7 @@ public class PreviewKey : PreviewItem {
 
 	// Use this for initialization
 	protected override void Awake(){
-		PreviewItems.getInstance().add("Key", this);
+		PreviewItems.getInstance().add(InventoryItem.Type.KEY, this);
 		gameObject.SetActive(false);
 	}
 	

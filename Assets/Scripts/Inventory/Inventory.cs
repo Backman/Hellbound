@@ -13,6 +13,9 @@ public class Inventory {
 	private GameObject m_InventoryMenu = null;
 	private int m_InventoryIndex;
 	private Dictionary<InventoryItem.Type, int> m_InventoryItemIndex = new Dictionary<InventoryItem.Type, int>();
+	private Dictionary<InventoryItem.Type, GameObject> m_InventoryItemIdentifier = new Dictionary<InventoryItem.Type, GameObject>();
+
+	private int m_RealInventoryItems = 0;
 	
 	private Inventory(){
 		m_GridWidth = 16;
@@ -33,9 +36,15 @@ public class Inventory {
 		return m_Instance;
 	}
 
-	public void add(InventoryItem invItem){
+	public void add(InventoryItem invItem, GameObject obj){
 		m_InvItems.Add(invItem);
 		invItem.setInventoryPosition(m_InventoryItemIndex[invItem.getType()]);
+		if(!m_InventoryItemIdentifier.ContainsKey(invItem.getType())){
+			m_InventoryItemIdentifier.Add(invItem.getType(), obj);
+		}
+		else{
+			++m_RealInventoryItems;
+		}
 	}
 
 	public void remove(InventoryItem invItem){
@@ -85,5 +94,16 @@ public class Inventory {
 			combineItem.combine(
 		}
 		*/
+	}
+
+	public void addInteractable(InventoryItem.Type inventoryType){
+		GameObject obj = m_InventoryItemIdentifier[inventoryType];
+		GameObject copy = GameObject.Instantiate(obj, obj.transform.position, obj.transform.rotation) as GameObject;
+		copy.transform.parent = obj.transform.parent;
+		copy.transform.localScale = Vector3.one;
+		float x = m_RealInventoryItems * 150;
+		copy.transform.localPosition = new Vector3(x, 0.0f, 0.0f);
+		copy.SetActive(true);
+
 	}
 }
