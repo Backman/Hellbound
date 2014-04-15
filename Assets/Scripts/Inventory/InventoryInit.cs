@@ -9,7 +9,6 @@ public class InventoryInit : MonoBehaviour {
 		Debug.Log("Awake: "+gameObject.name);
 		if(!initialized){
 			initialized = true;
-			copy();
 		}
 	}
 	// Use this for initialization
@@ -25,12 +24,5 @@ public class InventoryInit : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
-	}
-	
-	public static GameObject copy(){
-		GameObject obj = Instantiate(m_Object, m_Object.transform.position, m_Object.transform.rotation) as GameObject;
-		obj.transform.parent = m_Object.transform.parent;
-		obj.transform.localScale = Vector3.one;
-		return obj;
 	}
 }

@@ -103,6 +103,14 @@ public class GUIManager : Singleton<GUIManager> {
 		} 
 	}
 
+	/// <summary>
+	/// This function will display the passed text in a small box
+	/// at the lower part of the screen. All formating of the text
+	/// is handled internaly.
+	/// 
+	/// The text will automatically scroll without the players
+	/// involvement. The player can move while the text is displayed.
+	/// </summary>
 	public void simpleShowTextAutoScroll( string text, float scollSpeed){
 		if( !m_Busy ){
 			m_Busy = true;	
@@ -129,11 +137,9 @@ public class GUIManager : Singleton<GUIManager> {
         if (pause) {
             r_PauseWindow.SetActive(true);
             PauseMenu.getInstance().showInventory();
-			r_PauseWindow.GetComponent<TweenScale>().PlayForward();
-            r_PauseWindow.GetComponent<TweenPosition>().PlayForward();
-        } else {
-            r_PauseWindow.GetComponent<TweenScale>().PlayReverse();
-            r_PauseWindow.GetComponent<TweenPosition>().PlayReverse();
+			r_PauseWindow.GetComponent<UIPlayTween>().Play(true);
+		} else {
+			r_PauseWindow.GetComponent<UIPlayTween>().Play(false);
         }
         
     }

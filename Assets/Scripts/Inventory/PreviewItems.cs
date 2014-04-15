@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class PreviewItems {
 	private static PreviewItems m_Instance = null;
-	private Dictionary<string, PreviewItem> m_PreviewItems = new Dictionary<string, PreviewItem>();
+	private Dictionary<InventoryItem.Type, PreviewItem> m_PreviewItems = new Dictionary<InventoryItem.Type, PreviewItem>();
 	
 	public static PreviewItems getInstance(){
 		if(m_Instance == null){
@@ -13,13 +13,13 @@ public class PreviewItems {
 		return m_Instance;
 	}
 	
-	public void add(string id, PreviewItem item){
-		m_PreviewItems.Add(id, item);
+	public void add(InventoryItem.Type type, PreviewItem item){
+		m_PreviewItems.Add(type, item);
 	}
 	
-	public void previewItem(string id){
-		foreach(KeyValuePair<string, PreviewItem> item in m_PreviewItems){
-			if(item.Key != id){
+	public void previewItem(InventoryItem.Type type){
+		foreach(KeyValuePair<InventoryItem.Type, PreviewItem> item in m_PreviewItems){
+			if(item.Key != type){
 				item.Value.hide();
 			}
 			else{
