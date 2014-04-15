@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class Inventory {
 	public static Inventory m_Instance = null;
 
-	private List<InventoryItem> m_InvItems;
+	private List<InventoryItem> m_InvItems = new List<InventoryItem>();
+	private List<InventoryItem> m_CombineItems = new List<InventoryItem>();
 	private int m_GridWidth, m_GridHeight;
 	private static InventoryItem m_CurrentSelectedInventoryItem = null;
 
@@ -14,7 +15,6 @@ public class Inventory {
 	private Dictionary<InventoryItem.Type, int> m_InventoryItemIndex = new Dictionary<InventoryItem.Type, int>();
 	
 	private Inventory(){
-		m_InvItems = new List<InventoryItem>();
 		m_GridWidth = 16;
 		m_GridHeight = 6;
 
@@ -56,5 +56,34 @@ public class Inventory {
 
 	public void hideInventoryMenu(){
 		m_InventoryMenu.SetActive(false);
+	}
+	
+	public void addCombineItem(InventoryItem invItem, bool combine = true){
+		if(!combine){
+			if(m_CombineItems.Count != 0){
+				m_CombineItems.Add(invItem);
+			}
+		}
+		else{
+			m_CombineItems.Add(invItem);
+			// Combine if two inventory items has been selected to be combined
+			if(m_CombineItems.Count == 1){
+				Combine.show();
+			}
+			else if(combine){
+				combineItems();
+			}
+		}
+	}
+	
+	public void combineItems(){
+		Debug.Log ("Combine selected items!");
+		m_CombineItems.Clear();
+		Combine.hide();
+	/*
+		foreach(InventoryItem combineItem in m_CombineItems){
+			combineItem.combine(
+		}
+		*/
 	}
 }
