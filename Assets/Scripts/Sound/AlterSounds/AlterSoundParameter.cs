@@ -16,7 +16,9 @@ public class AlterSoundParameter : MonoBehaviour {
 	public float m_OutsideParameter = 0f;
 	public bool m_RevertToOriginalValue = false;
 	public bool m_UseFade = false;
-	public float m_FadeSpeed = 100f;
+	public float m_FadeSpeed = 1f;
+
+	public bool m_DestroyOnExit = false;
 
 	private bool m_Inside = false;
 	private List<FMOD.Studio.ParameterInstance> r_ParameterCollection = new List<FMOD.Studio.ParameterInstance>();
@@ -31,29 +33,36 @@ public class AlterSoundParameter : MonoBehaviour {
 	}
 
 
-	void OnTriggerEnter(Collider other)
-	{
+	void OnTriggerEnter(Collider other){
 		if (m_UseFade && !m_Inside) {
 			m_Inside = true;
 			StartCoroutine("FadeIn");
 		}
 		else if (!m_UseFade && !m_Inside){
+			m_Inside = true;
 			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-				p.setValue(m_InsideParameter);
+				if(r_ParameterCollection != null){
+					p.setValue(m_InsideParameter);
+				}
 			}
 		}
 	}
 
 
-	void OnTriggerExit(Collider other)
-	{
+	void OnTriggerExit(Collider other){
 		if (m_UseFade && m_Inside) {
 			m_Inside = false;
 			StartCoroutine("FadeOut");
 		}
 		else if (!m_UseFade && m_Inside){
+			m_Inside = false;
 			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-				p.setValue(m_OutsideParameter);
+				if(r_ParameterCollection != null){
+					p.setValue(m_OutsideParameter);
+				}
+			}
+			if(m_DestroyOnExit){
+				r_ParameterCollection.Clear();
 			}
 		}
 	}
@@ -62,59 +71,61 @@ public class AlterSoundParameter : MonoBehaviour {
 	private IEnumerator FadeIn()
 	{
 		StopCoroutine("FadeOut");
-
-		float speed = (m_InsideParameter - m_OutsideParameter) / m_FadeSpeed;
-		float currentValue = m_OutsideParameter;
-
-		if (m_RevertToOriginalValue) {
-			float noPointerPlease = 0f;
-			r_ParameterCollection[0].getValue(out noPointerPlease);
-			m_OriginalValue = noPointerPlease;
-			currentValue = m_OriginalValue;
-		}
-		else{
-			float noPointerPlease = 0f;
-			r_ParameterCollection[0].getValue(out noPointerPlease);
-			currentValue = noPointerPlease;
-		}
-
-		while (currentValue != m_InsideParameter) {
-			yield return new WaitForSeconds (0.01f);
-
-			currentValue += speed;
+		
+		float startvalue = getCurrentValue (r_ParameterCollection[0]);
+		float newValue = startvalue;
+		
+		while (newValue != m_InsideParameter) {
+			
+			newValue = moveTo(startvalue, newValue, m_InsideParameter);
 			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-				p.setValue(currentValue);	
+				if(r_ParameterCollection != null){
+					p.setValue(newValue);
+				}
 			}
 		}
+		
 		yield return 0;
 	}
 
 
-	private IEnumerator FadeOut()
-	{
+	private IEnumerator FadeOut(){
 		StopCoroutine("FadeIn");
 
-		float speed = (m_OutsideParameter - m_InsideParameter) / m_FadeSpeed;
-		float currentValue = m_InsideParameter;
+		float startvalue = getCurrentValue (r_ParameterCollection[0]);
+		float newValue = startvalue;
 
-		if (m_RevertToOriginalValue) {
-			currentValue = m_OriginalValue;
-			m_OriginalValue = 0f;
-		}
-		else{
-			float noPointerPlease = 0f;
-			r_ParameterCollection[0].getValue(out noPointerPlease);
-			currentValue = noPointerPlease;
-		}
+		while (newValue != m_OutsideParameter) {
 
-		while (currentValue != m_OutsideParameter) {
-			yield return new WaitForSeconds (0.01f);
-
-			currentValue += speed;
+			newValue = moveTo(startvalue, newValue, m_OutsideParameter);
 			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-				p.setValue(currentValue);
+				if(r_ParameterCollection != null){
+					p.setValue(newValue);
+				}
 			}
 		}
+
+		if(m_DestroyOnExit){
+			r_ParameterCollection.Clear();
+		}
 		yield return 0;
+	}
+	
+	private float getCurrentValue(FMOD.Studio.ParameterInstance parameter){
+	
+		float Current = 0f;
+		float noPointerPlease = 0f;
+		
+		r_ParameterCollection[0].getValue(out noPointerPlease);
+		Current = noPointerPlease;
+		
+		return Current;
+	}
+
+	private float moveTo(float beginning, float at, float to){
+
+		float speed = Time.deltaTime / (m_FadeSpeed * (to - beginning));
+		at += speed;
+		return at;
 	}
 }

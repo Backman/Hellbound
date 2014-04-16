@@ -28,15 +28,7 @@ public class FootStepsBack : MonoBehaviour {
 	{
 		if(other.GetComponent<FootstepSurface>() != null)
 		{
-			/*Texture tex1 = other.renderer.material.GetTexture("_MainTex");
-			Debug.Log ("terrain: " + tex1);
-			Texture tex2 = other.renderer.material.GetTexture("_BumpMap");
-			Debug.Log ("BumpMap: " + tex2);
-			Texture tex3 = other.renderer.material.GetTexture("_Cube");
-			Debug.Log ("Cube: " + tex3);
-			*/b_IsHitting = false;
+			b_IsHitting = false;
 		}
 	}
-
-	//TODO: find out a way to figure out the texture this box hits.
 }

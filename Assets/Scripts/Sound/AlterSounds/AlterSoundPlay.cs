@@ -12,7 +12,7 @@ public class AlterSoundPlay : MonoBehaviour {
 	/// </summary>
 
 	public string m_Path = "event:/";
-
+	public Vector3 m_Position;
 	//variables if something should happen when the player enters/exits the collider
 	public bool m_Enter = false;
 	public bool m_Exit = false;
@@ -20,6 +20,8 @@ public class AlterSoundPlay : MonoBehaviour {
 
 	private bool m_HavePlayedOnce = false;
 	private bool m_Inside = false;
+
+
 
 	//if something enters the collider, depending on the variables 
 	//stuff happens
@@ -33,7 +35,7 @@ public class AlterSoundPlay : MonoBehaviour {
 					Destroy(gameObject);
 				}
 				else{
-					FMOD_StudioSystem.instance.PlayOneShot(m_Path, transform.position);
+					FMOD_StudioSystem.instance.PlayOneShot(m_Path, m_Position);
 					m_HavePlayedOnce = true;
 				}
 			}
