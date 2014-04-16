@@ -27,7 +27,11 @@ public class ExamineTest : Interactable {
 			m_FSM.changeState<ExamineState2>();
 		}
 	}
-	
+
+	public override void activate () {
+		m_FSM.CurrentState.activate (this);
+	}
+
 	public override void pickUp () {
 		m_FSM.CurrentState.pickUp(this);
 	}
