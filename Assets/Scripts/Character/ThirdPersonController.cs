@@ -22,6 +22,7 @@ public class ThirdPersonController : MonoBehaviour {
 	private bool m_Zoomed = false;
 	private bool m_Crouched = false;
 	private bool m_LockedInput = false;
+    private bool m_PauseGame = false;
 	// Use this for initialization
 	void Start () {
 		Messenger.AddListener<bool>("lock player input", lockInput);

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿/*
+using UnityEngine;
 using UnityEditor;
 
 /// <summary>
@@ -78,6 +79,7 @@ public class InteractableTool : EditorWindow {
 		} EditorGUILayout.EndScrollView();
 	}	
 }
+*/
 
 
 

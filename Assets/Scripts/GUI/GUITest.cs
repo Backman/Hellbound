@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GUITest : MonoBehaviour {
+public class GUITest {
 	[Multiline]
 	public string m_MyString = "Enter text here";
 

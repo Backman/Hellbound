@@ -5,7 +5,7 @@
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		_DispTex("Displacement Texture", 2D) = "white" {}
 		_NormalTex("Normal Texture", 2D) = "bump" {}
-		_Displacement("Displacement", Range(0.0, 1.0)) = 0.3
+		_Displacement("Displacement", Range(0.0, 10.0)) = 0.3
 		_SpecColor ("Spec color", color) = (0.5,0.5,0.5,0.5)
 		
 	}
