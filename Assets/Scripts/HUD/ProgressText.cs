@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Class currently not in use, but should(or maybe not?) be used for displaying
+/// info about picked up object.
+/// </summary>
 public class ProgressText : MonoBehaviour {
 
 	private string m_FullText;
