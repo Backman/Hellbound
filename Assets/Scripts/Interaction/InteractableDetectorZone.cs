@@ -7,10 +7,10 @@ using System.Collections;
 /// 
 /// Created by Simon
 /// </summary>
-public class InteractableDetectorZone : MonoBehaviour {
+public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 
 	private Interactable r_InFocus = null;
-	
+
 	void Start () {
 		//TODO: Find the avatar and position this in the appropriate spot
 	}

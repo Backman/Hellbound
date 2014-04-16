@@ -18,7 +18,7 @@ public abstract class InventoryItem : MonoBehaviour{
 	}
 
 	public void examine() { InteractableObject.examine (); }
-	public void use() { InteractableObject.activate (); }
+	public void use() { InteractableObject.useWith ( InteractableDetectorZone.Instance.getInteractableInFocus().gameObject ); }
 	public abstract void combine(InventoryItem invItem);
 	public abstract void drop();
 	public InventoryItem.Type getType(){

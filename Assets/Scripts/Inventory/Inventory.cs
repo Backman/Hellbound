@@ -93,7 +93,6 @@ public class Inventory {
 		InventoryItem obj = GameObject.Instantiate(item, r_Grid.transform.position, r_Grid.transform.rotation) as InventoryItem;
 		obj.transform.parent = r_Grid.transform;
 		obj.transform.localScale = Vector3.one;
-		obj.gameObject.SetActive (true);
 		obj.GetComponent<InventoryItem>().InteractableObject = interactable;
 		InventoryGridController.reposition ();
 	}
