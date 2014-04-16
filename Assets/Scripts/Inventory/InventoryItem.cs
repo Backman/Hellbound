@@ -7,18 +7,22 @@ using System.Collections.Generic;
 /// </summary>
 public abstract class InventoryItem : MonoBehaviour{
 	public enum Type{
-		KEY,
-		OIL
+		Key,
+		Oil
 	};
 
-	public abstract void examine();
-	public abstract void use();
+	public Type m_InventoryType;
+	public GameObject m_ModelPreview;
+	public Interactable InteractableObject {
+		get; set;
+	}
+
+	public void examine() { InteractableObject.examine (); }
+	public void use() { InteractableObject.useWith ( InteractableDetectorZone.Instance.getInteractableInFocus().gameObject ); }
 	public abstract void combine(InventoryItem invItem);
 	public abstract void drop();
-	public abstract InventoryItem.Type getType();
-
-	protected virtual void Awake(){
-		Inventory.getInstance().add(this, gameObject);
+	public InventoryItem.Type getType(){
+		return m_InventoryType;
 	}
 	
 	public UIAtlas getAtlas(){

@@ -6,7 +6,7 @@ using System.Collections;
 /// </summary>
 public class PreviewOil : PreviewItem {
 	protected override void Awake(){
-		PreviewItems.getInstance().add(InventoryItem.Type.OIL, this);
+		PreviewItems.getInstance().add(InventoryItem.Type.Oil, this);
 		gameObject.SetActive(false);
 	}
 	
