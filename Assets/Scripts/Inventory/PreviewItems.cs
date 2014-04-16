@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Class for keeping a list of inventory preview objects, and switching which object to preview
+/// </summary>
 public class PreviewItems {
 	private static PreviewItems m_Instance = null;
 	private Dictionary<InventoryItem.Type, PreviewItem> m_PreviewItems = new Dictionary<InventoryItem.Type, PreviewItem>();

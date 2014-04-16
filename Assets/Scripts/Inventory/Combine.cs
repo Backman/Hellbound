@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Class to handle visibility of combine buttons
+/// </summary>
 public class Combine : MonoBehaviour {
-	private static GameObject m_Object;
+	private static GameObject r_Object;
 	// Use this for initialization
 	void Start () {
-		Debug.Log ("Initialize combine window");
-		m_Object = gameObject;
-		gameObject.SetActive(false);
+		r_Object = gameObject;
+		//gameObject.SetActive(false);
 	}
 	
 	public void combine(){
@@ -15,10 +17,12 @@ public class Combine : MonoBehaviour {
 	}
 	
 	public static void show(){
-		m_Object.SetActive(true);
+		r_Object.GetComponent<UIPlayTween>().Play(true);
+		//m_Object.SetActive(true);
 	}
 	
 	public static void hide(){
-		m_Object.SetActive(false);
+		r_Object.GetComponent<UIPlayTween>().Play(false);
+		//m_Object.SetActive(false);
 	}
 }
