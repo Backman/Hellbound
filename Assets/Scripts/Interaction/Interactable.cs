@@ -13,6 +13,7 @@ using System.Reflection;
 public abstract class Interactable : MonoBehaviour{
 	public enum ActivateType{ OnTrigger, OnClick };
 	public ActivateType m_ActivateType = ActivateType.OnClick;
+	public InventoryItem m_InventoryItem;
 
 	private Shader m_OutlineShader;
 	private Shader m_OriginalShader;
@@ -41,8 +42,7 @@ public abstract class Interactable : MonoBehaviour{
 
 	}
 
-	public virtual void activate(){ 
-	}
+	public virtual void activate(){ }
 
 	/// <summary>
 	/// Use parameter object on the interactable

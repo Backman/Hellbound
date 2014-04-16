@@ -7,7 +7,7 @@ using System.Collections;
 public class PreviewKey : PreviewItem {
 	// Use this for initialization
 	protected override void Awake(){
-		PreviewItems.getInstance().add(InventoryItem.Type.KEY, this);
+		PreviewItems.getInstance().add(InventoryItem.Type.Key, this);
 		gameObject.SetActive(false);
 	}
 	

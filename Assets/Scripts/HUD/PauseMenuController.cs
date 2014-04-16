@@ -12,7 +12,6 @@ public class PauseMenuController : MonoBehaviour {
 	
 	public void show(){
 		PauseMenu.getInstance().hideAll();
-		Debug.Log("Show: "+gameObject.name);
 		gameObject.SetActive(true);
 	}
 	
