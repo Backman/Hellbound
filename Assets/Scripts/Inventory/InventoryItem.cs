@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Abstract class for Inventory items
+/// </summary>
 public abstract class InventoryItem : MonoBehaviour{
 	public enum Type{
 		KEY,
@@ -14,15 +17,8 @@ public abstract class InventoryItem : MonoBehaviour{
 	public abstract void drop();
 	public abstract InventoryItem.Type getType();
 
-	private int m_InventoryPos = 0;
-
-	protected virtual void Awake()
-	{
+	protected virtual void Awake(){
 		Inventory.getInstance().add(this, gameObject);
-	}
-
-	public void setInventoryPosition(int position){
-		m_InventoryPos = position;
 	}
 	
 	public UIAtlas getAtlas(){

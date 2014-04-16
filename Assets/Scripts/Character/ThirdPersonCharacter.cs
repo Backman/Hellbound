@@ -247,7 +247,6 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		r_Animator.SetBool ("Crouch", m_CrouchInput);
 		r_Animator.SetBool ("OnGround", m_OnGround);
 		if (!m_OnGround) {
-			Debug.Log("Setting jump float: " + m_Velocity.y);
 			r_Animator.SetFloat ("Jump", m_Velocity.y);
 		}
 

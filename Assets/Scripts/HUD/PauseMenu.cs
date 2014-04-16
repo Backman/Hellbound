@@ -2,12 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Singleton class used for switching between Inventory and Settings
+/// in pause menu.
+/// </summary>
 public class PauseMenu{
 	private static PauseMenu m_Instance = null;
-	private List<PauseMenuController> m_Controllers;
+	private List<PauseMenuController> r_Controllers;
 	
 	private PauseMenu(){
-		m_Controllers = new List<PauseMenuController>();
+		r_Controllers = new List<PauseMenuController>();
 	}
 	
 	public static PauseMenu getInstance(){
@@ -18,17 +22,17 @@ public class PauseMenu{
 	}
 	
 	public void hideAll(){
-		foreach(PauseMenuController controller in m_Controllers){
+		foreach(PauseMenuController controller in r_Controllers){
 			controller.hide();
 		}
 	}
 	
 	public void add(PauseMenuController controller){
-		m_Controllers.Add(controller);
+		r_Controllers.Add(controller);
 	}
 	
 	public void showInventory(){
-		foreach(PauseMenuController controller in m_Controllers){
+		foreach(PauseMenuController controller in r_Controllers){
 			if(controller.name == "Inventory"){
 				controller.show();
 			}

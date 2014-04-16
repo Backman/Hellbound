@@ -1,18 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Class that is used as an interface to call functions inventory item handling functions when a button is pressed
+/// </summary>
 public class InventoryItem_Usage : MonoBehaviour {
-	
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	public void use(){
 		InventoryItem invItem = Inventory.getInstance().getSelectedItem();
 		invItem.use();
@@ -31,6 +23,9 @@ public class InventoryItem_Usage : MonoBehaviour {
 		//Inventory.getInstance().hideInventoryMenu();
 	}
 	
+	/// <summary>
+	/// Let Inventory handle logic for combining
+	/// </summary>
 	public void combine(){
 		InventoryItem invItem = Inventory.getInstance().getSelectedItem();
 		Inventory.getInstance().addCombineItem(invItem, true);

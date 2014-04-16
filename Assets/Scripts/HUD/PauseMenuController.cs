@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Class that is attached to Inventory and Settings panel to show/hide
+/// and switch between them
+/// </summary>
 public class PauseMenuController : MonoBehaviour {
-
-	private UISprite m_Sprite;
-	
 	void Awake(){
 		PauseMenu.getInstance().add (this);
 	}
