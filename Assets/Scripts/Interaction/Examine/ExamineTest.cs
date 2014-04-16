@@ -8,7 +8,8 @@ public class ExamineTest : Interactable {
 
 	private StateMachine<ExamineTest> m_FSM;
 
-	void Start(){
+	protected override void Start(){
+		base.Start();
 		//state1 = new ExamineState1();
 		//state2 = new ExamineState2();
 
@@ -25,5 +26,9 @@ public class ExamineTest : Interactable {
 		if(Input.GetKeyDown(KeyCode.Space)){
 			m_FSM.changeState<ExamineState2>();
 		}
+	}
+	
+	public override void pickUp () {
+		m_FSM.CurrentState.pickUp(this);
 	}
 }
