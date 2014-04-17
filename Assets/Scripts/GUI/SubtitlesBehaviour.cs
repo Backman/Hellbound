@@ -38,14 +38,12 @@ public class SubtitlesBehaviour : MonoBehaviour {
 	
 	
 	public IEnumerator showSubtitles(object[] args){
-		Debug.Log("In! Subtitles!");
 
 		StartCoroutine( "feedText", args );
 		yield return StartCoroutine( "awaitTime", (float) args[1] );
 		
 		StopCoroutine( "feedText" );
 		StopCoroutine( "feedLine" );
-		Debug.Log("Out! Subtitles!");
 	}
 
 	public IEnumerator clearLables(){
@@ -106,8 +104,8 @@ public class SubtitlesBehaviour : MonoBehaviour {
 			}
 			yield return StartCoroutine( (string) args[2], args[3]);
 		}
-		
-		Debug.Log("Done printing subtitle");
+
+
 	}
 
 	/// <summary>
