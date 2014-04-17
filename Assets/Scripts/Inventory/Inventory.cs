@@ -22,7 +22,7 @@ public class Inventory {
 	
 	private Inventory(){
 		r_InventoryMenu = GameObject.FindGameObjectWithTag("ExamineWindow");
-		r_InventoryMenu.SetActive(false);
+		//r_InventoryMenu.SetActive(false);
 		r_Grid = (UIGrid)GameObject.FindGameObjectWithTag("InventoryGrid").GetComponent(typeof(UIGrid));
 
 		// Same types of objects should be placed on same space in inventory
@@ -49,11 +49,14 @@ public class Inventory {
 	}
 
 	public void showInventoryMenu(){
-		r_InventoryMenu.SetActive(true);
+		TweenAlpha tween = (TweenAlpha)r_InventoryMenu.GetComponent(typeof(TweenAlpha));
+		tween.PlayForward();
+		//r_InventoryMenu.SetActive(true);
 	}
 
 	public void hideInventoryMenu(){
-		r_InventoryMenu.SetActive(false);
+		TweenAlpha tween = (TweenAlpha)r_InventoryMenu.GetComponent(typeof(TweenAlpha));
+		tween.PlayReverse();
 	}
 	
 	public void addCombineItem(InventoryItem invItem, bool combine = true){

@@ -13,7 +13,7 @@ public class KeyInteractable : Interactable {
 
 	public override void useWith (GameObject obj) {
 		if(obj != null){
-			LockedInteractable door = (LockedInteractable)obj.GetComponent(typeof(LockedInteractable));
+			Interactable door = (Interactable)obj.GetComponent(typeof(Interactable));
 			if(door != null){
 				door.useWith (gameObject);
 			}
