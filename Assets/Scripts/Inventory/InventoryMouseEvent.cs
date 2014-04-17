@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Class to create mouse events for pressing on inventory items
+/// </summary>
 public class InventoryMouseEvent : MonoBehaviour {
-
 	private static bool m_LeftMouseDown;
-	private static GameObject m_MouseDownObject;
+	private static GameObject r_MouseDownObject = null;
 	// Use this for initialization
 	void Start () {
 		m_LeftMouseDown = Input.GetKeyDown(KeyCode.Mouse0);
@@ -27,21 +29,20 @@ public class InventoryMouseEvent : MonoBehaviour {
 	// Button 1 is mouse1, (Right mouse button)
 	void onMouseClick(int button){
 		if(button == 0) {
-			m_MouseDownObject = UICamera.hoveredObject;
+			r_MouseDownObject = UICamera.hoveredObject;
 		}
 	}
 
 	void onMouseRelease(int button){
-		if(m_MouseDownObject && button == 0) {
-			InventoryItem invItem = m_MouseDownObject.GetComponent<InventoryItem>();
-			if (UICamera.hoveredObject == m_MouseDownObject && invItem != null) {
-				PreviewItems.getInstance().previewItem(invItem.getType());
-				Debug.Log("Preview: "+invItem.name);
+		if(r_MouseDownObject && button == 0) {
+			InventoryItem invItem = r_MouseDownObject.GetComponent<InventoryItem>();
+			if (UICamera.hoveredObject == r_MouseDownObject && invItem != null) {
+				Messenger.Broadcast<InventoryItem>("show inventory model", invItem);
 				Inventory.getInstance().setSelectedItem(invItem);
 				Inventory.getInstance().showInventoryMenu();
 				Inventory.getInstance().addCombineItem(invItem, false);
 			}
-			m_MouseDownObject = null;
+			r_MouseDownObject = null;
 		}
 	}
 }

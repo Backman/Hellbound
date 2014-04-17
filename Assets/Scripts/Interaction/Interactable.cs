@@ -13,9 +13,13 @@ using System.Reflection;
 public abstract class Interactable : MonoBehaviour{
 	public enum ActivateType{ OnTrigger, OnClick };
 	public ActivateType m_ActivateType = ActivateType.OnClick;
+<<<<<<< HEAD
 	private EventSound m_EventSound;
 
 
+=======
+	public InventoryItem m_InventoryItem;
+>>>>>>> 44b51e53a55996846fda79e9161535c88f13fb71
 
 	private Shader m_OutlineShader;
 	private Shader m_OriginalShader;
@@ -46,12 +50,16 @@ public abstract class Interactable : MonoBehaviour{
 		}
 	}
 
+<<<<<<< HEAD
 	public virtual void activate(){ 
 				//Object is activated
 		if (m_EventSound.m_Activate  && m_EventSound != null) {
 						FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathActivate, gameObject.transform.position);
 				}
 		}
+=======
+	public virtual void activate(){ }
+>>>>>>> 44b51e53a55996846fda79e9161535c88f13fb71
 
 	/// <summary>
 	/// Use parameter object on the interactable

@@ -30,6 +30,6 @@ public abstract class State <T> {
 	public virtual void exit(T entity) {}
 
 	public virtual void activate(T entity) {}
-	public virtual void examine(T entity) { if(m_Description.Trim () != string.Empty) GUIManager.Instance.simpleShowTextLockMovement(m_Description); }
+	public virtual void examine(T entity) { if(m_Description.Trim () != string.Empty) GUIManager.Instance.simpleShowText(m_Description, true); }
 	public virtual void pickUp(T entity) {}
 }

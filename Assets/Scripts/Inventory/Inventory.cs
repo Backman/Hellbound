@@ -2,32 +2,32 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Class to handle Inventory items (add, remove, etc...)
+/// TODO: Remove old unused variables
+/// </summary>
 public class Inventory {
-	public static Inventory m_Instance = null;
+	private static Inventory m_Instance = null;
 
-	private List<InventoryItem> m_InvItems = new List<InventoryItem>();
-	private List<InventoryItem> m_CombineItems = new List<InventoryItem>();
-	private int m_GridWidth, m_GridHeight;
+	private List<InventoryItem> r_InvItems = new List<InventoryItem>();
+	private List<InventoryItem> r_CombineItems = new List<InventoryItem>();
 	private static InventoryItem m_CurrentSelectedInventoryItem = null;
 
-	private GameObject m_InventoryMenu = null;
+	private GameObject r_InventoryMenu = null;
 	private int m_InventoryIndex;
 	private Dictionary<InventoryItem.Type, int> m_InventoryItemIndex = new Dictionary<InventoryItem.Type, int>();
-	private Dictionary<InventoryItem.Type, GameObject> m_InventoryItemIdentifier = new Dictionary<InventoryItem.Type, GameObject>();
 
 	private int m_RealInventoryItems = 0;
+	private UIGrid r_Grid = null;
 	
 	private Inventory(){
-		m_GridWidth = 16;
-		m_GridHeight = 6;
+		r_InventoryMenu = GameObject.FindGameObjectWithTag("ExamineWindow");
+		r_InventoryMenu.SetActive(false);
+		r_Grid = (UIGrid)GameObject.FindGameObjectWithTag("InventoryGrid").GetComponent(typeof(UIGrid));
 
-		m_InventoryMenu = GameObject.FindGameObjectWithTag("ExamineWindow");
-		m_InventoryMenu.SetActive(false);
-		Debug.Log("Initialize Inventory");
-		
 		// Same types of objects should be placed on same space in inventory
-		m_InventoryItemIndex.Add(InventoryItem.Type.KEY, 0);
-		m_InventoryItemIndex.Add(InventoryItem.Type.OIL, 1);
+		m_InventoryItemIndex.Add(InventoryItem.Type.Key, 0);
+		m_InventoryItemIndex.Add(InventoryItem.Type.Oil, 1);
 	}
 
 	public static Inventory getInstance(){
@@ -36,19 +36,8 @@ public class Inventory {
 		return m_Instance;
 	}
 
-	public void add(InventoryItem invItem, GameObject obj){
-		m_InvItems.Add(invItem);
-		invItem.setInventoryPosition(m_InventoryItemIndex[invItem.getType()]);
-		if(!m_InventoryItemIdentifier.ContainsKey(invItem.getType())){
-			m_InventoryItemIdentifier.Add(invItem.getType(), obj);
-		}
-		else{
-			++m_RealInventoryItems;
-		}
-	}
-
 	public void remove(InventoryItem invItem){
-		m_InvItems.Remove(invItem);
+		r_InvItems.Remove(invItem);
 	}
 
 	public InventoryItem getSelectedItem(){
@@ -60,23 +49,23 @@ public class Inventory {
 	}
 
 	public void showInventoryMenu(){
-		m_InventoryMenu.SetActive(true);
+		r_InventoryMenu.SetActive(true);
 	}
 
 	public void hideInventoryMenu(){
-		m_InventoryMenu.SetActive(false);
+		r_InventoryMenu.SetActive(false);
 	}
 	
 	public void addCombineItem(InventoryItem invItem, bool combine = true){
 		if(!combine){
-			if(m_CombineItems.Count != 0){
-				m_CombineItems.Add(invItem);
+			if(r_CombineItems.Count != 0){
+				r_CombineItems.Add(invItem);
 			}
 		}
 		else{
-			m_CombineItems.Add(invItem);
+			r_CombineItems.Add(invItem);
 			// Combine if two inventory items has been selected to be combined
-			if(m_CombineItems.Count == 1){
+			if(r_CombineItems.Count == 1){
 				Combine.show();
 			}
 			else if(combine){
@@ -87,7 +76,7 @@ public class Inventory {
 	
 	public void combineItems(){
 		Debug.Log ("Combine selected items!");
-		m_CombineItems.Clear();
+		r_CombineItems.Clear();
 		Combine.hide();
 	/*
 		foreach(InventoryItem combineItem in m_CombineItems){
@@ -96,13 +85,15 @@ public class Inventory {
 		*/
 	}
 
-	public void addInteractable(InventoryItem.Type inventoryType){
-		GameObject obj = m_InventoryItemIdentifier[inventoryType];
-		GameObject copy = GameObject.Instantiate(obj, obj.transform.position, obj.transform.rotation) as GameObject;
-		copy.transform.parent = obj.transform.parent;
-		copy.transform.localScale = Vector3.one;
-		float x = m_RealInventoryItems * 150;
-		copy.transform.localPosition = new Vector3(x, 0.0f, 0.0f);
-		copy.SetActive(true);
+	/// <summary>
+	/// Create inventory item from InventoryType; Called by sub classes of Interactable.
+	/// </summary>
+	public void addInteractable(InventoryItem item, Interactable interactable){
+		InventoryGridController.reposition ();
+		InventoryItem obj = GameObject.Instantiate(item, r_Grid.transform.position, r_Grid.transform.rotation) as InventoryItem;
+		obj.transform.parent = r_Grid.transform;
+		obj.transform.localScale = Vector3.one;
+		obj.GetComponent<InventoryItem>().InteractableObject = interactable;
+		InventoryGridController.reposition ();
 	}
 }

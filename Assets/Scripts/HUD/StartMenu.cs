@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Class for setting visibility of start menu.
+/// </summary>
 public class StartMenu : MonoBehaviour {
 	static GameObject r_StartMenu;
 	void Awake () {
