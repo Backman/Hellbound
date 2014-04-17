@@ -1,53 +1,59 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GetDominantTexture : MonoBehaviour {
 
-	public float m_SurfaceIndex = 0;
+	public float m_SurfaceType = 0;
+	
+	private Terrain r_Terrain;
+	private TerrainData r_TerrainData;
+	private Vector3 r_TerrainPos;
 
-	private TerrainData m_TerrainData;
-	private Vector3 m_TerrainPos;
+	void Start(){
+		r_Terrain = Terrain.activeTerrain;
+		r_TerrainData = r_Terrain.terrainData;
+		r_TerrainPos = r_Terrain.transform.position;
+	}
 
-	private bool m_SkipEveryThing = false;
-
-
-	void Start () {
-		if(Terrain.activeTerrain != null){
-			Terrain terrain = Terrain.activeTerrain;
-			m_TerrainData = terrain.terrainData;
-			m_TerrainPos = terrain.transform.position;
-		}
-		else{
-			m_SkipEveryThing = true;
-		}
+	
+	private void UpdateTerrain(Terrain newTerrain){
+		r_Terrain = newTerrain;
+		r_TerrainData = r_Terrain.terrainData;
+		r_TerrainPos = r_Terrain.transform.position;
 	}
 
 
-	public float GetTextureAt(Vector3 WorldPos){
-		if (!m_SkipEveryThing) {
-			
-			float terrainX = ((WorldPos.x - m_TerrainPos.x) / m_TerrainData.size.x) * m_TerrainData.alphamapWidth;
-			float terrainZ = ((WorldPos.z - m_TerrainPos.z) / m_TerrainData.size.z) * m_TerrainData.alphamapHeight;
-			
-			float[,,] splatmapData = m_TerrainData.GetAlphamaps ((int)(terrainX), (int)(terrainZ), 1, 1);
-			
-			float[] cellMix = new float[(splatmapData.GetUpperBound(2)+1)];
-			
-			for (int n = 0; n < cellMix.Length; n++) {
-				cellMix[n] = splatmapData[0,0,n];
-			}
-			
-			float maxMix = 0;
-			float maxIndex = 0;
-			
-			for(int n = 0; n < cellMix.Length; n++){
-				if(cellMix[n] > maxMix){
-					maxIndex = n;
-					maxMix = cellMix[n];
-				}
-			}
-			return maxIndex;
+	void OnTriggerEnter(Collider other){
+		if (other.GetComponent<Terrain>() != null) {			
+			UpdateTerrain(other.GetComponent<Terrain>());			
+			m_SurfaceType = GetMostDominantTexture(gameObject.transform.position);				
 		}
-		return -0.123f;
 	}
+
+	
+	public int GetMostDominantTexture(Vector3 worldPos) {
+
+		int x = (int)(((worldPos.x - r_TerrainPos.x) / r_TerrainData.size.x) * r_TerrainData.alphamapWidth);
+		int z = (int)(((worldPos.z - r_TerrainPos.z) / r_TerrainData.size.z) * r_TerrainData.alphamapHeight);
+		
+		float[,,] alphamap = r_TerrainData.GetAlphamaps(x,z,1,1);
+		
+		float[] textureMix = new float[alphamap.GetUpperBound(2)+1];
+
+		for (int n=0; n<textureMix.Length; ++n){
+			textureMix[n] = alphamap[0,0,n];
+		}
+
+		float mostDominant = 0;
+		int dominantSurface = 0;
+
+		for (int n=0; n<textureMix.Length; ++n){
+			if (textureMix[n] > mostDominant){
+				dominantSurface = n;
+				mostDominant = textureMix[n];
+			}
+		}
+		return dominantSurface;		
+	}	
 }

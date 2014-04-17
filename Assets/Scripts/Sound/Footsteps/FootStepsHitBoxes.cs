@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FootStepsBack : MonoBehaviour {
+public class FootStepsHitBoxes : MonoBehaviour {
 
 	/// <summary>
 	/// This script is to be placed on the colliders on the back of the foot(feet).

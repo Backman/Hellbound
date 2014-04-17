@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class FootStepsFront : MonoBehaviour {
+public class FootStepSounds : MonoBehaviour {
 
 	/// <summary>
 	/// FootstepsFront will need to be placed on the front collider on both feet
@@ -13,15 +13,16 @@ public class FootStepsFront : MonoBehaviour {
 
 	//pointers to the other backcolliders
 	public GameObject FootBack;
+	public GameObject FootFront;
 	public GameObject OtherFootBack;
+
+	private FootStepsHitBoxes FBack;
+	private FootStepsHitBoxes FFront;
+	private FootStepsHitBoxes OtherFBack;
+
 
 	//the sound emitter (the source of the sound)
 	private FMOD_StudioEventEmitter f_Emitter;
-
-	//all we need from the colliders on the back of the feed are
-	//the scrips (so we save them separately)
-	private FootStepsBack BackScript;
-	private FootStepsBack OtherFootScript;
 
 	private GetDominantTexture surfaceTexture;
 
@@ -36,39 +37,49 @@ public class FootStepsFront : MonoBehaviour {
 	//(this is to provide shortcuts to what we want to access and/or change)
 	void Start(){
 		f_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
-		BackScript = FootBack.GetComponent<FootStepsBack> ();
-		OtherFootScript = OtherFootBack.GetComponent<FootStepsBack> ();
+
+		FBack = FootBack.GetComponent<FootStepsHitBoxes> ();
+		FFront = FootFront.GetComponent<FootStepsHitBoxes> ();
+		OtherFBack = OtherFootBack.GetComponent<FootStepsHitBoxes> ();
+
 		f_Parameter = f_Emitter.getParameter("Surface");
 		surfaceTexture = gameObject.GetComponent<GetDominantTexture> ();
 	}
 
-	//
+
 	void OnTriggerStay(Collider other){
 		//is the object we collided with have a footstepsurface?
 		if(other.GetComponent<FootstepSurface>() != null){
 
+			f_Parameter.setValue(surfaceTexture.m_SurfaceType);
 			//if our whole foot is placed on the ground, we havent played a sound this
 			//"step" and the other foots backcollider isnt hitting anything we can play a sound
 			//(this means that we are still moving foward)
-			if(BackScript.b_IsHitting && m_Once && !OtherFootScript.b_IsHitting){
+			if(FBack.b_IsHitting && m_Once && !OtherFBack.b_IsHitting && !FFront.b_IsHitting){
 				m_Once = false;
 				f_Emitter.Stop();
 				f_Emitter.Play();
 			}
 			//if both backcolliders are hitting something we know we have stopped moving
 			//(we can add a sound for "footstepstop" or something here)
-			if(BackScript.b_IsHitting && OtherFootScript.b_IsHitting){
+			if(FBack.b_IsHitting && OtherFBack.b_IsHitting){
 				m_Once = false;
 			}
-
 		}
 	}
 
+
 	//when the foot leaves the ground we can once again take a step
 	void OnTriggerExit(Collider other){
-		m_Once = true;
+		if(other.GetComponent<FootstepSurface>() != null){
+			coolDown(0.25f);
+		}
 	}
 
 
+	private IEnumerator coolDown(float seconds){
+		yield return new WaitForSeconds(seconds);
+		m_Once = true;
+	}
 
 }
