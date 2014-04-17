@@ -84,7 +84,7 @@ public class GUIManager : Singleton<GUIManager> {
 	/// </summary>
 	/// <param name="text">Text.</param>
 	/// <param name="lockMovement">If set to <c>true</c> lock movement.</param>
-	public void simpleShowText(string text, bool lockMovement){
+	public void simpleShowText(string text, bool lockMovement = true){
 		if( !m_Examining ){
 			m_Examining = true;
 			object[] args = new object[5];
