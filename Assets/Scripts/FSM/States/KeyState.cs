@@ -7,6 +7,7 @@ public class KeyState : State<KeyInteractable> {
 	{
 		Inventory.getInstance().addInteractable(entity.m_InventoryItem, entity);
 		entity.gameObject.SetActive (false);
+		Messenger.Broadcast("clear focus");
 	}
 }
 

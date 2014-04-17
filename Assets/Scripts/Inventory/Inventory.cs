@@ -17,6 +17,8 @@ public class Inventory {
 	private int m_InventoryIndex;
 	private Dictionary<InventoryItem.Type, int> m_InventoryItemIndex = new Dictionary<InventoryItem.Type, int>();
 
+	private List<InventoryItem> m_Items = new List<InventoryItem>();
+
 	private int m_RealInventoryItems = 0;
 	private UIGrid r_Grid = null;
 	
@@ -94,9 +96,18 @@ public class Inventory {
 	public void addInteractable(InventoryItem item, Interactable interactable){
 		InventoryGridController.reposition ();
 		InventoryItem obj = GameObject.Instantiate(item, r_Grid.transform.position, r_Grid.transform.rotation) as InventoryItem;
+		m_Items.Add (obj);
 		obj.transform.parent = r_Grid.transform;
 		obj.transform.localScale = Vector3.one;
 		obj.GetComponent<InventoryItem>().InteractableObject = interactable;
+		InventoryGridController.reposition ();
+	}
+
+	public void removeItem(InventoryItem item){
+		InventoryGridController.reposition ();
+		InventoryItem obj = m_Items.Find(x => x.getType() == item.getType());
+		m_Items.Remove(obj);
+		GameObject.Destroy(obj.gameObject);
 		InventoryGridController.reposition ();
 	}
 }

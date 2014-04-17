@@ -1,27 +1,28 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Rigidbody))]
 public class MovableInteractable : Interactable {
 	public MovableState m_MovableState;
 	public ImmovableState m_ImmovableState;
 
-	private StateMachine<MovableInteractable> m_FSM;
-	private bool m_Movable = false;
+	public StateMachine<MovableInteractable> m_FSM;
+	public bool Movable {
+		get; set;
+	}
 	void Start(){
+		Movable = false;
+		rigidbody.isKinematic = !Movable;
 		m_FSM = new StateMachine<MovableInteractable>(this, m_ImmovableState);
 		m_FSM.addState (m_MovableState);
 	}
 
 	void Update(){
 		if(Input.GetKeyDown(KeyCode.Space)){
-			m_Movable = !m_Movable;
+			Movable = !Movable;
 		}
 
-		if(m_Movable && m_FSM.CurrentState != m_MovableState) {
-			m_FSM.changeState<MovableState>();
-		} else if(!m_Movable && m_FSM.CurrentState != m_ImmovableState){
-			m_FSM.changeState<ImmovableState>();
-		}
+		m_FSM.update (Time.deltaTime);
 	}
 
 	public override void examine () {

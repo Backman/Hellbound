@@ -7,6 +7,7 @@ using System.Collections;
 public class InventoryItem_Usage : MonoBehaviour {
 	public void use(){
 		InventoryItem invItem = Inventory.getInstance().getSelectedItem();
+		Inventory.getInstance().hideInventoryMenu();
 		invItem.use();
 		//Inventory.getInstance().hideInventoryMenu();
 	}

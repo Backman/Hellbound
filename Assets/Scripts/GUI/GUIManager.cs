@@ -60,7 +60,7 @@ public class GUIManager : Singleton<GUIManager> {
 	}
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetButtonDown("Inventory")) {
             m_GamePaused = !m_GamePaused;
             Messenger.Broadcast<bool>("lock player input", m_GamePaused);
             pauseGame(m_GamePaused);
