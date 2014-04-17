@@ -13,11 +13,9 @@ public class FootStepSounds : MonoBehaviour {
 
 	//pointers to the other backcolliders
 	public GameObject FootBack;
-	public GameObject FootFront;
 	public GameObject OtherFootBack;
 
 	private FootStepsHitBoxes FBack;
-	private FootStepsHitBoxes FFront;
 	private FootStepsHitBoxes OtherFBack;
 
 
@@ -39,7 +37,6 @@ public class FootStepSounds : MonoBehaviour {
 		f_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
 
 		FBack = FootBack.GetComponent<FootStepsHitBoxes> ();
-		FFront = FootFront.GetComponent<FootStepsHitBoxes> ();
 		OtherFBack = OtherFootBack.GetComponent<FootStepsHitBoxes> ();
 
 		f_Parameter = f_Emitter.getParameter("Surface");
@@ -51,11 +48,11 @@ public class FootStepSounds : MonoBehaviour {
 		//is the object we collided with have a footstepsurface?
 		if(other.GetComponent<FootstepSurface>() != null){
 
-			f_Parameter.setValue(surfaceTexture.m_SurfaceType);
+		//	f_Parameter.setValue(surfaceTexture.m_SurfaceType);
 			//if our whole foot is placed on the ground, we havent played a sound this
 			//"step" and the other foots backcollider isnt hitting anything we can play a sound
 			//(this means that we are still moving foward)
-			if(FBack.b_IsHitting && m_Once && !OtherFBack.b_IsHitting && !FFront.b_IsHitting){
+			if(FBack.b_IsHitting && m_Once && !OtherFBack.b_IsHitting){
 				m_Once = false;
 				f_Emitter.Stop();
 				f_Emitter.Play();

@@ -68,23 +68,33 @@ public class AlterSoundParameter : MonoBehaviour {
 	}
 
 
-	private IEnumerator FadeIn()
-	{
+	private IEnumerator FadeIn(){
 		StopCoroutine("FadeOut");
 		
-		float startvalue = getCurrentValue (r_ParameterCollection[0]);
-		float newValue = startvalue;
+		float Current = 0f;
+		float noPointerPlease = 0f;
 		
-		while (newValue != m_InsideParameter) {
-			
-			newValue = moveTo(startvalue, newValue, m_InsideParameter);
-			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-				if(r_ParameterCollection != null){
-					p.setValue(newValue);
-				}
-			}
+		foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
+			p.getValue(out noPointerPlease);
 		}
 		
+		Current = noPointerPlease;
+		
+		float startvalue = Current;
+
+		while (Current != m_InsideParameter) {
+			
+			float speed = Time.deltaTime / (m_FadeSpeed * (m_OutsideParameter - startvalue));
+			
+			Current += speed;
+
+			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
+				if(r_ParameterCollection != null){
+					p.setValue(Current);
+				}
+			}
+			Debug.Log(Current);
+		}
 		yield return 0;
 	}
 
@@ -92,40 +102,35 @@ public class AlterSoundParameter : MonoBehaviour {
 	private IEnumerator FadeOut(){
 		StopCoroutine("FadeIn");
 
-		float startvalue = getCurrentValue (r_ParameterCollection[0]);
-		float newValue = startvalue;
+		float Current = 0f;
+		float noPointerPlease = 0f;
+		
+		foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
+			p.getValue(out noPointerPlease);
+		}
 
-		while (newValue != m_OutsideParameter) {
+		Current = noPointerPlease;
 
-			newValue = moveTo(startvalue, newValue, m_OutsideParameter);
+		float startvalue = Current;
+
+		while (Current != m_OutsideParameter) {
+
+			float speed = Time.deltaTime / (m_FadeSpeed * (m_OutsideParameter - startvalue));
+
+			Current += speed;
+
 			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
 				if(r_ParameterCollection != null){
-					p.setValue(newValue);
+					p.setValue(Current);
 				}
 			}
+			Debug.Log(Current);
 		}
 
 		if(m_DestroyOnExit){
 			r_ParameterCollection.Clear();
 		}
+
 		yield return 0;
-	}
-	
-	private float getCurrentValue(FMOD.Studio.ParameterInstance parameter){
-	
-		float Current = 0f;
-		float noPointerPlease = 0f;
-		
-		r_ParameterCollection[0].getValue(out noPointerPlease);
-		Current = noPointerPlease;
-		
-		return Current;
-	}
-
-	private float moveTo(float beginning, float at, float to){
-
-		float speed = Time.deltaTime / (m_FadeSpeed * (to - beginning));
-		at += speed;
-		return at;
 	}
 }
