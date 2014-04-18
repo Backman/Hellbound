@@ -38,7 +38,6 @@ public class ExamineBehaviour : MonoBehaviour {
 
 
 	public IEnumerator showText(object[] args){
-		Debug.Log("In! Examine!");
 
 		m_QuickSkip = false;
 		
@@ -49,7 +48,6 @@ public class ExamineBehaviour : MonoBehaviour {
 		StopCoroutine( "feedText" );
 		StopCoroutine( "feedLine" );
 		StopCoroutine( "listenForQuickSkip" );
-		Debug.Log("Out! Examine!");
 	}
 
 	public IEnumerator clearLables(){
@@ -113,8 +111,7 @@ public class ExamineBehaviour : MonoBehaviour {
 			yield return StartCoroutine( (string) args[2], args[3]);
 			m_QuickSkip = false;
 		}
-		
-		Debug.Log("Done printing examine");
+
 	}
 
 	/// <summary>

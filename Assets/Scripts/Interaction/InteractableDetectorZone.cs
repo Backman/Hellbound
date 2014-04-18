@@ -13,6 +13,7 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 
 	void Start () {
 		//TODO: Find the avatar and position this in the appropriate spot
+		Messenger.AddListener("clear focus", clearFocus);
 	}
 
 	void Update () {
@@ -69,4 +70,7 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 		return r_InFocus;
 	}
 
+	public void clearFocus(){
+		r_InFocus = null;
+	}
 }

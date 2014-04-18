@@ -13,7 +13,7 @@ public class KeyInteractable : Interactable {
 
 	public override void useWith (GameObject obj) {
 		if(obj != null){
-			LockedInteractable door = (LockedInteractable)obj.GetComponent(typeof(LockedInteractable));
+			Interactable door = (Interactable)obj.GetComponent(typeof(Interactable));
 			if(door != null){
 				door.useWith (gameObject);
 			}
@@ -22,5 +22,9 @@ public class KeyInteractable : Interactable {
 
 	public override void pickUp () {
 		m_FSM.CurrentState.pickUp(this);
+	}
+
+	public override void examine () {
+		m_FSM.CurrentState.examine (this);
 	}
 }

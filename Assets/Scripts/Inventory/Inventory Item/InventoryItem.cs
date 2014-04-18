@@ -7,6 +7,7 @@ using System.Collections.Generic;
 /// </summary>
 public abstract class InventoryItem : MonoBehaviour{
 	public enum Type{
+		Lantern,
 		Key,
 		Oil
 	};
@@ -20,7 +21,7 @@ public abstract class InventoryItem : MonoBehaviour{
 	public void examine() { InteractableObject.examine (); }
 	public void use() { InteractableObject.useWith ( InteractableDetectorZone.Instance.getInteractableInFocus().gameObject ); }
 	public abstract void combine(InventoryItem invItem);
-	public abstract void drop();
+	public virtual void drop(){}
 	public InventoryItem.Type getType(){
 		return m_InventoryType;
 	}

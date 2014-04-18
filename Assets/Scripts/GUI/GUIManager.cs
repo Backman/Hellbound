@@ -60,7 +60,7 @@ public class GUIManager : Singleton<GUIManager> {
 	}
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetButtonDown("Inventory")) {
             m_GamePaused = !m_GamePaused;
             Messenger.Broadcast<bool>("lock player input", m_GamePaused);
             pauseGame(m_GamePaused);
@@ -84,7 +84,7 @@ public class GUIManager : Singleton<GUIManager> {
 	/// </summary>
 	/// <param name="text">Text.</param>
 	/// <param name="lockMovement">If set to <c>true</c> lock movement.</param>
-	public void simpleShowText(string text, bool lockMovement){
+	public void simpleShowText(string text, bool lockMovement = true){
 		if( !m_Examining ){
 			m_Examining = true;
 			object[] args = new object[5];
