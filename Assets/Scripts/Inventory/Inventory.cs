@@ -25,7 +25,7 @@ public class Inventory {
 	private Inventory(){
 		r_InventoryMenu = GameObject.FindGameObjectWithTag("ExamineWindow");
 		//r_InventoryMenu.SetActive(false);
-		r_Grid = (UIGrid)GameObject.FindGameObjectWithTag("InventoryGrid").GetComponent(typeof(UIGrid));
+		r_Grid = GUIManager.Instance.m_PauseWindow.r_InventoryWindow.GetComponentInChildren<UIGrid>();
 
 		// Same types of objects should be placed on same space in inventory
 		m_InventoryItemIndex.Add(InventoryItem.Type.Key, 0);

@@ -4,6 +4,15 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
 
+[System.Serializable]
+public class PauseWindow {
+	public GameObject r_MainWindow;
+	public GameObject r_InventoryWindow;
+	public GameObject r_JournalWindow;
+	public GameObject r_SaveLoadWindow;
+	public GameObject r_SettingsWindow;
+}
+
 /// <summary>
 /// This class handles the GUI window that displays text messages
 /// to the player as the player for example examines items.
@@ -11,12 +20,15 @@ using System.Linq;
 /// Created by Simon
 /// </summary>
 public class GUIManager : Singleton<GUIManager> {
+	public PauseWindow m_PauseWindow;
     [SerializeField]
     private GameObject r_PauseWindow;
 	[SerializeField]
 	private UISprite r_ExamineWindow;
 	[SerializeField]
 	private UISprite r_SubtitlesWindow;
+
+	public GameObject m_ExamineText;
 
 	////////////////////////////////////////////////
 	[SerializeField] [Range (0, 1)]				  //	
@@ -40,6 +52,7 @@ public class GUIManager : Singleton<GUIManager> {
 	private UILabel[] r_SubtitlesLables;
 
 	public void Start(){
+		Inventory.getInstance();
 		if( r_ExamineWindow == null ){
 			Debug.LogError("Error! No description window present!");
 		} 
@@ -60,24 +73,41 @@ public class GUIManager : Singleton<GUIManager> {
 	}
 
     void Update() {
-        if (Input.GetButtonDown("Inventory")) {
+        if (Input.GetButtonDown("Pause")) {
             m_GamePaused = !m_GamePaused;
             Messenger.Broadcast<bool>("lock player input", m_GamePaused);
             pauseGame(m_GamePaused);
         }
+		if (Input.GetButtonDown("Inventory") && !m_GamePaused) {
+			m_GamePaused = !m_GamePaused;
+			Messenger.Broadcast<bool>("lock player input", m_GamePaused);
+			inventory();
+		}
+		if (Input.GetButtonDown("Journal") && !m_GamePaused) {
+			m_GamePaused = !m_GamePaused;
+			Messenger.Broadcast<bool>("lock player input", m_GamePaused);
+			journal();
+		}
     }
 
     public void pauseGame(bool pause) {
-		
         if (pause) {
-            r_PauseWindow.SetActive(true);
-            PauseMenu.getInstance().showInventory();
-			r_PauseWindow.GetComponent<UIPlayTween>().Play(true);
+            PauseMenu.getInstance().showPauseWindow();
+			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 		} else {
-			r_PauseWindow.GetComponent<UIPlayTween>().Play(false);
+			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(false);
         }
-        
     }
+
+	public void inventory(){
+		PauseMenu.getInstance ().showInventory();
+		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
+	}
+
+	public void journal(){
+		PauseMenu.getInstance ().showJournal();
+		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
+	}
 
 	/// <summary>
 	/// Will display a window with the supplied text.

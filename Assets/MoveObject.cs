@@ -9,8 +9,8 @@ public class MoveObject : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		r_TweenPosition = (TweenPosition)GetComponent(typeof(TweenPosition));
-//		r_TweenPosition.from = m_From.position;
-//		r_TweenPosition.to = m_To.position;
+		r_TweenPosition.from = transform.position;
+		//r_TweenPosition.to = m_To.position;
 		r_TweenPosition.PlayForward();
 	}
 	
