@@ -7,12 +7,13 @@ using System.Collections;
 /// 
 /// Created by Simon
 /// </summary>
-public class InteractableDetectorZone : MonoBehaviour {
+public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 
 	private Interactable r_InFocus = null;
-	
+
 	void Start () {
 		//TODO: Find the avatar and position this in the appropriate spot
+		Messenger.AddListener("clear focus", clearFocus);
 	}
 
 	void Update () {
@@ -24,7 +25,7 @@ public class InteractableDetectorZone : MonoBehaviour {
 				r_InFocus.activate();
 			}
 			
-			if( Input.GetButtonDown( "Fire2" ) ){
+			if( Input.GetButtonDown( "Examine" ) ){
 				r_InFocus.examine();
 			}
 			
@@ -45,6 +46,8 @@ public class InteractableDetectorZone : MonoBehaviour {
 		if( ii != null ){
 			r_InFocus = ii;
 			r_InFocus.gainFocus();
+			GUIManager.Instance.m_ExamineText.SetActive(true);
+			GUIManager.Instance.m_ExamineText.GetComponent<UIPlayTween>().Play(true);
 		}
 	}
 
@@ -55,8 +58,9 @@ public class InteractableDetectorZone : MonoBehaviour {
 		//TODO: Detect wheter the left  trigger was the interactalbe actually in focus 
 
 		if( r_InFocus != null && col.gameObject == r_InFocus.gameObject ){
-				r_InFocus.loseFocus();
-				r_InFocus = null;
+			r_InFocus.loseFocus();
+			r_InFocus = null;
+			GUIManager.Instance.m_ExamineText.SetActive(false);
 		}
 	}
 
@@ -69,4 +73,8 @@ public class InteractableDetectorZone : MonoBehaviour {
 		return r_InFocus;
 	}
 
+	public void clearFocus(){
+		r_InFocus = null;
+		GUIManager.Instance.m_ExamineText.SetActive(false);
+	}
 }

@@ -34,8 +34,8 @@ public class State {
 	public void gainFocus(){ 
 		if( m_FocusScript != null ){
 			//TODO: Run focus script
-			// m_FocusScript.action();
-			Debug.Log("Run focus script");
+            // m_FocusScript.action();
+
 		}
 	}
 	

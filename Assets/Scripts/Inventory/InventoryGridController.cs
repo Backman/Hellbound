@@ -9,9 +9,11 @@ using System.Collections;
 public class InventoryGridController : MonoBehaviour {
 	
 	private static UIGrid r_Grid;
+	private static UIScrollView r_ScrollView;
 	
 	void Start(){
-		r_Grid = GetComponent<UIGrid>();
+		r_Grid = (UIGrid)GetComponent(typeof(UIGrid));
+		r_ScrollView = (UIScrollView)r_Grid.transform.parent.GetComponent(typeof(UIScrollView));
 	}
 	
 	/// <summary>
@@ -20,6 +22,6 @@ public class InventoryGridController : MonoBehaviour {
 	/// </summary>
 	public static void reposition(){
 		r_Grid.Reposition ();
-		r_Grid.transform.parent.gameObject.GetComponent<UIScrollView>().ResetPosition();
+		r_ScrollView.UpdatePosition();
 	}
 }

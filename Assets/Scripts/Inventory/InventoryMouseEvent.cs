@@ -37,8 +37,7 @@ public class InventoryMouseEvent : MonoBehaviour {
 		if(r_MouseDownObject && button == 0) {
 			InventoryItem invItem = r_MouseDownObject.GetComponent<InventoryItem>();
 			if (UICamera.hoveredObject == r_MouseDownObject && invItem != null) {
-				PreviewItems.getInstance().previewItem(invItem.getType());
-				Debug.Log("Preview: "+invItem.name);
+				//Messenger.Broadcast<InventoryItem>("show inventory model", invItem);
 				Inventory.getInstance().setSelectedItem(invItem);
 				Inventory.getInstance().showInventoryMenu();
 				Inventory.getInstance().addCombineItem(invItem, false);

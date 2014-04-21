@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// TODO: Remove old unused variables
 /// </summary>
 public class Inventory {
-	public static Inventory m_Instance = null;
+	private static Inventory m_Instance = null;
 
 	private List<InventoryItem> r_InvItems = new List<InventoryItem>();
 	private List<InventoryItem> r_CombineItems = new List<InventoryItem>();
@@ -16,33 +16,26 @@ public class Inventory {
 	private GameObject r_InventoryMenu = null;
 	private int m_InventoryIndex;
 	private Dictionary<InventoryItem.Type, int> m_InventoryItemIndex = new Dictionary<InventoryItem.Type, int>();
-	private Dictionary<InventoryItem.Type, GameObject> r_InventoryItemIdentifier = new Dictionary<InventoryItem.Type, GameObject>();
+
+	private List<InventoryItem> m_Items = new List<InventoryItem>();
 
 	private int m_RealInventoryItems = 0;
+	private UIGrid r_Grid = null;
 	
 	private Inventory(){
 		r_InventoryMenu = GameObject.FindGameObjectWithTag("ExamineWindow");
-		r_InventoryMenu.SetActive(false);
-		
+		//r_InventoryMenu.SetActive(false);
+		r_Grid = GUIManager.Instance.m_PauseWindow.r_InventoryWindow.GetComponentInChildren<UIGrid>();
+
 		// Same types of objects should be placed on same space in inventory
-		m_InventoryItemIndex.Add(InventoryItem.Type.KEY, 0);
-		m_InventoryItemIndex.Add(InventoryItem.Type.OIL, 1);
+		m_InventoryItemIndex.Add(InventoryItem.Type.Key, 0);
+		m_InventoryItemIndex.Add(InventoryItem.Type.Oil, 1);
 	}
 
 	public static Inventory getInstance(){
 		if(m_Instance == null)
 			m_Instance = new Inventory();
 		return m_Instance;
-	}
-
-	public void add(InventoryItem invItem, GameObject obj){
-		r_InvItems.Add(invItem);
-		if(!r_InventoryItemIdentifier.ContainsKey(invItem.getType())){
-			r_InventoryItemIdentifier.Add(invItem.getType(), obj);
-		}
-		else{
-			++m_RealInventoryItems;
-		}
 	}
 
 	public void remove(InventoryItem invItem){
@@ -58,11 +51,14 @@ public class Inventory {
 	}
 
 	public void showInventoryMenu(){
-		r_InventoryMenu.SetActive(true);
+		TweenAlpha tween = (TweenAlpha)r_InventoryMenu.GetComponent(typeof(TweenAlpha));
+		tween.PlayForward();
+		//r_InventoryMenu.SetActive(true);
 	}
 
 	public void hideInventoryMenu(){
-		r_InventoryMenu.SetActive(false);
+		TweenAlpha tween = (TweenAlpha)r_InventoryMenu.GetComponent(typeof(TweenAlpha));
+		tween.PlayReverse();
 	}
 	
 	public void addCombineItem(InventoryItem invItem, bool combine = true){
@@ -72,7 +68,6 @@ public class Inventory {
 			}
 		}
 		else{
-			Debug.Log("Show combine stuff");
 			r_CombineItems.Add(invItem);
 			// Combine if two inventory items has been selected to be combined
 			if(r_CombineItems.Count == 1){
@@ -98,14 +93,21 @@ public class Inventory {
 	/// <summary>
 	/// Create inventory item from InventoryType; Called by sub classes of Interactable.
 	/// </summary>
-	public void addInteractable(InventoryItem.Type inventoryType){
-		GameObject obj = r_InventoryItemIdentifier[inventoryType];
-		GameObject copy = GameObject.Instantiate(obj, obj.transform.position, obj.transform.rotation) as GameObject;
-		copy.transform.parent = obj.transform.parent;
-		copy.transform.localScale = Vector3.one;
-		float x = m_RealInventoryItems * 150;
-		copy.transform.localPosition = new Vector3(x, 0.0f, 0.0f);
-		copy.SetActive(true);
+	public void addInteractable(InventoryItem item, Interactable interactable){
+		InventoryGridController.reposition ();
+		InventoryItem obj = GameObject.Instantiate(item, r_Grid.transform.position, r_Grid.transform.rotation) as InventoryItem;
+		m_Items.Add (obj);
+		obj.transform.parent = r_Grid.transform;
+		obj.transform.localScale = Vector3.one;
+		obj.GetComponent<InventoryItem>().InteractableObject = interactable;
+		InventoryGridController.reposition ();
+	}
+
+	public void removeItem(InventoryItem item){
+		InventoryGridController.reposition ();
+		InventoryItem obj = m_Items.Find(x => x.getType() == item.getType());
+		m_Items.Remove(obj);
+		GameObject.Destroy(obj.gameObject);
 		InventoryGridController.reposition ();
 	}
 }

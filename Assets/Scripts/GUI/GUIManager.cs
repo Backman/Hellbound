@@ -4,17 +4,14 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
 
-/*[System.Serializable]
-struct DialogSettings{
-	[SerializeField] [Range (0, 1)]
-	public float m_WindowFadeTime = 0.0f;
-	[SerializeField] [Range (0, 0.1f)]
-	public float m_TextSpeed = 0.0f;
-	[SerializeField] [Range (0, 1)]
-	public float m_NewLineWait = 0.0f;
-	[SerializeField]
-	public bool m_doLinePadding = false;
-}*/
+[System.Serializable]
+public class PauseWindow {
+	public GameObject r_MainWindow;
+	public GameObject r_InventoryWindow;
+	public GameObject r_JournalWindow;
+	public GameObject r_SaveLoadWindow;
+	public GameObject r_SettingsWindow;
+}
 
 /// <summary>
 /// This class handles the GUI window that displays text messages
@@ -23,355 +20,247 @@ struct DialogSettings{
 /// Created by Simon
 /// </summary>
 public class GUIManager : Singleton<GUIManager> {
-	private bool m_Busy = false;
-	private bool m_QuickSkip = false;
-
-
-	private UILabel r_CurrentLabel;
-	private UISprite r_NextSprite;
-
+	public PauseWindow m_PauseWindow;
     [SerializeField]
     private GameObject r_PauseWindow;
 	[SerializeField]
-	private UISprite r_DescriptionWindow;
+	private UISprite r_ExamineWindow;
 	[SerializeField]
-	private UILabel[] r_DescriptionLabels; 
+	private UISprite r_SubtitlesWindow;
 
-	[SerializeField] [Range (0, 1)]
-	public float m_WindowFadeTime = 0.0f;
-	[SerializeField] [Range (0, 0.1f)]
-	public float m_TextSpeed = 0.0f;
-	[SerializeField] [Range (0, 1)]
-	public float m_NewLineWait = 0.0f;
-	[SerializeField]
-	public bool m_doLinePadding = false;
+	public GameObject m_ExamineText;
+
+	////////////////////////////////////////////////
+	[SerializeField] [Range (0, 1)]				  //	
+	public float m_WindowFadeTime = 0.0f;		  //
+	[SerializeField] [Range (0, 0.1f)]			  //
+	public float m_ExamineTextSpeed = 0.0f;		  //
+	[SerializeField] [Range (0, 1)]				  //
+	public float m_ExamineNewLineWait = 0.0f;	  //
+	[SerializeField]							  //
+	public bool m_ExamineDoLinePadding = false;	  //
+	////////////////////////////////////////////////
 
     private bool m_GamePaused = false;
+	private bool m_Examining = false;
+	private bool m_SubtitlesDisplayed = false;
+
+	private ExamineBehaviour   m_Examine;
+	private SubtitlesBehaviour m_Subtitles;
+
+	private UILabel[] r_ExamineLabels;
+	private UILabel[] r_SubtitlesLables;
 
 	public void Start(){
-		if( r_DescriptionWindow == null ){
+		Inventory.getInstance();
+		if( r_ExamineWindow == null ){
 			Debug.LogError("Error! No description window present!");
-		}
-		Transform t = r_DescriptionWindow.transform.Find("NextSprite");
-		if( t == null ){
-			Debug.LogError("Error! No sprite for the 'next' icon present!");
-		} else {
-			r_NextSprite = t.GetComponent<UISprite>();
-		}
-		foreach ( UILabel label in r_DescriptionLabels ){
-			if( label == null ){
-				Debug.LogError("Error! A label reference is invalid!");
-			} else {
-				label.text = "";
-			}
-		}
-
-		r_NextSprite.alpha = 0.0f;
-		r_DescriptionWindow.alpha = 0.0f;
-		r_DescriptionWindow.transform.localScale = new Vector3(1.0f, 0.0f, 1.0f);
-	}
-
-	/// <summary>
-	/// This function will display the passed text in a small box
-	/// at the lower part of the screen. All formating of the text
-	/// is handled internaly.
-	/// 
-	/// This will lock the players movement and ability to rotate the camera
-	/// </summary>
-	public void simpleShowTextLockMovement(string text){
-		Messenger.Broadcast("lock player input", true );
-		simpleShowText( text );
-	}
-
-	/// <summary>
-	/// This function will display the passed text in a small box
-	/// at the lower part of the screen. All formating of the text
-	/// is handled internaly.
-	/// 
-	/// This will not lock the players movement
-	/// </summary>
-	public void simpleShowText(string text){
-		if( !m_Busy ){
-			m_Busy = true;	
-
-			object[] args = new object[4];
-			args[0] = text;
-			args[1] = true;
-			args[2] = "awaitInput";
-			args[3] = "Fire2";
-			StartCoroutine("simpleShowText_Manual", args);
 		} 
-	}
+		else {
+			r_ExamineWindow.alpha = 0.0f;
+			r_ExamineWindow.transform.localScale = new Vector3(1.0f, 0.0f, 1.0f);
+			initExamineWindow();
+		}
 
-	/// <summary>
-	/// This function will display the passed text in a small box
-	/// at the lower part of the screen. All formating of the text
-	/// is handled internaly.
-	/// 
-	/// The text will automatically scroll without the players
-	/// involvement. The player can move while the text is displayed.
-	/// </summary>
-	public void simpleShowTextAutoScroll( string text, float scollSpeed){
-		if( !m_Busy ){
-			m_Busy = true;	
-			
-			object[] args = new object[4];
-			args[0] = text;
-			args[1] = false;
-			args[2] = "awaitTime";
-			args[3] = scollSpeed;
-			StartCoroutine("simpleShowText_Manual", args);
+		if( r_SubtitlesWindow == null ){
+			Debug.LogError("Error! No subtitles window present!");
 		} 
+		else {
+			r_SubtitlesWindow.alpha = 0.0f;
+			r_SubtitlesWindow.transform.localScale = new Vector3(1.0f, 0.0f, 1.0f);
+			initSubtitleWindow();
+		}
 	}
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetButtonDown("Pause")) {
             m_GamePaused = !m_GamePaused;
             Messenger.Broadcast<bool>("lock player input", m_GamePaused);
             pauseGame(m_GamePaused);
         }
+		if (Input.GetButtonDown("Inventory") && !m_GamePaused) {
+			m_GamePaused = !m_GamePaused;
+			Messenger.Broadcast<bool>("lock player input", m_GamePaused);
+			inventory();
+		}
+		if (Input.GetButtonDown("Journal") && !m_GamePaused) {
+			m_GamePaused = !m_GamePaused;
+			Messenger.Broadcast<bool>("lock player input", m_GamePaused);
+			journal();
+		}
     }
 
     public void pauseGame(bool pause) {
-		
         if (pause) {
-            r_PauseWindow.SetActive(true);
-            PauseMenu.getInstance().showInventory();
-			r_PauseWindow.GetComponent<UIPlayTween>().Play(true);
+            PauseMenu.getInstance().showPauseWindow();
+			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 		} else {
-			r_PauseWindow.GetComponent<UIPlayTween>().Play(false);
+			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(false);
         }
-        
     }
-	
-	#region Examine Monologue Coroutines
 
-	IEnumerator simpleShowText_Manual(object[] args){
-		m_QuickSkip = false;
+	public void inventory(){
+		PauseMenu.getInstance ().showInventory();
+		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
+	}
 
-		yield return StartCoroutine( "showWindow" );
-
-		if( (bool)args[1] == true ){
-			StartCoroutine ("listenForQuickSkip", args[3]);
-		}
-
-		yield return StartCoroutine( "feedText", args );	
-		yield return StartCoroutine( "hideWindow" );
-
-		StopCoroutine( "feedText" );
-		StopCoroutine( "feedLine" );
-		StopCoroutine( "listenForQuickSkip" );
-		
-		foreach( UILabel label in r_DescriptionLabels ){
-			label.text = "";
-		}
-
-		Messenger.Broadcast("lock player input", false );
-		m_Busy = false;
-
+	public void journal(){
+		PauseMenu.getInstance ().showJournal();
+		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 	}
 
 	/// <summary>
-	/// This function handles the logic about which line of text
-	/// should be displayed to the player
-	/// 
-	/// Args[0] = (string) the text
-	/// Args[1] = (bool)  allow quick skip
-	/// Args[2] = (string) scroll method
-	/// Args[3] = (obj) scroll method argument
+	/// Will display a window with the supplied text.
 	/// </summary>
-	IEnumerator feedText( object[] args ){
-		//Place all words in a stack
-		string[] w = Regex.Split( (string)args[0] , @"(\s)" ); 
-		Stack<string> words = new Stack<string>();
-		foreach( string word in w.Reverse<string>()){
-			words.Push(word);
+	/// <param name="text">Text.</param>
+	/// <param name="lockMovement">If set to <c>true</c> lock movement.</param>
+	public void simpleShowText(string text, bool lockMovement = true){
+		if( !m_Examining ){
+			m_Examining = true;
+			object[] args = new object[5];
+			args[0] = text;	
+			args[1] = lockMovement;
+			args[2] = "awaitInput";		//Method for making text advance
+			args[3] = "Fire2";
+			args[4] = false;
+
+			StartCoroutine("examine", args);
 		}
-		Debug.Log( args[0] );
-		foreach( UILabel label in r_DescriptionLabels ){
-			if( words.Count == 0 ){
-				break;
-			}
-			r_CurrentLabel = label;
-			string line = getLine( words, r_CurrentLabel );
-			
-			if( m_QuickSkip ){
-				label.text = line;
-			} else {
-				yield return StartCoroutine( "feedLine", line);
-			}
+		else {
+			Debug.Log("Bussy examining");
 		}
-		
-		yield return StartCoroutine( (string) args[2], args[3]);
-		m_QuickSkip = false;
-		
-		while( words.Count > 0 ){
-			foreach( UILabel l in r_DescriptionLabels ){
-				if( words.Count == 0 ){
-					break;
-				}
-				for( int i = 0; i < r_DescriptionLabels.Count() - 1; ++i ){
-					r_DescriptionLabels[i].text = r_DescriptionLabels[i+1].text;
-				}	
-				r_CurrentLabel.text = "";
-				string line = getLine( words, r_CurrentLabel );
-				if( m_QuickSkip ){
-					r_CurrentLabel.text = line;
-				} else {
-					yield return StartCoroutine( "feedLine", line);
-					yield return m_QuickSkip ? null : new WaitForSeconds( m_NewLineWait );
-				}
-			}
-			yield return StartCoroutine( (string) args[2], args[3]);
-			m_QuickSkip = false;
-		}
-		
-		Debug.Log("Done printing text");
-	}
-	
-	/// <summary>
-	/// Returns a line composed of the words in the stack that would
-	/// fit into the label.
-	/// The line is returned when the next word wouldn't fit or the last poped
-	/// word was a newline.
-	/// 
-	/// The stack is requiered to have all characters and all whitespaces in
-	/// separate elements. The labels text must be blank.
-	/// </summary>
-	private string getLine( Stack<string> words, UILabel targetLabel ){
-		string line = "";
-		string currWord = "";
-		Vector2 labelSize = new Vector2( targetLabel.width, targetLabel.height );
-		Vector2 textSize  = new Vector2();
-		targetLabel.UpdateNGUIText();
-		
-		//Add next word to the current line as long as the line would fit in the label
-		//and not cause a newline.
-		while( words.Count > 0 ){
-			currWord = words.Peek();
-			textSize = NGUIText.CalculatePrintedSize(line + currWord);
-			
-			if( textSize.y > labelSize.y ){	
-				//Check if the current word is a whitespace. If it is, remove it
-				if( currWord.Trim() == string.Empty ){
-					words.Pop();
-					line.Trim();
-				}
-				textSize = NGUIText.CalculatePrintedSize(line + " ");
-				while( textSize.y < labelSize.y && m_doLinePadding ){
-					line += " ";
-					textSize = NGUIText.CalculatePrintedSize(line + " ");
-				}
-				return line;
-			}
-			line += words.Pop();
-		}
-		
-		return line;
 	}
 
+	/// <summary>
+	/// Shows the subtitles.
+	/// </summary>
+	/// <param name="text">Text.</param>
+	/// <param name="displayTime">Display time.</param>
+	/// <param name="textSpeed">Text speed.</param>
+	/// <param name="doLinePadding">If set to <c>true</c> do line padding.</param>
+	public void showSubtitles( MyGUI.SubtitlesSettings[] subtitles ){
+
+			StartCoroutine("subtitles", subtitles);
+
+	}
+	#region private functions
+	private void initExamineWindow(){
+		//Fetch the "NextSprite" among the ExaminWindows children
+		Transform t = r_ExamineWindow.transform;
+		UISprite sprite = t.FindChild("NextSprite").GetComponent<UISprite>();
+		sprite.alpha = 0.0f;
+		
+		//Fetch the "ExamineTextLabels" among the ExamineWindows children, then
+		//sort them
+		r_ExamineLabels = t.GetComponentsInChildren<UILabel>();
+		r_ExamineLabels = r_ExamineLabels.OrderBy( x => x.name ).ToArray();
+		
+		m_Examine = gameObject.GetComponent<ExamineBehaviour>();
+		m_Examine.initialize( r_ExamineLabels, sprite, m_ExamineTextSpeed,
+		                     m_ExamineNewLineWait, m_ExamineDoLinePadding );
+	}
+
+	private void initSubtitleWindow(){
+		Transform t = r_SubtitlesWindow.transform;
+		
+		//Fetch the "ExamineTextLabels" among the ExamineWindows children, then
+		//sort them
+		r_SubtitlesLables = t.GetComponentsInChildren<UILabel>();
+		r_SubtitlesLables = r_SubtitlesLables.OrderBy( x => x.name ).ToArray();
+		
+		m_Subtitles = gameObject.GetComponent<SubtitlesBehaviour>();
+		m_Subtitles.initialize( r_SubtitlesLables );
+	}
 	#endregion
+
+
+	IEnumerator examine(object[] args){
+
+		if( (bool) args[1] ){
+			Messenger.Broadcast("lock player input", true );
+		}
+
+		r_SubtitlesWindow.GetComponent<TweenPosition>().PlayForward();
+
+		StartCoroutine( m_Examine.clearLables() );
+		yield return StartCoroutine( "showWindow", r_ExamineWindow );
+		yield return StartCoroutine( m_Examine.showText( args ) );	
+		yield return StartCoroutine( "hideWindow", r_ExamineWindow );
+		
+		Messenger.Broadcast("lock player input", false );
+
+		m_Examining = false;
+		r_SubtitlesWindow.GetComponent<TweenPosition>().PlayReverse();
+	}
+
+	IEnumerator subtitles(MyGUI.SubtitlesSettings[] subtitles){
+
+		object[] args = new object[5];
+		StartCoroutine( m_Subtitles.clearLables() );
+
+		yield return StartCoroutine( "showWindow", r_SubtitlesWindow );	
+		foreach( MyGUI.SubtitlesSettings subtitle in subtitles ){
+			args[0] = subtitle.Text;	
+			args[1] = subtitle.DisplayTime;
+			args[2] = "awaitTime";		//Method for making text advance
+			args[3] = subtitle.TextSpeed;
+			args[4] = false;
+
+
+			yield return StartCoroutine( m_Subtitles.showSubtitles( args ) );
+			StartCoroutine( m_Subtitles.clearLables() );
+
+		}
+		yield return StartCoroutine( "hideWindow", r_SubtitlesWindow );
+
+	}
 
 	#region General Coroutines
 	/// <summary>
 	/// Causes the text box to appera smoothly.
 	/// </summary>
-	IEnumerator showWindow(){
+	IEnumerator showWindow(UISprite window){
 		Color col = new Color();
 		Vector3 scale = new Vector3();
-		while( r_DescriptionWindow.color.a < 0.99f ){
-			col = r_DescriptionWindow.color;
+		while( window.color.a < 0.99f ){
+			col = window.color;
 			col.a +=  Time.deltaTime / m_WindowFadeTime;
-			r_DescriptionWindow.color = col; 
+			window.color = col; 
 			
-			scale = r_DescriptionWindow.transform.localScale;
+			scale = window.transform.localScale;
 			scale.y += Time.deltaTime / m_WindowFadeTime;
-			r_DescriptionWindow.transform.localScale = scale;
+			window.transform.localScale = scale;
 			
 			yield return null;
 		}
 		col.a = 1.0f;
 		scale = Vector3.one;
-		r_DescriptionWindow.color = col;		
-		r_DescriptionWindow.transform.localScale = scale;
-	}
-	
-	/// <summary>
-	/// Displays the actual line of text to the player, character by character
-	/// </summary>
-	IEnumerator feedLine( string line ){
-		for( int i = 0; i < line.Length; ++i){
-			if( m_QuickSkip ){
-				r_CurrentLabel.text = line;
-			} else {
-				r_CurrentLabel.text += line[i];
-				yield return new WaitForSeconds(m_TextSpeed);
-			}
-		}
+		window.color = col;		
+		window.transform.localScale = scale;
 	}
 	
 	/// <summary>
 	/// Hides the window in a smooth way
 	/// </summary>
-	IEnumerator hideWindow(){
+	IEnumerator hideWindow( UISprite window){
 		Color col = new Color();
 		Vector3 scale = new Vector3();
-		while( r_DescriptionWindow.color.a > 0.01f ){
-			col = r_DescriptionWindow.color;
+		while( window.color.a > 0.01f ){
+			col = window.color;
 			col.a -=  Time.deltaTime / m_WindowFadeTime;
-			r_DescriptionWindow.color = col; 
+			window.color = col; 
 			
-			scale = r_DescriptionWindow.transform.localScale;
+			scale = window.transform.localScale;
 			scale.y -= Time.deltaTime / m_WindowFadeTime;
-			r_DescriptionWindow.transform.localScale = scale;
+			window.transform.localScale = scale;
 			
 			yield return null;
 		}
 		col.a = 0.0f;
 		scale.y = 0.0f;
 		
-		r_DescriptionWindow.color = col;
-		r_DescriptionWindow.transform.localScale = scale;
+		window.color = col;
+		window.transform.localScale = scale;
 	}
-	
-	/// <summary>
-	/// This function detects if the player wishes to speed up
-	/// the text display. IF the player clicks "Fire2" as the text
-	/// is being printed, all text of that "frame" is displayed
-	/// instantaniously
-	/// </summary>
-	/// <returns>The for quick skip.</returns>
-	IEnumerator listenForQuickSkip(string button){
-		while( true ){
-			if( Input.GetButtonDown(button) ){
-				m_QuickSkip = true;
-			}
-			yield return null;
-		}
-	}
-	
-	/// <summary>
-	/// This function locks further progress until the player pushes
-	/// the button (that is passed as parameter)
-	/// </summary>
-	IEnumerator awaitInput( string button){
-		yield return null;
-		r_NextSprite.alpha = 1.0f;
-		while( true ){
-			if( Input.GetButtonDown(button) ){
-				break;
-			}
-			yield return null;
-		}
-		yield return null;
-		r_NextSprite.alpha = 0.0f;
-	}
-
-	/// <summary>
-	/// Will wait for waitTime seconds before returning
-	/// </summary>
-	IEnumerator awaitTime( float waitTime ){
-		yield return new WaitForSeconds( waitTime );
-	}	
 	#endregion
 }

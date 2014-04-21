@@ -34,7 +34,33 @@ public class PauseMenu{
 	public void showInventory(){
 		foreach(PauseMenuController controller in r_Controllers){
 			if(controller.name == "Inventory"){
+				InventoryGridController.reposition ();
 				controller.show();
+				InventoryGridController.reposition ();
+			}
+			else{
+				controller.hide();
+			}
+		}
+	}
+
+	public void showJournal(){
+		foreach(PauseMenuController controller in r_Controllers){
+			if(controller.name == "Journal"){
+				controller.show();
+			}
+			else{
+				controller.hide();
+			}
+		}
+	}
+
+	public void showPauseWindow(){
+		foreach(PauseMenuController controller in r_Controllers){
+			if(controller.name == "Pause"){
+				InventoryGridController.reposition ();
+				controller.show();
+				InventoryGridController.reposition ();
 			}
 			else{
 				controller.hide();

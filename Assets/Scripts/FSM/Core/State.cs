@@ -5,7 +5,7 @@ using System.Collections;
 public abstract class State <T> {
 
 	[Multiline]
-	public string m_Description;
+	public string m_ExamineText;
 
 	protected StateMachine<T> m_Machine;
 	protected T m_Owner;
@@ -13,7 +13,7 @@ public abstract class State <T> {
 	public State() {}
 
 	public void setText(string text){
-		m_Description = text;
+		m_ExamineText = text;
 	}
 
 	public void setMachineAndOwner(StateMachine<T> machine, T owner) {
@@ -30,6 +30,6 @@ public abstract class State <T> {
 	public virtual void exit(T entity) {}
 
 	public virtual void activate(T entity) {}
-	public virtual void examine(T entity) { if(m_Description.Trim () != string.Empty) GUIManager.Instance.simpleShowTextLockMovement(m_Description); }
+	public virtual void examine(T entity) { if(m_ExamineText.Trim () != string.Empty) GUIManager.Instance.simpleShowText(m_ExamineText, true); }
 	public virtual void pickUp(T entity) {}
 }

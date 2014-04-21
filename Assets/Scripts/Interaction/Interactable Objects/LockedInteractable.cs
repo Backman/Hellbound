@@ -22,6 +22,9 @@ public class LockedInteractable : Interactable {
 		Interactable key = obj.GetComponent<Interactable>();
 		if(m_Keys.Contains (key)){
 			m_KeyState[key] = true;
+			if(key.m_InventoryItem != null){
+				Inventory.getInstance().removeItem(key.m_InventoryItem);
+			}
 			if( allKeys() ){
 				m_FSM.changeState<OpenedState>();
 			}
@@ -32,6 +35,7 @@ public class LockedInteractable : Interactable {
 		foreach(Interactable obj in m_Keys){
 			m_KeyState.Add (obj, false);
 		}
+		Debug.Log ("Dictionary size: " + m_KeyState.Count);
 	}
 
 	private bool allKeys() {
