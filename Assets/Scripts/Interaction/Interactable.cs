@@ -15,23 +15,12 @@ public abstract class Interactable : MonoBehaviour{
 	public ActivateType m_ActivateType = ActivateType.OnClick;
 	public InventoryItem m_InventoryItem;
 
-	private Shader m_OutlineShader;
-	private Shader m_OriginalShader;
-	private Material m_OutlineMaterial;
-	private Material m_OriginalMaterial;
-
-
-	protected virtual void Start(){
-		m_OutlineMaterial = new Material(renderer.material);
-		m_OutlineMaterial.shader = Shader.Find ("Hidden/Outline");
-		m_OriginalMaterial = new Material(renderer.material);
-		m_OriginalShader = m_OriginalMaterial.shader;
-	}
-
 	public void componentAction(string componentType) {
 		//m_CurrentState.componentAction(componentType);
 
 	}
+
+	protected virtual void Start() {}
 
 
 	public virtual void pickUp()  { 
@@ -52,14 +41,13 @@ public abstract class Interactable : MonoBehaviour{
 	
 	public virtual void gainFocus(){
 		//Apply light
-		m_OriginalMaterial = renderer.material;
-		renderer.material = m_OutlineMaterial;
+		Messenger.Broadcast<GameObject> ("onFocus", gameObject);
 		Debug.Log("Gaining focus: " + gameObject.name );
 	}
 
 	public virtual void loseFocus(){
 		//Remove light
-		renderer.material = m_OriginalMaterial;
+		Messenger.Broadcast ("leaveFocus");
 		Debug.Log("Leaving focus: " + gameObject.name );
 	}
 }

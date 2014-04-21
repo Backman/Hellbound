@@ -74,6 +74,7 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 	}
 
 	public void clearFocus(){
+		Messenger.Broadcast ("leaveFocus");
 		r_InFocus = null;
 		GUIManager.Instance.m_ExamineText.SetActive(false);
 	}
