@@ -26,8 +26,9 @@ public class AlterSoundParameter : MonoBehaviour {
 	void Start () 
 	{
 		foreach(GameObject g in g_GameObjects){
-			if(g.GetComponent<FMOD_StudioEventEmitter>() != null)
-			r_ParameterCollection.Add(g.GetComponent<FMOD_StudioEventEmitter>().getParameter(s_Parameter));
+			if(g.GetComponent<FMOD_StudioEventEmitter>() != null){
+				r_ParameterCollection.Add(g.GetComponent<FMOD_StudioEventEmitter>().getParameter(s_Parameter));
+			}
 		}
 		if(m_FadeSpeed == 0f){
 			m_FadeSpeed = 1;
@@ -105,23 +106,22 @@ public class AlterSoundParameter : MonoBehaviour {
 	private IEnumerator FadeOut(){
 		StopCoroutine("FadeIn");
 
-		float noPointersPlease = 0f;
-		
+		float noPointersPlease = m_InsideParameter;
+		float current = m_InsideParameter;
+
+
 		foreach (FMOD.Studio.ParameterInstance p in r_ParameterCollection) {
 			p.getValue(out noPointersPlease);
 		}
 		
 		m_OriginalValue = noPointersPlease;
 		float beginValue = noPointersPlease;
-		float current = noPointersPlease;
+		current = noPointersPlease;
 
 		
-		float desiredValue = 0f;
+		float desiredValue = m_OutsideParameter;
 		if(m_RevertToOriginalValue){
 			desiredValue = m_OriginalValue;
-		}
-		else{
-			desiredValue = m_OutsideParameter;
 		}
 		
 		while(current != desiredValue){
@@ -149,11 +149,16 @@ public class AlterSoundParameter : MonoBehaviour {
 		if(!(returnThis < desiredValue - oneStep) && !(returnThis > desiredValue + oneStep)){
 			return desiredValue;
 		}
-		if (at == desiredValue) {
-			return desiredValue;
+		if (beginValue < desiredValue) {
+			if(at > desiredValue){
+				return desiredValue;
+			}
 		}
-		else{
-			return returnThis;
+		else if(beginValue > desiredValue){
+			if(at < desiredValue)
+				return desiredValue;
 		}
+
+		return returnThis;
 	}
 }
