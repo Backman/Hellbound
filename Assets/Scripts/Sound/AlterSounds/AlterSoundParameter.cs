@@ -9,7 +9,6 @@ public class AlterSoundParameter : MonoBehaviour {
 	/// (the number of objects can be decided by the editor)
 	/// Anton Thorsell
 	/// </summary>
-
 	public GameObject[] g_GameObjects;
 	public string s_Parameter = "";
 	public float m_InsideParameter = 0f;
@@ -34,6 +33,7 @@ public class AlterSoundParameter : MonoBehaviour {
 
 
 	void OnTriggerEnter(Collider other){
+		if(other.GetComponent<Rigidbody>() != null){
 		if (m_UseFade && !m_Inside) {
 			m_Inside = true;
 			StartCoroutine("FadeIn");
@@ -47,9 +47,11 @@ public class AlterSoundParameter : MonoBehaviour {
 			}
 		}
 	}
+	}
 
 
 	void OnTriggerExit(Collider other){
+			if(other.GetComponent<Rigidbody>() != null){
 		if (m_UseFade && m_Inside) {
 			m_Inside = false;
 			StartCoroutine("FadeOut");
@@ -65,72 +67,75 @@ public class AlterSoundParameter : MonoBehaviour {
 				r_ParameterCollection.Clear();
 			}
 		}
+			}
 	}
 
 
 	private IEnumerator FadeIn(){
 		StopCoroutine("FadeOut");
 		
-		float Current = 0f;
-		float noPointerPlease = 0f;
+		float Current = m_OutsideParameter;
+		float noPointerPlease = m_OutsideParameter;
 		
+		if (m_FadeSpeed == 0) {
+			m_FadeSpeed = 1;
+		}
+
 		foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
 			p.getValue(out noPointerPlease);
 		}
 		
 		Current = noPointerPlease;
-		
-		float startvalue = Current;
+		float speed = (m_InsideParameter - Current) / (m_FadeSpeed * 50f);
+
 
 		while (Current != m_InsideParameter) {
-			
-			float speed = Time.deltaTime / (m_FadeSpeed * (m_OutsideParameter - startvalue));
-			
-			Current += speed;
 
+			Current += speed;
+			
 			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-				if(r_ParameterCollection != null){
-					p.setValue(Current);
-				}
+				p.setValue(Current);
 			}
-			Debug.Log(Current);
+
+			yield return new WaitForSeconds(0.01f);
 		}
+
 		yield return 0;
 	}
 
 
 	private IEnumerator FadeOut(){
 		StopCoroutine("FadeIn");
-
-		float Current = 0f;
-		float noPointerPlease = 0f;
 		
+		float Current = m_InsideParameter;
+		float noPointerPlease = m_InsideParameter;
+		if (m_FadeSpeed == 0) {
+			m_FadeSpeed = 1;
+		}
+
 		foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
 			p.getValue(out noPointerPlease);
 		}
 
 		Current = noPointerPlease;
 
-		float startvalue = Current;
+		float speed = (m_OutsideParameter - Current) / (m_FadeSpeed * 50f);
 
 		while (Current != m_OutsideParameter) {
-
-			float speed = Time.deltaTime / (m_FadeSpeed * (m_OutsideParameter - startvalue));
-
+			
 			Current += speed;
-
+			
 			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-				if(r_ParameterCollection != null){
-					p.setValue(Current);
-				}
+				p.setValue(Current);
 			}
-			Debug.Log(Current);
+
+			yield return new WaitForSeconds(0.01f);
 		}
 
-		if(m_DestroyOnExit){
-			r_ParameterCollection.Clear();
+		if (m_DestroyOnExit) {
+			Destroy(gameObject);
 		}
-
+		
 		yield return 0;
 	}
 }
