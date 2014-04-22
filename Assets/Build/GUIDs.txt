@@ -1,8 +1,0 @@
-{04804d8b-fdfe-473e-9387-8f2221bb2632} event:/Ambience
-{59077e5f-ae88-4fc3-a6ee-febf2b7eecdf} event:/Fireball
-{ef10de99-7887-40c4-b570-c1ab11dea43a} event:/Basic Engine
-{b768fc77-e9db-431f-95d4-dc56ea8ec847} bus:/
-{b21ab71d-af62-46dd-af16-4ad741ce0f17} bus:/SFX
-{91802361-b88a-437f-886c-e84e1478c12c} bus:/SFX/Reverb
-{38f3f7e5-eb55-4c79-a60d-b9bb8b0eb0c2} bus:/Reverb
-{b710f43e-b0af-4280-b9e5-cb004f095dba} bank:/Master Bank
