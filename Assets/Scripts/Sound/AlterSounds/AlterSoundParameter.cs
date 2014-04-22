@@ -29,6 +29,9 @@ public class AlterSoundParameter : MonoBehaviour {
 			if(g.GetComponent<FMOD_StudioEventEmitter>() != null)
 			r_ParameterCollection.Add(g.GetComponent<FMOD_StudioEventEmitter>().getParameter(s_Parameter));
 		}
+		if(m_FadeSpeed == 0f){
+			m_FadeSpeed = 1;
+		}
 	}
 
 
@@ -74,8 +77,26 @@ public class AlterSoundParameter : MonoBehaviour {
 	private IEnumerator FadeIn(){
 		StopCoroutine("FadeOut");
 
+		float noPointersPlease = 0f;
 
+		foreach (FMOD.Studio.ParameterInstance p in r_ParameterCollection) {
+			p.getValue(out noPointersPlease);
+		}
+	
+		m_OriginalValue = noPointersPlease;
+		float beginValue = noPointersPlease;
+		float current = noPointersPlease;
 
+		while(current != m_InsideParameter){
+
+			current = MoveTo(current, beginValue, m_InsideParameter);
+
+			foreach (FMOD.Studio.ParameterInstance p in r_ParameterCollection) {
+				p.setValue(current);
+			}
+			Debug.Log(current);
+			yield return new WaitForSeconds(0.01f);
+		}
 
 		yield return 0;
 	}
@@ -83,9 +104,56 @@ public class AlterSoundParameter : MonoBehaviour {
 
 	private IEnumerator FadeOut(){
 		StopCoroutine("FadeIn");
+
+		float noPointersPlease = 0f;
 		
+		foreach (FMOD.Studio.ParameterInstance p in r_ParameterCollection) {
+			p.getValue(out noPointersPlease);
+		}
+		
+		m_OriginalValue = noPointersPlease;
+		float beginValue = noPointersPlease;
+		float current = noPointersPlease;
 
 		
+		float desiredValue = 0f;
+		if(m_RevertToOriginalValue){
+			desiredValue = m_OriginalValue;
+		}
+		else{
+			desiredValue = m_OutsideParameter;
+		}
+		
+		while(current != desiredValue){
+			
+			current = MoveTo(current, beginValue, desiredValue);
+			
+			foreach (FMOD.Studio.ParameterInstance p in r_ParameterCollection) {
+				p.setValue(current);
+			}
+			Debug.Log(current);
+			yield return new WaitForSeconds(0.01f);
+		}
+
 		yield return 0;
+	}
+
+
+	private float MoveTo(float at, float beginValue, float desiredValue){
+
+		float returnThis = at;
+
+		float oneStep = (desiredValue - beginValue) / (m_FadeSpeed * 50f);
+		returnThis += oneStep;
+
+		if(!(returnThis < desiredValue - oneStep) && !(returnThis > desiredValue + oneStep)){
+			return desiredValue;
+		}
+		if (at == desiredValue) {
+			return desiredValue;
+		}
+		else{
+			return returnThis;
+		}
 	}
 }
