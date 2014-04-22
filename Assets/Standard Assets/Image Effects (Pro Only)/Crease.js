@@ -1,4 +1,3 @@
-
 #pragma strict
 
 @script ExecuteInEditMode

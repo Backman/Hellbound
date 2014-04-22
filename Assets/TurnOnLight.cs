@@ -6,6 +6,7 @@ public class TurnOnLight : MonoBehaviour {
 	private float[] m_OrignalIntensity;
 	public string m_ColliderTag = "Player";
 	public float m_TurnOnSpeed = 0.3f;
+	public float m_Delay = 0.0f;
 	private bool m_Triggered = false;
 
 	public void Start(){
@@ -25,6 +26,7 @@ public class TurnOnLight : MonoBehaviour {
 	}
 	
 	IEnumerator turnOnLights(){
+		yield return new WaitForSeconds(m_Delay);
 		float t = 0.0f;
 		while(t <= m_TurnOnSpeed){
 			for(int i = 0; i < m_Lights.Length; ++i){

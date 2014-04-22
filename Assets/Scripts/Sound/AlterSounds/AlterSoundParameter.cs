@@ -67,38 +67,15 @@ public class AlterSoundParameter : MonoBehaviour {
 				r_ParameterCollection.Clear();
 			}
 		}
-			}
 	}
+}
 
 
 	private IEnumerator FadeIn(){
 		StopCoroutine("FadeOut");
-		
-		float Current = m_OutsideParameter;
-		float noPointerPlease = m_OutsideParameter;
-		
-		if (m_FadeSpeed == 0) {
-			m_FadeSpeed = 1;
-		}
-
-		foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-			p.getValue(out noPointerPlease);
-		}
-		
-		Current = noPointerPlease;
-		float speed = (m_InsideParameter - Current) / (m_FadeSpeed * 50f);
 
 
-		while (Current != m_InsideParameter) {
 
-			Current += speed;
-			
-			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-				p.setValue(Current);
-			}
-
-			yield return new WaitForSeconds(0.01f);
-		}
 
 		yield return 0;
 	}
@@ -107,34 +84,7 @@ public class AlterSoundParameter : MonoBehaviour {
 	private IEnumerator FadeOut(){
 		StopCoroutine("FadeIn");
 		
-		float Current = m_InsideParameter;
-		float noPointerPlease = m_InsideParameter;
-		if (m_FadeSpeed == 0) {
-			m_FadeSpeed = 1;
-		}
 
-		foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-			p.getValue(out noPointerPlease);
-		}
-
-		Current = noPointerPlease;
-
-		float speed = (m_OutsideParameter - Current) / (m_FadeSpeed * 50f);
-
-		while (Current != m_OutsideParameter) {
-			
-			Current += speed;
-			
-			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-				p.setValue(Current);
-			}
-
-			yield return new WaitForSeconds(0.01f);
-		}
-
-		if (m_DestroyOnExit) {
-			Destroy(gameObject);
-		}
 		
 		yield return 0;
 	}
