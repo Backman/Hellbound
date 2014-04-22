@@ -15,6 +15,8 @@ public abstract class Interactable : MonoBehaviour{
 	public ActivateType m_ActivateType = ActivateType.OnClick;
 	public InventoryItem m_InventoryItem;
 
+	[HideInInspector] public string m_Description;
+
 	public void componentAction(string componentType) {
 		//m_CurrentState.componentAction(componentType);
 

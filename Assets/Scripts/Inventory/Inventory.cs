@@ -23,6 +23,7 @@ public class Inventory {
 	private UIGrid r_Grid = null;
 	
 	private Inventory(){
+		Messenger.AddListener("reset pause window", resetInventory);
 		r_InventoryMenu = GameObject.FindGameObjectWithTag("ExamineWindow");
 		//r_InventoryMenu.SetActive(false);
 		r_Grid = GUIManager.Instance.m_PauseWindow.r_InventoryWindow.GetComponentInChildren<UIGrid>();
@@ -30,6 +31,12 @@ public class Inventory {
 		// Same types of objects should be placed on same space in inventory
 		m_InventoryItemIndex.Add(InventoryItem.Type.Key, 0);
 		m_InventoryItemIndex.Add(InventoryItem.Type.Oil, 1);
+	}
+
+	public void resetInventory() {
+		hideInventoryMenu();
+		m_CurrentSelectedInventoryItem = null;
+		r_CombineItems.Clear ();
 	}
 
 	public static Inventory getInstance(){
@@ -53,7 +60,6 @@ public class Inventory {
 	public void showInventoryMenu(){
 		TweenAlpha tween = (TweenAlpha)r_InventoryMenu.GetComponent(typeof(TweenAlpha));
 		tween.PlayForward();
-		//r_InventoryMenu.SetActive(true);
 	}
 
 	public void hideInventoryMenu(){

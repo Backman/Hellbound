@@ -25,4 +25,8 @@ public class Combine : MonoBehaviour {
 		r_Object.GetComponent<UIPlayTween>().Play(false);
 		//m_Object.SetActive(false);
 	}
+
+	public void hideWindow() {
+		gameObject.GetComponent<UIPlayTween>().Play(false);
+	}
 }
