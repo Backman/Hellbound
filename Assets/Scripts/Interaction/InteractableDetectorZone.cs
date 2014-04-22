@@ -46,8 +46,8 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 		if( ii != null ){
 			r_InFocus = ii;
 			r_InFocus.gainFocus();
-			GUIManager.Instance.m_ExamineText.SetActive(true);
-			GUIManager.Instance.m_ExamineText.GetComponent<UIPlayTween>().Play(true);
+			GUIManager.Instance.m_InteractText.gameObject.SetActive(true);
+			GUIManager.Instance.m_InteractText.GetComponent<UIPlayTween>().Play(true);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 		if( r_InFocus != null && col.gameObject == r_InFocus.gameObject ){
 			r_InFocus.loseFocus();
 			r_InFocus = null;
-			GUIManager.Instance.m_ExamineText.SetActive(false);
+			GUIManager.Instance.m_InteractText.gameObject.SetActive(false);
 		}
 	}
 
@@ -76,6 +76,6 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 	public void clearFocus(){
 		Messenger.Broadcast ("leaveFocus");
 		r_InFocus = null;
-		GUIManager.Instance.m_ExamineText.SetActive(false);
+		GUIManager.Instance.m_InteractText.gameObject.SetActive(false);
 	}
 }

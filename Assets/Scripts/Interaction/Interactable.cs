@@ -28,7 +28,6 @@ public abstract class Interactable : MonoBehaviour{
 	}
 
 	public virtual void examine() {
-
 	}
 
 	public virtual void activate(){ }

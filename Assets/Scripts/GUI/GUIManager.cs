@@ -28,7 +28,7 @@ public class GUIManager : Singleton<GUIManager> {
 	[SerializeField]
 	private UISprite r_SubtitlesWindow;
 
-	public GameObject m_ExamineText;
+	public InteractText m_InteractText;
 
 	////////////////////////////////////////////////
 	[SerializeField] [Range (0, 1)]				  //	
