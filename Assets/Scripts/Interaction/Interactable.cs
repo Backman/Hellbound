@@ -87,7 +87,7 @@ public abstract class Interactable : MonoBehaviour{
 		Messenger.Broadcast ("leaveFocus");
 		Debug.Log("Leaving focus: " + gameObject.name );
 		if (m_EventSound.m_LoseFocus) { 
-			FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_LoseFocus, gameObject.transform.position);
+			FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathLoseFocus, gameObject.transform.position);
 		}
 	}
 }
