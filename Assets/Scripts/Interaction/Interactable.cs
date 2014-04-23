@@ -79,6 +79,8 @@ public abstract class Interactable : MonoBehaviour{
 		if (m_EventSound.m_GainFocus) { 
 			FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathGainFocus, gameObject.transform.position);
 		}
+
+
 	}
 	
 	

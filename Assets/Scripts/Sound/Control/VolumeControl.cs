@@ -60,6 +60,8 @@ public class VolumeControl : MonoBehaviour {
 		system.lookupID ("bus:/Music", out guid);
 		system.getMixerStrip (guid, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus);
 		m_Volume.Add ("Music", bus);
+
+		LoadVolume();
 	}
 
 
@@ -69,5 +71,25 @@ public class VolumeControl : MonoBehaviour {
 	public void ChangeVolume(float newVolume, string tagToBeChanged)
 	{
 		m_Volume[tagToBeChanged].setFaderLevel (newVolume);
+	}
+
+	private void LoadVolume(){
+		float setThis = 0f;
+		
+		m_Volume ["Master"].getFaderLevel(out setThis);
+		PlayerPrefs.SetFloat ("Master", setThis);
+		m_Volume ["SFX"].getFaderLevel(out setThis);
+		PlayerPrefs.SetFloat ("SFX", setThis);
+		m_Volume ["Voice"].getFaderLevel(out setThis);
+		PlayerPrefs.SetFloat ("Voice", setThis);
+		m_Volume ["Music"].getFaderLevel(out setThis);
+		PlayerPrefs.SetFloat ("Music", setThis);
+	}
+
+	private void SaveVolume(){
+		ChangeVolume (PlayerPrefs.GetFloat ("Master", 1f), "Master");
+		ChangeVolume (PlayerPrefs.GetFloat ("SFX", 1f), "SFX");
+		ChangeVolume (PlayerPrefs.GetFloat ("Voice", 1f), "Voice");
+		ChangeVolume (PlayerPrefs.GetFloat ("Music", 1f), "Music");
 	}
 }
