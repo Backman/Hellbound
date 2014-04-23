@@ -96,6 +96,7 @@ public class GUIManager : Singleton<GUIManager> {
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 		} else {
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(false);
+			Messenger.Broadcast("reset pause window");
         }
     }
 
