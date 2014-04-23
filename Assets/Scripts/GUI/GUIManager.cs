@@ -121,7 +121,7 @@ public class GUIManager : Singleton<GUIManager> {
 			args[0] = text;	
 			args[1] = lockMovement;
 			args[2] = "awaitInput";		//Method for making text advance
-			args[3] = "Fire2";
+			args[3] = "Examine";
 			args[4] = false;
 
 			StartCoroutine("examine", args);
@@ -134,10 +134,6 @@ public class GUIManager : Singleton<GUIManager> {
 	/// <summary>
 	/// Shows the subtitles.
 	/// </summary>
-	/// <param name="text">Text.</param>
-	/// <param name="displayTime">Display time.</param>
-	/// <param name="textSpeed">Text speed.</param>
-	/// <param name="doLinePadding">If set to <c>true</c> do line padding.</param>
 	public void showSubtitles( MyGUI.SubtitlesSettings[] subtitles ){
 
 			StartCoroutine("subtitles", subtitles);
