@@ -100,7 +100,8 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 
 	public void clearFocus(){
 		Messenger.Broadcast ("leaveFocus");
-		r_InFocus = null;
-		r_GUIManager.m_InteractText.gameObject.SetActive(false);
+		r_InFocus = null;		
+		r_GUIManager.m_InteractText.active(false);
+	//	r_GUIManager.m_InteractText.gameObject.SetActive(false);
 	}
 }
