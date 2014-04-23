@@ -39,9 +39,9 @@ public class InventoryMouseEvent : MonoBehaviour {
 			if (UICamera.hoveredObject == r_MouseDownObject && invItem != null) {
 				Messenger.Broadcast<InventoryItem>("show inventory model", invItem);
 				Messenger.Broadcast<string>("set description text", invItem.InteractableObject.m_Description);
-				Inventory.getInstance().setSelectedItem(invItem);
-				Inventory.getInstance().showInventoryMenu();
-				Inventory.getInstance().addCombineItem(invItem, false);
+				//Inventory.getInstance().setSelectedItem(invItem);
+				//Inventory.getInstance().showInventoryMenu();
+				//Inventory.getInstance().addCombineItem(invItem, false);
 			}
 			r_MouseDownObject = null;
 		}
