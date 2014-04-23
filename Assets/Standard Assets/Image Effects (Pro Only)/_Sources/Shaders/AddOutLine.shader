@@ -29,7 +29,7 @@ v2f vert(appdata v) {
 	o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
  
 	float3 norm   = mul ((float3x3)UNITY_MATRIX_IT_MV, v.normal);
-	float2 offset = TransformViewToProjection(norm.xy);
+	float2 offset = TransformViewToProjection(norm.xy)/4;
  
 	o.pos.xy += offset * o.pos.z * _Outline;
 	o.color = _OutlineColor;

@@ -23,7 +23,9 @@ public abstract class Interactable : MonoBehaviour{
 	public InventoryItem m_InventoryItem;
 	public EventSound m_EventSound;
 
-	
+
+	[HideInInspector] public string m_Description;
+
 	public void componentAction(string componentType) {
 		//m_CurrentState.componentAction(componentType);
 		

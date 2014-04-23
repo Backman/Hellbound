@@ -300,7 +300,7 @@ static internal class Messenger {
 public sealed class MessengerHelper : MonoBehaviour {
 	void Awake ()
 	{
-		DontDestroyOnLoad(gameObject);	
+		DontDestroyOnLoad(gameObject);
 	}
 	
 	//Clean up eventTable every time a new level loads.
