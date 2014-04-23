@@ -47,8 +47,9 @@ public class FootStepSounds : MonoBehaviour {
 	void OnTriggerStay(Collider other){
 		//is the object we collided with have a footstepsurface?
 		if(other.GetComponent<FootstepSurface>() != null){
-
-		//	f_Parameter.setValue(surfaceTexture.m_SurfaceType);
+			if(surfaceTexture != null){
+				f_Parameter.setValue(surfaceTexture.m_SurfaceType);
+			}
 			//if our whole foot is placed on the ground, we havent played a sound this
 			//"step" and the other foots backcollider isnt hitting anything we can play a sound
 			//(this means that we are still moving foward)

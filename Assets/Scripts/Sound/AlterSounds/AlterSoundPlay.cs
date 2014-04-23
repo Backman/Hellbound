@@ -36,7 +36,6 @@ public class AlterSoundPlay : MonoBehaviour {
 	}
 
 
-
 	//if something enters the collider, depending on the variables 
 	//stuff happens
 	void OnTriggerEnter(Collider other){

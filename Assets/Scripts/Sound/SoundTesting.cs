@@ -30,6 +30,5 @@ public class SoundTesting : MonoBehaviour {
 		{
 			m_VC.ChangeVolume(0f, "Master");
 		}
-		int derp = 0;
 	}
 }

@@ -11,10 +11,12 @@ public class EventSound : MonoBehaviour {
 	
 	public string m_PathActivate = "event:/";
 	public bool m_Activate = false;
-	
+
+
 	public string m_PathGainFocus = "event:/";
 	public bool m_GainFocus = false;
 	
 	public string m_PathLoseFocus = "event:/";
 	public bool m_LoseFocus = false;
+
 }
