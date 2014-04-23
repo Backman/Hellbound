@@ -44,6 +44,7 @@ public class GUIManager : Singleton<GUIManager> {
     private bool m_GamePaused = false;
 	private bool m_Examining = false;
 	private bool m_SubtitlesDisplayed = false;
+	private bool m_InventoryIsUp = false;
 
 	private ExamineBehaviour   m_Examine;
 	private SubtitlesBehaviour m_Subtitles;
@@ -52,7 +53,9 @@ public class GUIManager : Singleton<GUIManager> {
 	private UILabel[] r_SubtitlesLables;
 
 	public void Start(){
+		DontDestroyOnLoad( transform.gameObject );
 		Inventory.getInstance();
+//		m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().resetOnPlay = true;
 		if( r_ExamineWindow == null ){
 			Debug.LogError("Error! No description window present!");
 		} 
@@ -79,8 +82,7 @@ public class GUIManager : Singleton<GUIManager> {
             pauseGame(m_GamePaused);
         }
 		if (Input.GetButtonDown("Inventory") && !m_GamePaused) {
-			m_GamePaused = !m_GamePaused;
-			Messenger.Broadcast<bool>("lock player input", m_GamePaused);
+			m_InventoryIsUp = !m_InventoryIsUp;
 			inventory();
 		}
 		if (Input.GetButtonDown("Journal") && !m_GamePaused) {
@@ -101,8 +103,12 @@ public class GUIManager : Singleton<GUIManager> {
     }
 
 	public void inventory(){
-		PauseMenu.getInstance ().showInventory();
-		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
+		m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().Play (true);
+		if(m_InventoryIsUp) {
+			m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().tweenGroup = 1;
+		} else {
+			m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().tweenGroup = 0;
+		}
 	}
 
 	public void journal(){
@@ -122,7 +128,7 @@ public class GUIManager : Singleton<GUIManager> {
 			args[0] = text;	
 			args[1] = lockMovement;
 			args[2] = "awaitInput";		//Method for making text advance
-			args[3] = "Fire2";
+			args[3] = "Examine";
 			args[4] = false;
 
 			StartCoroutine("examine", args);
@@ -135,10 +141,6 @@ public class GUIManager : Singleton<GUIManager> {
 	/// <summary>
 	/// Shows the subtitles.
 	/// </summary>
-	/// <param name="text">Text.</param>
-	/// <param name="displayTime">Display time.</param>
-	/// <param name="textSpeed">Text speed.</param>
-	/// <param name="doLinePadding">If set to <c>true</c> do line padding.</param>
 	public void showSubtitles( MyGUI.SubtitlesSettings[] subtitles ){
 
 			StartCoroutine("subtitles", subtitles);

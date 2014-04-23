@@ -6,14 +6,13 @@ using System.Collections;
 /// because Unity does not update the scrollview....
 /// By Arvd/Aleksi 2014-04-16
 /// </summary>
-public class InventoryGridController : MonoBehaviour {
+public class InventoryTableController : MonoBehaviour {
 	
-	private static UIGrid r_Grid;
+	private static UITable r_Table;
 	private static UIScrollView r_ScrollView;
 	
 	void Start(){
-		r_Grid = (UIGrid)GetComponent(typeof(UIGrid));
-		r_ScrollView = (UIScrollView)r_Grid.transform.parent.GetComponent(typeof(UIScrollView));
+		r_Table = (UITable)GetComponent(typeof(UITable));
 	}
 	
 	/// <summary>
@@ -21,7 +20,7 @@ public class InventoryGridController : MonoBehaviour {
 	/// Unity is a mother fucking bullshit engine
 	/// </summary>
 	public static void reposition(){
-		r_Grid.Reposition ();
-		r_ScrollView.ResetPosition();
+		r_Table.Reposition ();
+		//r_ScrollView.ResetPosition();
 	}
 }
