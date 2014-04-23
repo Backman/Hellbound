@@ -34,15 +34,24 @@ public class FootStepSounds : MonoBehaviour {
 	//the start acceses and saves a few "pointers" to the necessary scrips and variables
 	//(this is to provide shortcuts to what we want to access and/or change)
 	void Start(){
-		f_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
+		StartCoroutine ("waitForParameters");
 
 		FBack = FootBack.GetComponent<FootStepsHitBoxes> ();
 		OtherFBack = OtherFootBack.GetComponent<FootStepsHitBoxes> ();
 
-		f_Parameter = f_Emitter.getParameter("Surface");
+
 		surfaceTexture = gameObject.GetComponent<GetDominantTexture> ();
 	}
 
+	private IEnumerator waitForParameters(){
+
+		while (f_Emitter == null) {
+			yield return new WaitForSeconds(0.1f);
+			f_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
+		}
+		f_Parameter = f_Emitter.getParameter("Surface");
+		yield return 0;
+	}
 
 	void OnTriggerStay(Collider other){
 		//is the object we collided with have a footstepsurface?
