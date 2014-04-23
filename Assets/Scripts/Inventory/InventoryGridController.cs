@@ -22,6 +22,6 @@ public class InventoryGridController : MonoBehaviour {
 	/// </summary>
 	public static void reposition(){
 		r_Grid.Reposition ();
-		r_ScrollView.UpdatePosition();
+		r_ScrollView.ResetPosition();
 	}
 }
