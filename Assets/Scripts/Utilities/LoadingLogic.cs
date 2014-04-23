@@ -50,7 +50,7 @@ public class LoadingLogic : Singleton<LoadingLogic> {
 		r_LoadingScreenTweener.PlayForward();
 		r_LoadingMessageTweener.PlayForward();
 
-		yield return new WaitForSeconds( 2.0f );
+		yield return new WaitForSeconds( 4.0f );
 
 		Application.LoadLevel( (string) args[0] );
 

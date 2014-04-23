@@ -53,8 +53,9 @@ public class GUIManager : Singleton<GUIManager> {
 	private UILabel[] r_SubtitlesLables;
 
 	public void Start(){
+		DontDestroyOnLoad( transform.gameObject );
 		Inventory.getInstance();
-		m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().resetOnPlay = true;
+//		m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().resetOnPlay = true;
 		if( r_ExamineWindow == null ){
 			Debug.LogError("Error! No description window present!");
 		} 
