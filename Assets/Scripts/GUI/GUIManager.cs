@@ -52,6 +52,11 @@ public class GUIManager : Singleton<GUIManager> {
 	private UILabel[] r_ExamineLabels;
 	private UILabel[] r_SubtitlesLables;
 
+	/// <summary>
+	/// Controlls wether the inventoryWindow is currently tweening or not
+	/// </summary>
+	private bool m_InventoryTweening = false;
+
 	public void Start(){
 		DontDestroyOnLoad( transform.gameObject );
 		Inventory.getInstance();
@@ -81,7 +86,8 @@ public class GUIManager : Singleton<GUIManager> {
             Messenger.Broadcast<bool>("lock player input", m_GamePaused);
             pauseGame(m_GamePaused);
         }
-		if (Input.GetButtonDown("Inventory") && !m_GamePaused) {
+		if (Input.GetButtonDown("Inventory") && !m_GamePaused && !m_InventoryTweening) {
+			m_InventoryTweening = true;
 			m_InventoryIsUp = !m_InventoryIsUp;
 			inventory();
 		}
@@ -102,13 +108,20 @@ public class GUIManager : Singleton<GUIManager> {
         }
     }
 
+	public void doneTweening(){
+		m_InventoryTweening = false;
+	}
+	
 	public void inventory(){
+
 		m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().Play (true);
 		if(m_InventoryIsUp) {
 			m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().tweenGroup = 1;
-		} else {
+		} 
+		else {
 			m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().tweenGroup = 0;
 		}
+
 	}
 
 	public void journal(){
