@@ -41,7 +41,7 @@ public class Inventory {
 		if(item.m_Thumbnail == null) {
 			return;
 		}
-		InventoryTableController.reposition ();
+//		InventoryTableController.reposition ();
 		UISprite sprite = GameObject.Instantiate(item.m_Thumbnail, r_Table.transform.position, r_Table.transform.rotation) as UISprite;
 		m_Items.Add (sprite);
 		m_InvItems.Add (item);
@@ -51,11 +51,13 @@ public class Inventory {
 	}
 
 	public void removeItem(Interactable item){
-		InventoryTableController.reposition ();
+//		InventoryTableController.reposition ();
 		UISprite sprite = m_Items.Find(x => x.spriteName == item.m_Thumbnail.spriteName);
 		m_Items.Remove(sprite);
 		m_InvItems.Remove (item);
-		GameObject.Destroy(sprite);
+		GameObject.Destroy(sprite.gameObject);
 		InventoryTableController.reposition ();
 	}
+
+
 }
