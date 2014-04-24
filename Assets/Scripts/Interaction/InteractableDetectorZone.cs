@@ -40,7 +40,7 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 	/// This function is called on the Interactable as the interactable enters the players interact zone
 	/// </summary>
 	void OnTriggerEnter( Collider col ){
-		//TODO: Add detection for which interactable is in focus.
+		//TODO: Add detection for which interactable is in focus if several objects are within the zone.
 
 		Interactable ii = col.gameObject.GetComponent<Interactable>();
 		if( ii != null ){
@@ -57,7 +57,6 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 	///This function is called on the Interactable as it leaves the players interact zone
 	/// </summary>
 	void OnTriggerExit( Collider col  ){
-		//TODO: Detect wheter the left  trigger was the interactalbe actually in focus 
 
 		if( r_InFocus != null && col.gameObject == r_InFocus.gameObject ){
 			r_InFocus.loseFocus();
@@ -83,7 +82,7 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 		} else {
 			r_GUIManager.m_InteractText.HasPickup = true;
 		}
-//		if(!r_InFocus.Usable) {
+//TODO	if(!r_InFocus.Usable) {
 //			r_GUIManager.m_InteractText.CanBeUsed = false;
 //		} else {
 //			r_GUIManager.m_InteractText.CanBeUsed = true;
@@ -100,7 +99,8 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 
 	public void clearFocus(){
 		Messenger.Broadcast ("leaveFocus");
-		r_InFocus = null;
-		r_GUIManager.m_InteractText.gameObject.SetActive(false);
+		r_InFocus = null;		
+		r_GUIManager.m_InteractText.active(false);
+	//	r_GUIManager.m_InteractText.gameObject.SetActive(false);
 	}
 }
