@@ -17,14 +17,31 @@ public class OutlinesToTarget : MonoBehaviour {
 	}
 
 	public void onFocus(GameObject obj) {
-		GameObject temp = Instantiate(obj) as GameObject;
+	/*	Mesh mesh = obj.GetComponent<Mesh>();
+		GameObject temp = new GameObject("Duplicant");
+		MeshFilter meshFilter = temp.AddComponent<MeshFilter>();
+		temp.AddComponent<MeshRenderer>();
+
+		Mesh tempMesh = temp.GetComponent<Mesh>();
+		tempMesh.vertices = mesh.vertices;
+		tempMesh.colors = mesh.colors;
+		tempMesh.triangles = mesh.triangles;
+		tempMesh.normals = mesh.normals;
+
+		//meshFilter.sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
+		temp.renderer.sharedMaterial = m_Material;
+		temp.transform.position = obj.transform.position;
+		temp.transform.rotation = obj.transform.rotation;
+		temp.transform.localScale = obj.transform.localScale;
+
+
 		var components = (Interactable)temp.GetComponent(typeof(Interactable));
 		components.enabled = false;
 		components.collider.enabled = false;
 
 		temp.renderer.sharedMaterial = m_Material;
-				
-		m_Target = temp;
+
+		m_Target = temp;	*/
 	}
 
 	public void leaveFocus(){
