@@ -13,7 +13,7 @@ public class Combine : MonoBehaviour {
 	}
 	
 	public void combine(){
-		Inventory.getInstance().combineItems();
+
 	}
 	
 	public static void show(){

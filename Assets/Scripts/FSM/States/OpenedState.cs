@@ -7,6 +7,7 @@ public class OpenedState : State<LockedInteractable> {
 	public override void enter (LockedInteractable entity)
 	{
 		GameObject.Destroy(entity.gameObject);
+		Messenger.Broadcast("leaveFocus");
 	}
 
 	public override void activate (LockedInteractable entity)

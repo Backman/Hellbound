@@ -21,36 +21,32 @@ public abstract class Interactable : MonoBehaviour{
 	public enum ActivateType{ OnTrigger, OnClick };
 	public ActivateType m_ActivateType = ActivateType.OnClick;
 	public InventoryItem m_InventoryItem;
+	public UISprite m_Thumbnail;
 	public EventSound m_EventSound;
 
 	[HideInInspector] public string m_Description;
 
-	public void componentAction(string componentType) {
-		//m_CurrentState.componentAction(componentType);
-		
-		
+	protected bool m_Usable = false;
+	public bool Usable {
+		get { return m_Usable; }
 	}
-	
-	
-	protected virtual void Start() {
-		m_EventSound = gameObject.GetComponent<EventSound> ();
-		if (m_EventSound != null) {
-			m_EventSound = new EventSound();
-		}
 
+	protected virtual void Awake() {
+		m_EventSound = gameObject.GetComponent<EventSound> ();
+		if (m_EventSound == null) {
+			Debug.Log ("No event sound. Creating a new one!");
+			m_EventSound = gameObject.AddComponent<EventSound>();
+		}
 	}
-	
-	
-	
+		
+	protected virtual void Start() {}
 	
 	public virtual void pickUp()  { 
-		Debug.Log("Is picked up: " + gameObject.name );
 		if (m_EventSound.m_PickUp) { 
 				FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathPickUp, gameObject.transform.position);
 		}
 
 	}
-	
 	
 	public virtual void examine() {
 		if (m_EventSound.m_Examine) { 
@@ -77,8 +73,10 @@ public abstract class Interactable : MonoBehaviour{
 		//Apply light
 		Messenger.Broadcast<GameObject> ("onFocus", gameObject);
 		Debug.Log("Gaining focus: " + gameObject.name );
-		if (m_EventSound.m_GainFocus) { 
-			FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathGainFocus, gameObject.transform.position);
+		if(m_EventSound != null) {
+			if (m_EventSound.m_GainFocus) { 
+				FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathGainFocus, gameObject.transform.position);
+			}
 		}
 	}
 	
@@ -91,4 +89,5 @@ public abstract class Interactable : MonoBehaviour{
 			FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathLoseFocus, gameObject.transform.position);
 		}
 	}
+
 }

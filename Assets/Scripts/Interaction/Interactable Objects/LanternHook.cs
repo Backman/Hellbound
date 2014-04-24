@@ -23,8 +23,14 @@ public class LanternHook : Interactable {
 		Interactable key = obj.GetComponent<Interactable>();
 		if(key.m_InventoryItem.getType () == InventoryItem.Type.Lantern && !m_IsOpen){
 			open();
-			Inventory.getInstance().removeItem(key.m_InventoryItem);
+			Inventory.getInstance().removeItem(key);
 		}
+	}
+
+	public override void activate ()
+	{
+		base.activate ();
+		m_FSM.CurrentState.activate (this);
 	}
 
 	public void Update(){
