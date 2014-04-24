@@ -44,7 +44,7 @@ public class LockedInteractable : Interactable {
 		foreach(Interactable obj in m_Keys){
 			m_KeyState.Add (obj, false);
 		}
-		Debug.Log ("Dictionary size: " + m_KeyState.Count);
+		//Debug.Log ("Dictionary size: " + m_KeyState.Count);
 	}
 
 	public bool allKeys() {

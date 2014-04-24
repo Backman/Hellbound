@@ -57,7 +57,7 @@ public class AlterSoundParameter : MonoBehaviour {
 			else if (!m_UseFade && !m_Inside){
 				m_Inside = true;
 				foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-					if(r_ParameterCollection != null){
+					if(p != null){
 						p.setValue(m_InsideParameter);
 					}
 				}
@@ -75,7 +75,7 @@ public class AlterSoundParameter : MonoBehaviour {
 		else if (!m_UseFade && m_Inside){
 			m_Inside = false;
 			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-				if(r_ParameterCollection != null){
+				if(p != null){
 					p.setValue(m_OutsideParameter);
 				}
 			}
@@ -177,5 +177,10 @@ public class AlterSoundParameter : MonoBehaviour {
 		}
 
 		return returnThis;
+	}
+
+	void OnDisable()
+	{
+		r_ParameterCollection.Clear ();
 	}
 }
