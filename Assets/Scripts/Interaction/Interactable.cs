@@ -92,4 +92,5 @@ public abstract class Interactable : MonoBehaviour{
 			FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathLoseFocus, gameObject.transform.position);
 		}
 	}
+
 }
