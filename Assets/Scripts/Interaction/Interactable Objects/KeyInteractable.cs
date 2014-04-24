@@ -22,6 +22,7 @@ public class KeyInteractable : Interactable {
 
 	public override void pickUp () {
 		m_FSM.CurrentState.pickUp(this);
+		base.pickUp();
 	}
 
 	public override void examine () {

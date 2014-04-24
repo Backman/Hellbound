@@ -23,6 +23,7 @@ public abstract class Interactable : MonoBehaviour{
 	public InventoryItem m_InventoryItem;
 	public UISprite m_Thumbnail;
 	public EventSound m_EventSound;
+	public string m_PuzzleState = "";
 
 	[HideInInspector] public string m_Description;
 
@@ -45,7 +46,7 @@ public abstract class Interactable : MonoBehaviour{
 		if (m_EventSound.m_PickUp) { 
 				FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathPickUp, gameObject.transform.position);
 		}
-
+	
 	}
 	
 	public virtual void examine() {
@@ -88,6 +89,14 @@ public abstract class Interactable : MonoBehaviour{
 		if (m_EventSound.m_LoseFocus) { 
 			FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathLoseFocus, gameObject.transform.position);
 		}
+	}
+
+	public string getPuzzleState(){
+		return m_PuzzleState;
+	}
+
+	public void setPuzzleState(string puzzleState){
+		m_PuzzleState = puzzleState;
 	}
 
 }
