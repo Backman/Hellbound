@@ -14,20 +14,16 @@ public class FootStepsHitBoxes : MonoBehaviour {
 
 
 	//if we hit anything that have footstepsurface as a component, the bool becomes true
-	void OnTriggerEnter(Collider other)
-	{
-		if(other.GetComponent<FootstepSurface>() != null)
-		{
+	void OnTriggerEnter(Collider other){
+		if(other.GetComponent<FootstepSurface>() != null){
 			b_IsHitting = true;
 		}
 	}
 
 	//if we leave the thing we hit that have footstepsurface as a component, 
 	///the bool becomes false (durr)
-	void OnTriggerExit(Collider other)
-	{
-		if(other.GetComponent<FootstepSurface>() != null)
-		{
+	void OnTriggerExit(Collider other){
+		if(other.GetComponent<FootstepSurface>() != null){
 			b_IsHitting = false;
 		}
 	}
