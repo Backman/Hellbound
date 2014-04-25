@@ -8,7 +8,6 @@ using System.Collections;
 /// </summary>
 public class InventoryTableController : MonoBehaviour {
 
-//	private static InventoryTableController instance;
 	private static bool m_DoReposition = false;
 	private static UITable r_Table;
 	private static UIScrollView r_ScrollView;

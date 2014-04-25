@@ -6,13 +6,7 @@ public class LanternHookCloseState : State<LanternHook> {
 
 	public override void activate (LanternHook entity)
 	{
-		foreach(Interactable item in Inventory.getInstance ().Items) {
-			if(item.m_Thumbnail.name.Contains ("Lantern")) {
-				entity.open ();
-				Inventory.getInstance ().removeItem(item);
-				break;
-			}
-		}
+//TODO: INV_	if( Inventory.contains( keyItem ) 
 	}
 
 	public override void reason (LanternHook entity) {

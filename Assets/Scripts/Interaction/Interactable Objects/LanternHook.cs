@@ -18,14 +18,7 @@ public class LanternHook : Interactable {
 		m_FSM = new StateMachine<LanternHook>(this, m_LockedState);
 		m_FSM.addState(m_OpenedState);
 	}
-	
-	public override void useWith (GameObject obj) {
-		Interactable key = obj.GetComponent<Interactable>();
-		if(key.m_InventoryItem.getType () == InventoryItem.Type.Lantern && !m_IsOpen){
-			open();
-			Inventory.getInstance().removeItem(key);
-		}
-	}
+
 
 	public override void activate ()
 	{

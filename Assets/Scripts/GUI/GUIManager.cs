@@ -46,8 +46,8 @@ public class GUIManager : Singleton<GUIManager> {
 	private bool m_SubtitlesDisplayed = false;
 	private bool m_InventoryIsUp = false;
 
-	private ExamineBehaviour   m_Examine;
-	private SubtitlesBehaviour m_Subtitles;
+	private ExamineLogic   m_Examine;
+	private SubtitlesLogic m_Subtitles;
 
 	private UILabel[] r_ExamineLabels;
 	private UILabel[] r_SubtitlesLables;
@@ -59,8 +59,9 @@ public class GUIManager : Singleton<GUIManager> {
 
 	public void Start(){
 		DontDestroyOnLoad( transform.gameObject );
-		Inventory.getInstance();
-//		m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().resetOnPlay = true;
+
+//TODO: INV_	Inventory.getInstance();	//For initialization
+
 		if( r_ExamineWindow == null ){
 			Debug.LogError("Error! No description window present!");
 		} 
@@ -171,7 +172,7 @@ public class GUIManager : Singleton<GUIManager> {
 		r_ExamineLabels = t.GetComponentsInChildren<UILabel>();
 		r_ExamineLabels = r_ExamineLabels.OrderBy( x => x.name ).ToArray();
 		
-		m_Examine = gameObject.GetComponent<ExamineBehaviour>();
+		m_Examine = gameObject.AddComponent<ExamineLogic>();
 		m_Examine.initialize( r_ExamineLabels, sprite, m_ExamineTextSpeed,
 		                     m_ExamineNewLineWait, m_ExamineDoLinePadding );
 	}
@@ -184,7 +185,7 @@ public class GUIManager : Singleton<GUIManager> {
 		r_SubtitlesLables = t.GetComponentsInChildren<UILabel>();
 		r_SubtitlesLables = r_SubtitlesLables.OrderBy( x => x.name ).ToArray();
 		
-		m_Subtitles = gameObject.GetComponent<SubtitlesBehaviour>();
+		m_Subtitles = gameObject.AddComponent<SubtitlesLogic>();
 		m_Subtitles.initialize( r_SubtitlesLables );
 	}
 	#endregion

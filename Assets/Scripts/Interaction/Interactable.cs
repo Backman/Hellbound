@@ -20,7 +20,6 @@ using System.Reflection;
 public abstract class Interactable : MonoBehaviour{
 	public enum ActivateType{ OnTrigger, OnClick };
 	public ActivateType m_ActivateType = ActivateType.OnClick;
-	public InventoryItem m_InventoryItem;
 	public UISprite m_Thumbnail;
 	public EventSound m_EventSound;
 	public string m_PuzzleState = "";

@@ -10,7 +10,7 @@ using System.Linq;
 /// 
 /// Created by Simon
 /// </summary>
-public class ExamineBehaviour : MonoBehaviour {
+public class ExamineLogic : MonoBehaviour {
 
 	private UILabel[] r_ExamineLabels;
 	private UISprite  r_NextSprite;

@@ -25,9 +25,11 @@ public class LockedInteractable : Interactable {
 		Interactable key = obj.GetComponent<Interactable>();
 		if(m_Keys.Contains (key)){
 			m_KeyState[key] = true;
-			if(Inventory.getInstance ().containsItem(key)){
+
+/*			if(Inventory.getInstance ().containsItem(key)){
 				Inventory.getInstance().removeItem(key);
 			}
+*/
 			if( allKeys() ){
 				m_FSM.changeState<OpenedState>();
 			}

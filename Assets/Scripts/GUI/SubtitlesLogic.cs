@@ -10,7 +10,7 @@ using System.Linq;
 /// 
 /// Created by Simon
 /// </summary>
-public class SubtitlesBehaviour : MonoBehaviour {
+public class SubtitlesLogic: MonoBehaviour {
 	
 	private UILabel[] r_SubtitlesLabels;
 	private UILabel   r_CurrentLabel;
