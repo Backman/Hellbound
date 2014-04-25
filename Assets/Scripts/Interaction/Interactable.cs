@@ -18,13 +18,13 @@ using System.Reflection;
 /// Anton Thorsell
 /// </summary>
 public abstract class Interactable : MonoBehaviour{
-	public enum ActivateType{ OnTrigger, OnClick };
-	public ActivateType m_ActivateType = ActivateType.OnClick;
-	public UISprite m_Thumbnail;
+
+	public enum ActivateType{ OnClick, OnTrigger }
+	public ActivateType m_ActivateType;
 	public EventSound m_EventSound;
-	public string m_PuzzleState = "";
 
 	[HideInInspector] public string m_Description;
+	[HideInInspector] public string m_PuzzleState;
 
 	protected bool m_Usable = false;
 	public bool Usable {
@@ -93,9 +93,4 @@ public abstract class Interactable : MonoBehaviour{
 	public string getPuzzleState(){
 		return m_PuzzleState;
 	}
-
-	public void setPuzzleState(string puzzleState){
-		m_PuzzleState = puzzleState;
-	}
-
 }
