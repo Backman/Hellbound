@@ -15,7 +15,7 @@ public sealed class StateMachine <T> {
 		addState(startState);
 		m_CurrentState = startState;
 	
-		setDescriptionText();
+		setVisableTexts();
 	}
 
 	public void addState(State<T> state) {
@@ -49,15 +49,16 @@ public sealed class StateMachine <T> {
 		m_CurrentState = m_States[newType];
 		m_CurrentState.enter(m_Owner);
 
-		setDescriptionText();
+		setVisableTexts();
 
 		return m_CurrentState as S;
 	}
 
-	private void setDescriptionText() {
+	private void setVisableTexts() {
 		if(m_Owner is Interactable){
 			var o = m_Owner as Interactable;
 			o.m_Description = CurrentState.m_ExamineText;
+			o.m_UseText     = CurrentState.m_UseText;
 		}
 	}
 }

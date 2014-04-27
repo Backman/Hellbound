@@ -46,7 +46,7 @@ public class InventoryLogic{
 		} 
 	}
 
-	public bool containsItems( string itemName ){
+	public bool containsItem( string itemName ){
 		return m_Items.Contains( itemName );
 	}
 

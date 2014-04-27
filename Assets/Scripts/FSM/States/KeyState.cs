@@ -3,7 +3,7 @@ using System.Collections;
 
 [System.Serializable]
 public class KeyState : State<Behaviour_PickUp> {
-	public override void pickUp (Behaviour_PickUp entity)
+	public override void activate (Behaviour_PickUp entity)
 	{
 		InventoryLogic.Instance.addItem( entity.m_ItemName, entity.m_ItemThumbnail );
 

@@ -12,8 +12,8 @@ public class Behaviour_PickUp : Interactable {
 		m_FSM = new StateMachine<Behaviour_PickUp>(this, m_State);
 	}
 	
-	public override void pickUp () {
-		m_FSM.CurrentState.pickUp( this );
+	public override void activate () {
+		m_FSM.CurrentState.activate( this );
 	}
 	
 	public override void examine () {

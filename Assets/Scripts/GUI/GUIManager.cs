@@ -27,8 +27,8 @@ public class GUIManager : Singleton<GUIManager> {
 	private UISprite r_ExamineWindow;
 	[SerializeField]
 	private UISprite r_SubtitlesWindow;
-
-	public InteractText m_InteractText;
+	[SerializeField]
+	private InteractText r_InteractText;
 
 	////////////////////////////////////////////////
 	[SerializeField] [Range (0, 1)]				  //	
@@ -131,18 +131,21 @@ public class GUIManager : Singleton<GUIManager> {
 	}
 
 	/// <summary>
-	/// Will display a window with the supplied text.
+	/// Shows a simple textbox with the supplied text.
+	/// The button-string dictates which button that closes the window. It is optional, defaults to Examine
+	/// The lockMovement bool dictates if the players movement is locked while the text is visible, defaults to true
 	/// </summary>
 	/// <param name="text">Text.</param>
+	/// <param name="button">Button.</param>
 	/// <param name="lockMovement">If set to <c>true</c> lock movement.</param>
-	public void simpleShowText(string text, bool lockMovement = true){
+	public void simpleShowText(string text, string button = "Examine", bool lockMovement = true){
 		if( !m_Examining ){
 			m_Examining = true;
 			object[] args = new object[5];
 			args[0] = text;	
 			args[1] = lockMovement;
 			args[2] = "awaitInput";		//Method for making text advance
-			args[3] = "Examine";
+			args[3] = button;
 			args[4] = false;
 
 			StartCoroutine("examine", args);
@@ -160,6 +163,16 @@ public class GUIManager : Singleton<GUIManager> {
 			StartCoroutine("subtitles", subtitles);
 
 	}
+
+	public void setupInteractionTexts( string examineText, string useText ){
+		r_InteractText.setupInteractionTexts( examineText, useText );
+	}
+
+	public void interactTextActive( bool status ){
+		r_InteractText.active( status );
+	}
+
+
 	#region private functions
 	private void initExamineWindow(){
 		//Fetch the "NextSprite" among the ExaminWindows children

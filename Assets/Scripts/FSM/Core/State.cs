@@ -4,6 +4,7 @@ using System.Collections;
 [System.Serializable]
 public abstract class State <T> {
 
+	public string m_UseText;
 	[Multiline]
 	public string m_ExamineText;
 
@@ -30,6 +31,6 @@ public abstract class State <T> {
 	public virtual void exit(T entity) {}
 
 	public virtual void activate(T entity) {}
-	public virtual void examine(T entity) { if(m_ExamineText.Trim () != string.Empty) GUIManager.Instance.simpleShowText(m_ExamineText, true); }
-	public virtual void pickUp(T entity) {}
+	public virtual void examine(T entity) { if(m_ExamineText.Trim () != string.Empty) GUIManager.Instance.simpleShowText(m_ExamineText); }
+//	public virtual void pickUp(T entity) {}
 }

@@ -123,7 +123,7 @@ public class ExamineLogic : MonoBehaviour {
 	/// <returns>The for quick skip.</returns>
 	IEnumerator listenForQuickSkip(string button){
 		while( true ){
-			if( Input.GetButtonDown(button) ){
+			if( Input.GetButtonDown( button ) ){
 				m_QuickSkip = true;
 			}
 			yield return null;

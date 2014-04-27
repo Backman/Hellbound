@@ -24,6 +24,7 @@ public abstract class Interactable : MonoBehaviour{
 	public EventSound m_EventSound;
 
 	[HideInInspector] public string m_Description;
+	[HideInInspector] public string m_UseText;
 	[HideInInspector] public string m_PuzzleState;
 
 	protected bool m_Usable = false;

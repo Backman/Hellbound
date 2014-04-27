@@ -38,16 +38,23 @@ public class LockedInteractable : Interactable {
 	public override void activate ()
 	{
 		base.activate ();
+		bool all = true;
 
+		//Check if all needed items is in inventory.
 		foreach( string s in m_NeedsItems ){
-			bool b = InventoryLogic.Instance.containsItems(s);
-			if( b ){
-				InventoryLogic.Instance.removeItem(s);
-				m_ItemKeyState[s] = b;
-			}
+			all = InventoryLogic.Instance.containsItem(s) & all;
 		}
-		if( allKeys() ){
+
+		//If all needed items were in inventory, remove them from inventory
+		//and change state to open state
+		if( all ){
+			foreach( string s in m_NeedsItems ){
+				m_ItemKeyState[s] = true;
+				InventoryLogic.Instance.removeItem( s );
+			}
 			m_FSM.changeState<OpenedState>();
+		} else {
+			GUIManager.Instance.simpleShowText("I can't unlock this", "Use");
 		}
 
 		m_FSM.CurrentState.activate (this);
