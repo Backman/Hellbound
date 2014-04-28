@@ -7,4 +7,7 @@ public class FootstepSurface : MonoBehaviour {
 	/// to change the sound the "footsteps" makes.
 	/// Anton Thorsell
 	/// </summary>
+
+	public bool m_UseFootstepSurface = false;
+	public float m_Surface = 0f;
 }

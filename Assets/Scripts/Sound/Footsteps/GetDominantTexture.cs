@@ -10,10 +10,14 @@ public class GetDominantTexture : MonoBehaviour {
 	private TerrainData r_TerrainData;
 	private Vector3 r_TerrainPos;
 
+	private bool m_TerrainExist = true;
+
 	void Start(){
-		r_Terrain = Terrain.activeTerrain;
-		r_TerrainData = r_Terrain.terrainData;
-		r_TerrainPos = r_Terrain.transform.position;
+		if(Terrain.activeTerrain != null){
+			r_Terrain = Terrain.activeTerrain;
+			r_TerrainData = r_Terrain.terrainData;
+			r_TerrainPos = r_Terrain.transform.position;
+		}
 	}
 
 	
