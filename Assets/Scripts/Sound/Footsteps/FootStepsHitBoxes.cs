@@ -10,6 +10,7 @@ public class FootStepsHitBoxes : MonoBehaviour {
 	/// </summary>
 
 	//bool to figure out if we are hitting anything 
+	[HideInInspector]
 	public bool b_IsHitting = false;
 
 

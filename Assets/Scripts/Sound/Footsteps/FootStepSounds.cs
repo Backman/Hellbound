@@ -34,7 +34,10 @@ public class FootStepSounds : MonoBehaviour {
 	//the start acceses and saves a few "pointers" to the necessary scrips and variables
 	//(this is to provide shortcuts to what we want to access and/or change)
 	void Start(){
-		StartCoroutine ("waitForParameters");
+		while (f_Emitter == null) {
+			f_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
+		}
+		f_Parameter = f_Emitter.getParameter("Surface");
 
 		FBack = FootBack.GetComponent<FootStepsHitBoxes> ();
 		OtherFBack = OtherFootBack.GetComponent<FootStepsHitBoxes> ();
@@ -44,23 +47,10 @@ public class FootStepSounds : MonoBehaviour {
 	}
 
 
-	private IEnumerator waitForParameters(){
-
-		while (f_Emitter == null) {
-			yield return new WaitForSeconds(0.1f);
-			f_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
-		}
-		f_Parameter = f_Emitter.getParameter("Surface");
-		yield return 0;
-	}
-
-
 	void OnTriggerStay(Collider other){
 		//is the object we collided with have a footstepsurface?
 		if(other.GetComponent<FootstepSurface>() != null){
-
 			if(other.GetComponent<FootstepSurface>().m_UseFootstepSurface){
-				Debug.Log("got footstepsurface");
 				f_Parameter.setValue(other.GetComponent<FootstepSurface>().m_Surface);
 			}
 			else if(surfaceTexture != null){
@@ -86,14 +76,17 @@ public class FootStepSounds : MonoBehaviour {
 	//when the foot leaves the ground we can once again take a step
 	void OnTriggerExit(Collider other){
 		if(other.GetComponent<FootstepSurface>() != null){
-			coolDown(0.25f);
+			//StartCoroutine("coolDown");
+			m_Once = true;
 		}
 	}
 
 
-	private IEnumerator coolDown(float seconds){
-		yield return new WaitForSeconds(seconds);
+	private IEnumerator coolDown(){
+		//yield return new WaitForSeconds(0.25f);
 		m_Once = true;
+		Debug.Log ("Cooldown completed");
+		yield return 0;
 	}
 
 }

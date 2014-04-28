@@ -9,6 +9,9 @@ public class AlterSoundParameter : MonoBehaviour {
 	/// (the number of objects can be decided by the editor)
 	/// Anton Thorsell
 	/// </summary>
+	
+
+
 	public GameObject[] g_GameObjects;
 	public string s_Parameter = "";
 	public float m_InsideParameter = 0f;
