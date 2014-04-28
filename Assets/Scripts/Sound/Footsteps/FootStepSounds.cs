@@ -43,6 +43,7 @@ public class FootStepSounds : MonoBehaviour {
 		surfaceTexture = gameObject.GetComponent<GetDominantTexture> ();
 	}
 
+
 	private IEnumerator waitForParameters(){
 
 		while (f_Emitter == null) {
@@ -53,14 +54,17 @@ public class FootStepSounds : MonoBehaviour {
 		yield return 0;
 	}
 
+
 	void OnTriggerStay(Collider other){
 		//is the object we collided with have a footstepsurface?
 		if(other.GetComponent<FootstepSurface>() != null){
-			if(surfaceTexture != null){
-				f_Parameter.setValue(surfaceTexture.m_SurfaceType);
-			}
-			else if(other.GetComponent<FootstepSurface>().m_UseFootstepSurface){
+
+			if(other.GetComponent<FootstepSurface>().m_UseFootstepSurface){
+				Debug.Log("got footstepsurface");
 				f_Parameter.setValue(other.GetComponent<FootstepSurface>().m_Surface);
+			}
+			else if(surfaceTexture != null){
+				f_Parameter.setValue(surfaceTexture.m_SurfaceType);
 			}
 			//if our whole foot is placed on the ground, we havent played a sound this
 			//"step" and the other foots backcollider isnt hitting anything we can play a sound
