@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class LockedInteractable : Interactable {
-	
+	public string m_LockedText = "I can't open this";
 	public LockedState m_LockedState;
 	public OpenedState m_OpenedState;
 
@@ -52,9 +52,12 @@ public class LockedInteractable : Interactable {
 				m_ItemKeyState[s] = true;
 				InventoryLogic.Instance.removeItem( s );
 			}
+		}
+
+		if (allKeys ()) {
 			m_FSM.changeState<OpenedState>();
 		} else {
-			GUIManager.Instance.simpleShowText("I can't unlock this", "Use");
+			GUIManager.Instance.simpleShowText(m_LockedText, "Use");
 		}
 
 		m_FSM.CurrentState.activate (this);

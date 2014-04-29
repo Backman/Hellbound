@@ -22,7 +22,10 @@ public class LanternHook : Interactable {
 	public override void activate ()
 	{
 		base.activate ();
-		m_FSM.CurrentState.activate (this);
+		if (InventoryLogic.Instance.containsItem ("Lantern")) {
+			open ();
+			InventoryLogic.Instance.removeItem( "Lantern" );
+		}
 	}
 	
 	public void Update(){
