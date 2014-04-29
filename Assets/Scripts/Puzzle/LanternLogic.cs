@@ -10,7 +10,6 @@ public class LanternLogic : MonoBehaviour {
 
 	public void onLanternPickup(GameObject obj, bool tr){
 		Interactable interObj = obj.GetComponent<Interactable>();
-		interObj.setPuzzleState("pickedUp");
 		Debug.Log("Picked up lantern");
 	}
 }
