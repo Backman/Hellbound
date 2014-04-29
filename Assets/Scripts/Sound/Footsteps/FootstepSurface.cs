@@ -10,4 +10,5 @@ public class FootstepSurface : MonoBehaviour {
 
 	public bool m_UseFootstepSurface = false;
 	public float m_Surface = 0f;
+	public int m_Priority = 0;
 }

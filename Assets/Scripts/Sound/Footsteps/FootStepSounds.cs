@@ -11,82 +11,100 @@ public class FootStepSounds : MonoBehaviour {
 	/// Anton Thorsell
 	/// </summary>
 
+
+	// TODO: objects get removed when not actually exiting.
+	// I know what to do (anton)
+
 	//pointers to the other backcolliders
 	public GameObject FootBack;
 	public GameObject OtherFootBack;
 
 	private FootStepsHitBoxes FBack;
 	private FootStepsHitBoxes OtherFBack;
-
-
+	
 	//the sound emitter (the source of the sound)
-	private FMOD_StudioEventEmitter f_Emitter;
+	private FMOD_StudioEventEmitter m_Emitter;
 
 	private GetDominantTexture surfaceTexture;
 
+	private List<GameObject> m_StandingOn = new List<GameObject>();
+	private int m_HighestPriority;
+
 	//a pointer to the sound-parameter (this can change the sound the emitter makes,
 	//for example footsteps on wood or stone)
-	private FMOD.Studio.ParameterInstance f_Parameter = null;
+	private FMOD.Studio.ParameterInstance m_Parameter = null;
 
 	//we only want one footstepsound for every step
 	private bool m_Once = true;
+	private float m_UseThisValue = 0f;
 
 	//the start acceses and saves a few "pointers" to the necessary scrips and variables
 	//(this is to provide shortcuts to what we want to access and/or change)
 	void Start(){
-		while (f_Emitter == null) {
-			f_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
+
+		while (m_Emitter == null) {
+			m_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
 		}
-		f_Parameter = f_Emitter.getParameter("Surface");
+
 
 		FBack = FootBack.GetComponent<FootStepsHitBoxes> ();
 		OtherFBack = OtherFootBack.GetComponent<FootStepsHitBoxes> ();
 
-
 		surfaceTexture = gameObject.GetComponent<GetDominantTexture> ();
+		m_Parameter = m_Emitter.getParameter("Surface");
 	}
 
+	void OnTriggerEnter(Collider other){
+		if (other.GetComponent<FootstepSurface> () != null) {
+			if(!m_StandingOn.Contains(other.gameObject)){
+				m_StandingOn.Add (collider.gameObject);
+				updatePrioritySurface();
+			}
+		}
+
+	}
 
 	void OnTriggerStay(Collider other){
-		//is the object we collided with have a footstepsurface?
-		if(other.GetComponent<FootstepSurface>() != null){
-			if(other.GetComponent<FootstepSurface>().m_UseFootstepSurface){
-				f_Parameter.setValue(other.GetComponent<FootstepSurface>().m_Surface);
-			}
-			else if(surfaceTexture != null){
-				f_Parameter.setValue(surfaceTexture.m_SurfaceType);
-			}
 			//if our whole foot is placed on the ground, we havent played a sound this
 			//"step" and the other foots backcollider isnt hitting anything we can play a sound
 			//(this means that we are still moving foward)
 			if(FBack.b_IsHitting && m_Once && !OtherFBack.b_IsHitting){
 				m_Once = false;
-				f_Emitter.Stop();
-				f_Emitter.Play();
+				m_Emitter.Stop();
+				m_Emitter.Play();
 			}
 			//if both backcolliders are hitting something we know we have stopped moving
 			//(we can add a sound for "footstepstop" or something here)
 			if(FBack.b_IsHitting && OtherFBack.b_IsHitting){
 				m_Once = false;
 			}
-		}
 	}
 
 
 	//when the foot leaves the ground we can once again take a step
 	void OnTriggerExit(Collider other){
 		if(other.GetComponent<FootstepSurface>() != null){
-			//StartCoroutine("coolDown");
 			m_Once = true;
+			if (m_StandingOn.Contains (other.gameObject)) {
+				m_StandingOn.Remove(other.gameObject);
+			}
 		}
 	}
 
 
-	private IEnumerator coolDown(){
-		//yield return new WaitForSeconds(0.25f);
-		m_Once = true;
-		Debug.Log ("Cooldown completed");
-		yield return 0;
+	private void updatePrioritySurface(){
+		int highest = 0;
+		foreach (GameObject g in m_StandingOn) {
+			FootstepSurface fss = g.GetComponent<FootstepSurface>();
+			if(fss.m_Priority > highest){ //---------------------------------
+				highest = fss.m_Priority;
+				if(fss.m_UseFootstepSurface){
+					m_UseThisValue = fss.m_Surface;
+				}
+				else{
+					m_UseThisValue = surfaceTexture.m_SurfaceType;
+				}
+			}
+		}
 	}
-
 }

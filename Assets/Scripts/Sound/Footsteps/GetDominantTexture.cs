@@ -58,6 +58,7 @@ public class GetDominantTexture : MonoBehaviour {
 				mostDominant = textureMix[n];
 			}
 		}
+
 		return dominantSurface;		
 	}	
 }
