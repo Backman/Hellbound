@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//peter
+//skapar en kopia av en object som ska följa original objektet och ha outlines only shadern på sig.
+//skapar en kopia så att objektet kan ha kvar sin original shader på sig samtidigt ha outlines.
+
 public class OutlinesToTarget : MonoBehaviour {
 	public GameObject m_Target;
 	public Shader m_Shader;
