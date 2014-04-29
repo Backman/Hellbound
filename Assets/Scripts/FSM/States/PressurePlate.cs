@@ -36,6 +36,7 @@ public class PressurePlate : Interactable {
 				activate();
 			}
 		}
+		PuzzleEvent.trigger("onTriggerEnter", gameObject, true);
 	}
 
 	/*public void reason() {

@@ -30,6 +30,7 @@ public class EventData{
 
 [System.Serializable]
 public class ObjectState {
+	//[SerializeField] bool m_IsThisObject;
 	[SerializeField] GameObject m_Object;
 	[SerializeField] string m_State;
 	
@@ -37,7 +38,11 @@ public class ObjectState {
 		m_Object = null;
 		m_State = "";
 	}
-	
+	/*
+	public bool isObjectAsThis(){
+		return m_IsThisObject;
+	}
+	*/
 	public GameObject getObject(){
 		return m_Object;
 	}
@@ -45,7 +50,11 @@ public class ObjectState {
 	public string getState(){
 		return m_State;
 	}
-	
+	/*
+	public void setObjectAsThis(){
+		m_IsThisObject = true;
+	}
+	*/
 	public void setObject(GameObject obj){
 		m_Object = obj;
 	}
@@ -166,7 +175,6 @@ public class PuzzleLogic : MonoBehaviour{
     }
     
     void Start(){
-    	Debug.Log("PuzzleLogic Start()");
     	int index = 0;
 		foreach(EventData eventData in m_Logic.getEvents()){
 			int idx = index;
@@ -195,7 +203,11 @@ public class PuzzleLogic : MonoBehaviour{
 						List<ObjectState> objectStates = m_Logic.getObjectStates(idx);
 						TriggerData triggerData = m_Logic.getTriggerData(idx);
 						foreach(ObjectState objectState in objectStates){
-							Interactable interSavedObj = objectState.getObject().GetComponent<Interactable>();
+							GameObject attachedObj = objectState.getObject();
+							if(attachedObj == null){
+								attachedObj = gameObject;
+							}
+							Interactable interSavedObj = attachedObj.GetComponent<Interactable>();
 							if(interSavedObj != null){
 								if(interSavedObj.getPuzzleState() != objectState.getState()){
 									doCall = false;
@@ -214,7 +226,7 @@ public class PuzzleLogic : MonoBehaviour{
 							}
 							*/
 							if(triggerData.getName().Length > 0 && !PuzzleEvent.isEventCancelled(triggerData.getName())){
-								Messenger.Broadcast<GameObject, bool>(triggerData.getName(), obj, false);
+								Messenger.Broadcast<GameObject, bool>(triggerData.getName(), gameObject, false);
 							}
 						}
 					}

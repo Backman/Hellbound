@@ -22,6 +22,7 @@ public class LanternHook : Interactable {
 	public override void activate ()
 	{
 		base.activate ();
+		PuzzleEvent.trigger("onUse", gameObject, true);
 		m_FSM.CurrentState.activate (this);
 	}
 	

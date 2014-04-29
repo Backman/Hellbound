@@ -25,7 +25,7 @@ public abstract class Interactable : MonoBehaviour{
 
 	[HideInInspector] public string m_Description;
 	[HideInInspector] public string m_UseText;
-	[HideInInspector] public string m_PuzzleState;
+	public string m_PuzzleState = "";
 
 	protected bool m_Usable = false;
 	public bool Usable {
@@ -93,5 +93,9 @@ public abstract class Interactable : MonoBehaviour{
 
 	public string getPuzzleState(){
 		return m_PuzzleState;
+	}
+
+	public void setPuzzleState(string state) {
+		m_PuzzleState = state;
 	}
 }
