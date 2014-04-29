@@ -74,7 +74,7 @@ public class LockedInteractable : Interactable {
 			if( b == false ) return b;
 		}
 		foreach( bool b in m_InteractableKeyState.Values){
-
+			if(b == false) return b;
 		}
 		return true;
 	}
