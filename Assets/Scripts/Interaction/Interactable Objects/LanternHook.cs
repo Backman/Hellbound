@@ -24,6 +24,10 @@ public class LanternHook : Interactable {
 		base.activate ();
 		PuzzleEvent.trigger("onUse", gameObject, true);
 		m_FSM.CurrentState.activate (this);
+//		if (InventoryLogic.Instance.containsItem ("Lantern")) {
+//			open ();
+//			InventoryLogic.Instance.removeItem( "Lantern" );
+//		}
 	}
 	
 	public void Update(){

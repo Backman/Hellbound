@@ -18,8 +18,10 @@ namespace Studio
     {
 #if UNITY_IPHONE && !UNITY_EDITOR
         public const string dll    = "__Internal";
+#elif UNITY_PS4 && !UNITY_EDITOR
+		public const string dll    = "libfmodstudio";
 #else
-        public const string dll    = "fmodstudio";
+		public const string dll    = "fmodstudio";
 #endif
     }
 		
@@ -77,6 +79,24 @@ namespace Studio
         public float updateUsage;         /* Returns the % CPU time taken by low level update, called as part of the studio update. */
         public float studioUsage;         /* Returns the % CPU time taken by studio update, called from the studio thread. Does not include low level update time. */
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct BUFFER_INFO
+    {
+        public int currentUsage;                    /* Current buffer usage in bytes. */
+        public int peakUsage;                       /* Peak buffer usage in bytes. */
+        public int capacity;                        /* Buffer capacity in bytes. */
+        public int stallCount;                      /* Number of stalls due to buffer overflow. */
+        public float stallTime;                     /* Amount of time stalled due to buffer overflow, in seconds. */
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct BUFFER_USAGE
+    {
+        public BUFFER_INFO studioCommandQueue;      /* Information for the Studio Async Command buffer, controlled by FMOD_STUDIO_ADVANCEDSETTINGS commandQueueSize. */
+        public BUFFER_INFO studioHandle;            /* Information for the Studio handle table, controlled by FMOD_STUDIO_ADVANCEDSETTINGS handleInitialSize. */
+    }
+
     public enum PARAMETER_TYPE
     {
         GAME_CONTROLLED,                  /* Controlled via the API using Studio::ParameterInstance::setValue. */
@@ -490,6 +510,14 @@ namespace Studio
         {
             return FMOD_Studio_System_GetCPUUsage(rawPtr, out usage);
         }
+        public RESULT getBufferUsage(out BUFFER_USAGE usage)
+        {
+            return FMOD_Studio_System_GetBufferUsage(rawPtr, out usage);
+        }
+        public RESULT resetBufferUsage()
+        {
+            return FMOD_Studio_System_ResetBufferUsage(rawPtr);
+        }
 
         #region importfunctions
         [DllImport (STUDIO_VERSION.dll)]
@@ -538,6 +566,10 @@ namespace Studio
         private static extern RESULT FMOD_Studio_System_GetBankList             (IntPtr studiosystem, IntPtr[] array, int capacity, out int count);
         [DllImport (STUDIO_VERSION.dll)]
         private static extern RESULT FMOD_Studio_System_GetCPUUsage             (IntPtr studiosystem, out CPU_USAGE usage);
+        [DllImport(STUDIO_VERSION.dll)]
+        private static extern RESULT FMOD_Studio_System_GetBufferUsage          (IntPtr studiosystem, out BUFFER_USAGE usage);
+        [DllImport(STUDIO_VERSION.dll)]
+        private static extern RESULT FMOD_Studio_System_ResetBufferUsage        (IntPtr studiosystem);
 
         #endregion
         #region wrapperinternal
