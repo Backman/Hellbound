@@ -13,7 +13,7 @@ public class Combine : MonoBehaviour {
 	}
 	
 	public void combine(){
-		Inventory.getInstance().combineItems();
+
 	}
 	
 	public static void show(){
@@ -24,5 +24,9 @@ public class Combine : MonoBehaviour {
 	public static void hide(){
 		r_Object.GetComponent<UIPlayTween>().Play(false);
 		//m_Object.SetActive(false);
+	}
+
+	public void hideWindow() {
+		gameObject.GetComponent<UIPlayTween>().Play(false);
 	}
 }
