@@ -24,10 +24,12 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			string name = interObj.name;
 			if(name == "Wind" || name == "Fire" || name == "Water"){
 				interObj.setPuzzleState("bad");
+				interObj.renderer.sharedMaterial.color = Color.red;
 				//Debug.Log("Puzzle state for wind set to bad!");
 			}
 			else{
 				interObj.setPuzzleState("good");
+				interObj.renderer.sharedMaterial.color = Color.green;
 			}
 		}
 		// Cancel event to prevent other logic with different condition to run
@@ -41,10 +43,12 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			string name = interObj.name;
 			if(name == "Wind" || name == "Fire" || name == "Earth"){
 				interObj.setPuzzleState("bad");
+				interObj.renderer.sharedMaterial.color = Color.red;
 				//Debug.Log("Puzzle state for wind set to bad!");
 			}
 			else{
 				interObj.setPuzzleState("good");
+				interObj.renderer.sharedMaterial.color = Color.green;
 			}
 		}
 		// Cancel event to prevent other logic with different condition to run
@@ -58,10 +62,12 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			string name = interObj.name;
 			if(name == "Wind" || name == "Earth" || name == "Fire"){
 				interObj.setPuzzleState("bad");
+				interObj.renderer.sharedMaterial.color = Color.red;
 				//Debug.Log("Puzzle state for wind set to bad!");
 			}
 			else{
 				interObj.setPuzzleState("good");
+				interObj.renderer.sharedMaterial.color = Color.green;
 			}
 		}
 		// Cancel event to prevent other logic with different condition to run
@@ -75,17 +81,21 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			string name = interObj.name;
 			if(name == "Wind" || name == "Earth" || name == "Water"){
 				interObj.setPuzzleState("bad");
+				interObj.renderer.sharedMaterial.color = Color.red;
 				//Debug.Log("Puzzle state for wind set to bad!");
 			}
 			else{
 				interObj.setPuzzleState("good");
+				interObj.renderer.sharedMaterial.color = Color.green;
 			}
 		}
+		Debug.Log ("Callllling");
 		// Cancel event to prevent other logic with different condition to run
 		PuzzleEvent.cancel("onTriggerEnter");
 	}
 	
 	public void requestLowerCeiling(GameObject obj, bool tr){
-		Debug.Log("Lower ceiling!");
+		Messenger.Broadcast ("lower roof");
+		PuzzleEvent.cancel("onTriggerEnter");
 	}
 }

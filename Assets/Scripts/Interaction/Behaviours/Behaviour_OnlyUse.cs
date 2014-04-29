@@ -23,7 +23,8 @@ public class Behaviour_OnlyUse : Interactable {
 	public override void activate ()
 	{
 		base.activate ();
-		m_FSM.CurrentState.activate (this);
+		PuzzleEvent.trigger("onUseOnly", gameObject, true);
+		//m_FSM.CurrentState.activate (this);
 	}
 
 	public override void examine ()

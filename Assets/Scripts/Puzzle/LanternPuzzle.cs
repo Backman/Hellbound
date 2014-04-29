@@ -28,6 +28,7 @@ public class LanternPuzzle : MonoBehaviour {
 		Interactable inter = obj.GetComponent<Interactable>();
 		if(inter != null && inter.getPuzzleState() != "used"){
 			inter.setPuzzleState("used");
+			((LanternHook)inter).open ();
 			++lanternsPlaced;
 			PuzzleEvent.trigger("requestRemoveLanternFromInventory", obj, false);
 			if(lanternsPlaced == 2){

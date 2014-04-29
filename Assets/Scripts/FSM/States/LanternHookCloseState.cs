@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [System.Serializable]
-public class LanternHookCloseState : State<LanternHook> {
+ public class LanternHookCloseState : State<LanternHook> {
 
 	public override void activate (LanternHook entity)
 	{
