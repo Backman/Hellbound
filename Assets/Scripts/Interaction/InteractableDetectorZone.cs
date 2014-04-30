@@ -10,10 +10,9 @@ using System.Collections;
 public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 
 	private Interactable r_InFocus = null;
-	private GUIManager r_GUIManager;
+	private GUIManager   r_GUIManager;
 
 	void Start () {
-		//TODO: Find the avatar and position this in the appropriate spot
 		Messenger.AddListener("clear focus", clearFocus);
 		r_GUIManager = GUIManager.Instance;
 	}
@@ -49,7 +48,7 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 
 			setupInteractText();
 
-			r_GUIManager.m_InteractText.active(true);
+			r_GUIManager.interactTextActive( true );
 		}
 	}
 
@@ -61,7 +60,8 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 		if( r_InFocus != null && col.gameObject == r_InFocus.gameObject ){
 			r_InFocus.loseFocus();
 			r_InFocus = null;
-			r_GUIManager.m_InteractText.active(false);
+
+			r_GUIManager.interactTextActive( false );
 		}
 	}
 
@@ -75,32 +75,41 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 	}
 
 	private void setupInteractText() {
-		r_GUIManager.m_InteractText.reposition();
 
-		if(r_InFocus.m_Thumbnail == null) {
-			r_GUIManager.m_InteractText.HasPickup = false;
-		} else {
-			r_GUIManager.m_InteractText.HasPickup = true;
-		}
-//TODO	if(!r_InFocus.Usable) {
-//			r_GUIManager.m_InteractText.CanBeUsed = false;
-//		} else {
-//			r_GUIManager.m_InteractText.CanBeUsed = true;
-//		}
-		r_GUIManager.m_InteractText.CanBeUsed = true;
-		if(r_InFocus.m_Description.Trim () == "") {
-			r_GUIManager.m_InteractText.HasExamine = false;
-		} else {
-			r_GUIManager.m_InteractText.HasExamine = true;
-		}
-		
-		r_GUIManager.m_InteractText.reposition();
+		string useText 		= r_InFocus.m_UseText.Trim();
+		string examineText 	= r_InFocus.m_Description.Trim();
+
+		r_GUIManager.setupInteractionTexts( examineText, useText );
+
 	}
 
 	public void clearFocus(){
 		Messenger.Broadcast ("leaveFocus");
 		r_InFocus = null;		
-		r_GUIManager.m_InteractText.active(false);
+		r_GUIManager.interactTextActive( false );
 	//	r_GUIManager.m_InteractText.gameObject.SetActive(false);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

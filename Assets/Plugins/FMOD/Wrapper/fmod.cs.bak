@@ -15,13 +15,15 @@ namespace FMOD
         0xaaaabbcc -> aaaa = major version number.  bb = minor version number.  cc = development version number.
     */
     public class VERSION
-    {
-        public const int    number = 0x00010300;
+	{
 #if UNITY_IPHONE && !UNITY_EDITOR
-        public const string dll    = "__Internal";
+		public const string dll    = "__Internal";
+#elif UNITY_PS4 && !UNITY_EDITOR
+		public const string dll    = "libfmod";
 #else
-        public const string dll    = "fmod";
+		public const string dll    = "fmod";
 #endif
+		public const int    number = 0x00010302;
     }
 
     /*

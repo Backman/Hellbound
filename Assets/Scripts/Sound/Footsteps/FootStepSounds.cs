@@ -41,19 +41,28 @@ public class FootStepSounds : MonoBehaviour {
 	//the start acceses and saves a few "pointers" to the necessary scrips and variables
 	//(this is to provide shortcuts to what we want to access and/or change)
 	void Start(){
+<<<<<<< HEAD
 
 		while (m_Emitter == null) {
 			m_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
 		}
 
+=======
+		StartCoroutine ("waitForParameters");
+>>>>>>> f0c2db97c357b8d419747579f60a3c791ddb7504
 
 		FBack = FootBack.GetComponent<FootStepsHitBoxes> ();
 		OtherFBack = OtherFootBack.GetComponent<FootStepsHitBoxes> ();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> f0c2db97c357b8d419747579f60a3c791ddb7504
 		surfaceTexture = gameObject.GetComponent<GetDominantTexture> ();
 		m_Parameter = m_Emitter.getParameter("Surface");
 	}
 
+<<<<<<< HEAD
 	void OnTriggerEnter(Collider other){
 		if (other.GetComponent<FootstepSurface> () != null) {
 			if(!m_StandingOn.Contains(other.gameObject)){
@@ -65,6 +74,24 @@ public class FootStepSounds : MonoBehaviour {
 	}
 
 	void OnTriggerStay(Collider other){
+=======
+	private IEnumerator waitForParameters(){
+
+		while (f_Emitter == null) {
+			yield return new WaitForSeconds(0.1f);
+			f_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
+		}
+		f_Parameter = f_Emitter.getParameter("Surface");
+		yield return 0;
+	}
+
+	void OnTriggerStay(Collider other){
+		//is the object we collided with have a footstepsurface?
+		if(other.GetComponent<FootstepSurface>() != null){
+			if(surfaceTexture != null){
+				f_Parameter.setValue(surfaceTexture.m_SurfaceType);
+			}
+>>>>>>> f0c2db97c357b8d419747579f60a3c791ddb7504
 			//if our whole foot is placed on the ground, we havent played a sound this
 			//"step" and the other foots backcollider isnt hitting anything we can play a sound
 			//(this means that we are still moving foward)

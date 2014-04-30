@@ -37,6 +37,12 @@ public class AlterSoundParameter : MonoBehaviour {
 
 	private IEnumerator waitForParameters()
 	{
+<<<<<<< HEAD
+=======
+		int d = g_GameObjects.Length;
+
+
+>>>>>>> f0c2db97c357b8d419747579f60a3c791ddb7504
 		for (int n = 0; n != g_GameObjects.Length;) {
 			yield return new WaitForSeconds(0.01f);
 			r_ParameterCollection.Clear();
@@ -60,7 +66,11 @@ public class AlterSoundParameter : MonoBehaviour {
 			else if (!m_UseFade && !m_Inside){
 				m_Inside = true;
 				foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
+<<<<<<< HEAD
 					if(p != null){
+=======
+					if(r_ParameterCollection != null){
+>>>>>>> f0c2db97c357b8d419747579f60a3c791ddb7504
 						p.setValue(m_InsideParameter);
 					}
 				}

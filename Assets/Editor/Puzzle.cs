@@ -100,9 +100,25 @@ public class Puzzle : Editor {
                 foreach(ObjectState objectState in objectStates){
                     GUILayout.BeginHorizontal();
                     {
+                    	/*
+						GUILayout.Label("This", GUILayout.Width(30f));
+						bool isThis = true;
+						EditorGUILayout.Toggle(isThis, GUILayout.Width(15f));
+						GameObject obj = null;
+						if(isThis){
+							GUI.backgroundColor = Color.black;
+							GUI.contentColor = Color.black;
+							EditorGUILayout.ObjectField(objectState.getObject(), typeof(GameObject));
+							GUI.backgroundColor = Color.white;
+							GUILayout.Label("state equals", GUILayout.Width(85f));
+						}
+						else{
+							obj = (GameObject)EditorGUILayout.ObjectField(objectState.getObject(), typeof(GameObject));
+							GUILayout.Label("'s state equals", GUILayout.Width(85f));
+						}
+						*/
 						GameObject obj = (GameObject)EditorGUILayout.ObjectField(objectState.getObject(), typeof(GameObject));
-						//string objectName = EditorGUILayout.TextField("", objectState.getObjectName());
-                        GUILayout.Label("'s state equals", GUILayout.Width(85f));
+						GUILayout.Label("'s state equals", GUILayout.Width(85f));
                         string state = EditorGUILayout.TextField("", objectState.getState());
 						GUI.backgroundColor = Color.red;
 						if(GUILayout.Button("Delete"))
