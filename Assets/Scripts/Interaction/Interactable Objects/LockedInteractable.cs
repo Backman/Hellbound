@@ -70,10 +70,7 @@ public class LockedInteractable : Interactable {
 		foreach(string s in m_NeedsItems ){
 			m_ItemKeyState.Add (s, false );
 		}
-<<<<<<< HEAD
 		//Debug.Log ("Dictionary size: " + m_KeyState.Count);
-=======
->>>>>>> f0c2db97c357b8d419747579f60a3c791ddb7504
 	}
 	
 	public bool allKeys() {
