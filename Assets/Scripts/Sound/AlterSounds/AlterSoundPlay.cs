@@ -82,7 +82,7 @@ public class AlterSoundPlay : MonoBehaviour {
 
 
 	private void PlayShot(){
-		FMOD_StudioSystem.instance.PlayOneShot(m_Path, m_Position);
+		FMOD_StudioSystem.instance.PlayOneShot(m_Path, transform.position);
 	}
 
 

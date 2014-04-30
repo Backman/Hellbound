@@ -13,13 +13,20 @@ public class GetDominantTexture : MonoBehaviour {
 	private bool m_TerrainExist = true;
 
 	void Start(){
+		getTerrain ();
+	}
+
+	private void OnLevelWasLoaded(){
+		getTerrain ();
+	}
+
+	private void getTerrain (){
 		if(Terrain.activeTerrain != null){
 			r_Terrain = Terrain.activeTerrain;
 			r_TerrainData = r_Terrain.terrainData;
 			r_TerrainPos = r_Terrain.transform.position;
 		}
 	}
-
 	
 	private void UpdateTerrain(Terrain newTerrain){
 		r_Terrain = newTerrain;
