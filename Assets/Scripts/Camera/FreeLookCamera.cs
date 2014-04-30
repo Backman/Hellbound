@@ -38,6 +38,11 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	private float m_SmoothXVelocity = 0.0f;
 	private float m_SmoothYVelocity = 0.0f;
 	private bool m_Zoomed = false;
+	
+	private bool m_FreeCameraEnabled = false;
+	private Vector3 m_FreeCameraStartRotation = new Vector3(0.0f, 0.0f, 0.0f);
+	private Vector3 m_FreeCameraRotation = new Vector3(0.0f, 0.0f, 0.0f);
+	private Vector3 m_FreeCameraPosition = new Vector3(0.0f, 0.0f, 0.0f);
 
 	private bool m_LockedInput = false;
 
@@ -64,10 +69,6 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	protected override void Update() {
 		base.Update ();
 
-		if(m_LockedInput){
-			return;
-		}
-
 		handleZoomInput();
 
 		handleRotationMovement();
@@ -86,41 +87,80 @@ public class FreeLookCamera : PivotBasedCameraRig {
 
 	void handleRotationMovement() {
 		// Read the user input
-
-		float x = Input.GetAxis("Mouse X");
-		float y = Input.GetAxis("Mouse Y");
-
-		// Smooth the user input
-		if(m_TurnSmoothing > 0.0f) {
-			m_SmoothX = Mathf.SmoothDamp(m_SmoothX, x, ref m_SmoothXVelocity, m_TurnSmoothing);
-			m_SmoothY = Mathf.SmoothDamp(m_SmoothY, y, ref m_SmoothYVelocity, m_TurnSmoothing);
-		} else {
-			m_SmoothX = x;
-			m_SmoothY = y;
+		
+		if(m_FreeCameraEnabled){
+			//Vector3 newRot = m_FreeCameraStartRotation
+			float movePow = 0.8f;
+			
+			float diffX = m_FreeCameraRotation.x - m_FreeCameraStartRotation.x;
+			float diffY = m_FreeCameraRotation.y - m_FreeCameraStartRotation.y;
+			float diffZ = m_FreeCameraRotation.z - m_FreeCameraStartRotation.z;
+			
+			float diffX2 = m_FreeCameraStartRotation.x - m_FreeCameraRotation.x;
+			float diffY2 = m_FreeCameraStartRotation.y - m_FreeCameraRotation.y;
+			float diffZ2 = m_FreeCameraStartRotation.z - m_FreeCameraRotation.z;
+			
+			float dx = Mathf.Abs(diffX) < Mathf.Abs(diffX2) ? diffX : diffX2;
+			float dy = Mathf.Abs(diffY) < Mathf.Abs(diffY2) ? diffY : diffY2;
+			float dz = Mathf.Abs(diffZ) < Mathf.Abs(diffZ2) ? diffZ : diffZ2;
+			
+			float dirX = dx < 0.0f ? -1.0f : 1.0f;
+			float dirY = dy < 0.0f ? -1.0f : 1.0f;
+			float dirZ = dz < 0.0f ? -1.0f : 1.0f;
+			
+			Debug.Log("diffX: "+diffX+" diffX2: "+diffX2);
+			
+			if(Mathf.Abs(dx) > 1.0f){
+				m_FreeCameraStartRotation.x += movePow * dirX;
+			}
+			if(Mathf.Abs(dy) > 1.0f){
+				m_FreeCameraStartRotation.y += movePow * dirY;
+			}
+			if(Mathf.Abs(dz) > 1.0f){
+				m_FreeCameraStartRotation.z += movePow * dirZ;
+			}
+			
+			m_Camera.rotation = Quaternion.Euler(m_FreeCameraStartRotation);
 		}
-
-		// Adjust the look angle by an amount proportional to the turn speed and horizontal input
-		m_LookAngle += m_SmoothX * m_TurnSpeed;
-
-		if(Application.isPlaying){
-		// Rotate the rig (the root object) around Y axis only
-		transform.rotation = Quaternion.Euler(0.0f, m_LookAngle, 0.0f);
+		else{
+			float x = Input.GetAxis("Mouse X");
+			float y = Input.GetAxis("Mouse Y");
+	
+			// Smooth the user input
+			if(m_TurnSmoothing > 0.0f) {
+				m_SmoothX = Mathf.SmoothDamp(m_SmoothX, x, ref m_SmoothXVelocity, m_TurnSmoothing);
+				m_SmoothY = Mathf.SmoothDamp(m_SmoothY, y, ref m_SmoothYVelocity, m_TurnSmoothing);
+			} else {
+				m_SmoothX = x;
+				m_SmoothY = y;
+			}
+	
+			// Adjust the look angle by an amount proportional to the turn speed and horizontal input
+			m_LookAngle += m_SmoothX * m_TurnSpeed;
+	
+			if(Application.isPlaying){
+				// Rotate the rig (the root object) around Y axis only
+				transform.rotation = Quaternion.Euler(0.0f, m_LookAngle, 0.0f);
+			}
+			// We adjust the current angle based on Y mouse input and turn speed
+			m_TiltAngle -= m_SmoothY * m_TurnSpeed;
+			// We make sure the new valuse is within the tilt range
+			m_TiltAngle = Mathf.Clamp(m_TiltAngle, -m_TiltMin, m_TiltMax);
+	
+	
+			// Tilt input around X is applied to the pivot (the child of this object)
+			m_Pivot.localRotation = Quaternion.Euler(m_TiltAngle, 0.0f, 0.0f);
 		}
-		// We adjust the current angle based on Y mouse input and turn speed
-		m_TiltAngle -= m_SmoothY * m_TurnSpeed;
-		// We make sure the new valuse is within the tilt range
-		m_TiltAngle = Mathf.Clamp(m_TiltAngle, -m_TiltMin, m_TiltMax);
-
-
-		// Tilt input around X is applied to the pivot (the child of this object)
-		m_Pivot.localRotation = Quaternion.Euler(m_TiltAngle, 0.0f, 0.0f);
 	}
 
 	void handleZoomInput() {
 		bool zoom = Input.GetButtonDown("Zoom");
-
 		if(zoom && !m_Zoomed) {
 			m_ZoomPosition = m_Pivot.localPosition;
+			m_Zoomed = true;
+			Messenger.Broadcast<bool>("lock player input", m_Zoomed);
+		}else if(m_FreeCameraEnabled){
+			m_ZoomPosition = m_FreeCameraPosition;
 			m_Zoomed = true;
 			Messenger.Broadcast<bool>("lock player input", m_Zoomed);
 		} else if(zoom && m_Zoomed) {
@@ -128,38 +168,72 @@ public class FreeLookCamera : PivotBasedCameraRig {
 			m_Zoomed = false;
 			Messenger.Broadcast<bool>("lock player input", m_Zoomed);
 		}
-		m_ZoomPosition.y = 0.0f;
-		Vector3 newPos = Vector3.MoveTowards(m_Camera.localPosition, m_ZoomPosition, m_ZoomSpeed * Time.deltaTime);
-		m_Camera.localPosition = newPos;
-
-		if((m_Camera.localPosition - m_ZoomPosition).magnitude <= 0.4f && m_Zoomed){
-			DisableMeshRendererOnTarget();
-		}
-		if((m_Camera.localPosition - m_ZoomPosition).magnitude >= 0.4f  && !m_Zoomed) {
-			EnableMeshRendererOnTarget();
+		if(m_FreeCameraEnabled) {
+			Vector3 newPos = Vector3.MoveTowards(m_Camera.position, m_ZoomPosition, m_ZoomSpeed * Time.deltaTime);
+			m_Camera.position = newPos;
+			
+			if((m_Camera.position - m_ZoomPosition).magnitude <= 3.0f){
+				DisableMeshRendererOnTarget();
+			}
+			else{
+				EnableMeshRendererOnTarget();
+			}
+		} else {
+			m_ZoomPosition.y = 0.0f;
+			Vector3 newPos = Vector3.MoveTowards(m_Camera.localPosition, m_ZoomPosition, m_ZoomSpeed * Time.deltaTime);
+			m_Camera.localPosition = newPos;
+			
+			if((m_Camera.localPosition - m_ZoomPosition).magnitude <= 0.4f && m_Zoomed){
+				DisableMeshRendererOnTarget();
+			}
+			else if((m_Camera.localPosition - m_ZoomPosition).magnitude >= 0.4f  && !m_Zoomed) {
+				EnableMeshRendererOnTarget();
+			}
 		}
 	}
 
 	void DisableMeshRendererOnTarget(){
-		SkinnedMeshRenderer[] renderers = m_Target.GetComponentsInChildren<SkinnedMeshRenderer>();
-
-		foreach(SkinnedMeshRenderer m in renderers){
+		Transform benjamin = m_Target.FindChild("Benjamin");
+		//Renderer[] renderers = m_Target.GetComponentsInChildren<Renderer>();
+		benjamin.gameObject.SetActive(false);
+		/*foreach(Renderer m in renderers){
 			m.enabled = false;
-		}
+		}*/
 		m_FollowSpeed = 0.0f;
 	}
 
 	void EnableMeshRendererOnTarget(){
-		SkinnedMeshRenderer[] renderers = m_Target.GetComponentsInChildren<SkinnedMeshRenderer>();
+		Transform benjamin = m_Target.FindChild("Benjamin");
+		benjamin.gameObject.SetActive(true);
+	
+		/*SkinnedMeshRenderer[] renderers = m_Target.GetComponentsInChildren<SkinnedMeshRenderer>();
 		
 		foreach(SkinnedMeshRenderer m in renderers){
 			m.enabled = true;
-		}
+		}*/
 		m_FollowSpeed = m_OriginalFollowSpeed;
 	}
 
 	public void lockInput(bool lockInput){
 		m_LockedInput = lockInput;
+	}
+	
+	public bool isFreeCameraEnabled(){
+		return m_FreeCameraEnabled;
+	}
+	
+	public Vector3 getFreeCameraPosition(){
+		return m_FreeCameraPosition;
+	}
+	
+	public void setFreeCameraEnabled(bool enabled){
+		m_FreeCameraEnabled = enabled;
+	}
+	
+	public void setFreeCameraPosition(Vector3 pos, Vector3 rot){
+		m_FreeCameraPosition = pos;
+		m_FreeCameraRotation = rot;
+		m_FreeCameraStartRotation = m_Camera.rotation.eulerAngles;
 	}
 }
 
