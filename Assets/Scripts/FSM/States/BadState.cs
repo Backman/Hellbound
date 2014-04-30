@@ -8,5 +8,6 @@ public class BadState : State<PressurePlate> {
 	}
 
 	public override void activate (PressurePlate entity) {
+		Messenger.Broadcast ("lower roof");
 	}
 }

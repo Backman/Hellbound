@@ -41,14 +41,14 @@ public class GetDominantTexture : MonoBehaviour {
 		
 		float[] textureMix = new float[alphamap.GetUpperBound(2)+1];
 
-		for (int n=0; n<textureMix.Length; ++n){
+		for (int n = 0; n < textureMix.Length; n++){
 			textureMix[n] = alphamap[0,0,n];
 		}
 
 		float mostDominant = 0;
 		int dominantSurface = 0;
 
-		for (int n=0; n<textureMix.Length; ++n){
+		for (int n = 0 ; n < textureMix.Length; n++){
 			if (textureMix[n] > mostDominant){
 				dominantSurface = n;
 				mostDominant = textureMix[n];

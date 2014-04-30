@@ -124,7 +124,12 @@ public class FMOD_StudioSystem : MonoBehaviour
 		}
 	}
 	
-	public FMOD.Studio.EventInstance getEvent(string path)
+	public FMOD.Studio.EventInstance GetEvent(FMODAsset asset)
+	{
+		return GetEvent(asset.id);
+	}
+	
+	public FMOD.Studio.EventInstance GetEvent(string path)
 	{
 		FMOD.Studio.EventInstance instance = null;
 		
@@ -152,7 +157,7 @@ public class FMOD_StudioSystem : MonoBehaviour
 			}
 			else
 			{
-				FMOD.Studio.UnityUtil.LogError("Expected event path to start with '/'");
+				FMOD.Studio.UnityUtil.LogError("Expected event path to start with 'event:/'");
 			}
 			
 			FMOD.Studio.EventDescription desc = null;
@@ -173,15 +178,19 @@ public class FMOD_StudioSystem : MonoBehaviour
 		return instance;
 	}
 	
+	public void PlayOneShot(FMODAsset asset, Vector3 position)
+	{
+		PlayOneShot(asset.id, position);
+	}	
 	
 	public void PlayOneShot(string path, Vector3 position)
 	{
 		PlayOneShot(path, position, 1.0f);
 	}
 	
-	public void PlayOneShot(string path, Vector3 position, float volume)
+	void PlayOneShot(string path, Vector3 position, float volume)
 	{
-		var instance = getEvent(path);
+		var instance = GetEvent(path);
 		
 		var attributes = FMOD.Studio.UnityUtil.to3DAttributes(position);
 		ERRCHECK( instance.set3DAttributes(attributes) );
@@ -215,7 +224,7 @@ public class FMOD_StudioSystem : MonoBehaviour
 		
 		FMOD.Studio.UnityUtil.Log("FMOD_StudioSystem: system.init");
 		FMOD.RESULT result = FMOD.RESULT.OK;
-        result = system.init(1024, flags, FMOD.INITFLAGS.NORMAL, (System.IntPtr)null);
+		result = system.init(1024, flags, FMOD.INITFLAGS.NORMAL, global::System.IntPtr.Zero);
 		
 		if (result == FMOD.RESULT.ERR_NET_SOCKET_ERROR)
 		{

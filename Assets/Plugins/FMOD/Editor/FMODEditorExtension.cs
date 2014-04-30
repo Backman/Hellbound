@@ -478,7 +478,7 @@ public class FMODEditorExtension : MonoBehaviour
 				string path;
 				FMOD.RESULT result = desc.getPath(out path);
 				
-				if (result == FMOD.RESULT.ERR_EVENT_NOTFOUND)
+				if (result == FMOD.RESULT.ERR_EVENT_NOTFOUND || desc == null || !desc.isValid() || !ERRCHECK(result))
 				{
 					continue;
 				}
