@@ -3,16 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class LockedInteractable : Interactable {
-
+	public string m_LockedText = "I can't open this";
 	public LockedState m_LockedState;
 	public OpenedState m_OpenedState;
-	public List<Interactable> m_Keys = new List<Interactable>();
-	private Dictionary<Interactable, bool> m_KeyState = new Dictionary<Interactable, bool>();
-	public Dictionary<Interactable, bool> KeyState {
-		get { return m_KeyState; }
-	}
-	public StateMachine<LockedInteractable> m_FSM;
 
+	public List<Interactable> m_NeedsToBeOpen = new List<Interactable>();
+	public List<string> m_NeedsItems = new List<string>();
+
+	private Dictionary<Interactable, bool> m_InteractableKeyState = new Dictionary<Interactable, bool>();
+	private Dictionary<string, bool> m_ItemKeyState = new Dictionary<string, bool>();
+	
+	public StateMachine<LockedInteractable> m_FSM;
+	
 	// Use this for initialization
 	protected override void Start () {
 		base.Start();
@@ -20,40 +22,66 @@ public class LockedInteractable : Interactable {
 		m_FSM = new StateMachine<LockedInteractable>(this, m_LockedState);
 		m_FSM.addState(m_OpenedState);
 	}
-
+	
 	public override void useWith (GameObject obj) {
 		Interactable key = obj.GetComponent<Interactable>();
-		if(m_Keys.Contains (key)){
-			m_KeyState[key] = true;
-			if(Inventory.getInstance ().containsItem(key)){
-				Inventory.getInstance().removeItem(key);
-			}
-			if( allKeys() ){
-				m_FSM.changeState<OpenedState>();
-			}
+
+		if(m_NeedsToBeOpen.Contains (key)){
+			m_InteractableKeyState[key] = true;
+
+		}
+		if( allKeys() ){
+			m_FSM.changeState<OpenedState>();
 		}
 	}
-
+	
 	public override void activate ()
 	{
 		base.activate ();
+		bool all = true;
+
+		//Check if all needed items is in inventory.
+		foreach( string s in m_NeedsItems ){
+			all = InventoryLogic.Instance.containsItem(s) & all;
+		}
+
+		//If all needed items were in inventory, remove them from inventory
+		//and change state to open state
+		if( all ){
+			foreach( string s in m_NeedsItems ){
+				m_ItemKeyState[s] = true;
+				InventoryLogic.Instance.removeItem( s );
+			}
+		}
+
+		if (allKeys ()) {
+			m_FSM.changeState<OpenedState>();
+		} else {
+			GUIManager.Instance.simpleShowText(m_LockedText, "Use");
+		}
+
 		m_FSM.CurrentState.activate (this);
 	}
-
+	
 	private void initializeKeyState(){
-		foreach(Interactable obj in m_Keys){
-			m_KeyState.Add (obj, false);
+		foreach(Interactable obj in m_NeedsToBeOpen){
+			m_InteractableKeyState.Add (obj, false);
 		}
-		Debug.Log ("Dictionary size: " + m_KeyState.Count);
+		foreach(string s in m_NeedsItems ){
+			m_ItemKeyState.Add (s, false );
+		}
 	}
-
+	
 	public bool allKeys() {
-		foreach( bool b in m_KeyState.Values){
+		foreach( bool b in m_ItemKeyState.Values){
 			if( b == false ) return b;
+		}
+		foreach( bool b in m_InteractableKeyState.Values){
+			if(b == false) return b;
 		}
 		return true;
 	}
-
+	
 	public override void examine () {
 		m_FSM.CurrentState.examine (this);
 	}
