@@ -89,38 +89,9 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		// Read the user input
 		
 		if(m_FreeCameraEnabled){
-			//Vector3 newRot = m_FreeCameraStartRotation
-			float movePow = 0.8f;
+			Quaternion newRot = Quaternion.RotateTowards(m_Camera.rotation, Quaternion.Euler(m_FreeCameraRotation), 6.0f);
+			m_Camera.rotation = newRot;//Quaternion.Euler(m_FreeCameraStartRotation);
 			
-			float diffX = m_FreeCameraRotation.x - m_FreeCameraStartRotation.x;
-			float diffY = m_FreeCameraRotation.y - m_FreeCameraStartRotation.y;
-			float diffZ = m_FreeCameraRotation.z - m_FreeCameraStartRotation.z;
-			
-			float diffX2 = m_FreeCameraStartRotation.x - m_FreeCameraRotation.x;
-			float diffY2 = m_FreeCameraStartRotation.y - m_FreeCameraRotation.y;
-			float diffZ2 = m_FreeCameraStartRotation.z - m_FreeCameraRotation.z;
-			
-			float dx = Mathf.Abs(diffX) < Mathf.Abs(diffX2) ? diffX : diffX2;
-			float dy = Mathf.Abs(diffY) < Mathf.Abs(diffY2) ? diffY : diffY2;
-			float dz = Mathf.Abs(diffZ) < Mathf.Abs(diffZ2) ? diffZ : diffZ2;
-			
-			float dirX = dx < 0.0f ? -1.0f : 1.0f;
-			float dirY = dy < 0.0f ? -1.0f : 1.0f;
-			float dirZ = dz < 0.0f ? -1.0f : 1.0f;
-			
-			Debug.Log("diffX: "+diffX+" diffX2: "+diffX2);
-			
-			if(Mathf.Abs(dx) > 1.0f){
-				m_FreeCameraStartRotation.x += movePow * dirX;
-			}
-			if(Mathf.Abs(dy) > 1.0f){
-				m_FreeCameraStartRotation.y += movePow * dirY;
-			}
-			if(Mathf.Abs(dz) > 1.0f){
-				m_FreeCameraStartRotation.z += movePow * dirZ;
-			}
-			
-			m_Camera.rotation = Quaternion.Euler(m_FreeCameraStartRotation);
 		}
 		else{
 			float x = Input.GetAxis("Mouse X");
@@ -159,11 +130,11 @@ public class FreeLookCamera : PivotBasedCameraRig {
 			m_ZoomPosition = m_Pivot.localPosition;
 			m_Zoomed = true;
 			Messenger.Broadcast<bool>("lock player input", m_Zoomed);
-		}else if(m_FreeCameraEnabled){
+		}else if(m_FreeCameraEnabled && !m_Zoomed){
 			m_ZoomPosition = m_FreeCameraPosition;
 			m_Zoomed = true;
 			Messenger.Broadcast<bool>("lock player input", m_Zoomed);
-		} else if(zoom && m_Zoomed) {
+		} else if(zoom && m_Zoomed && !m_FreeCameraEnabled) {
 			m_ZoomPosition = m_CameraOriginPosition;
 			m_Zoomed = false;
 			Messenger.Broadcast<bool>("lock player input", m_Zoomed);
@@ -183,10 +154,10 @@ public class FreeLookCamera : PivotBasedCameraRig {
 			Vector3 newPos = Vector3.MoveTowards(m_Camera.localPosition, m_ZoomPosition, m_ZoomSpeed * Time.deltaTime);
 			m_Camera.localPosition = newPos;
 			
-			if((m_Camera.localPosition - m_ZoomPosition).magnitude <= 0.4f && m_Zoomed){
+			if((m_Camera.localPosition - m_ZoomPosition).magnitude <= 1.0f && m_Zoomed){
 				DisableMeshRendererOnTarget();
 			}
-			else if((m_Camera.localPosition - m_ZoomPosition).magnitude >= 0.4f  && !m_Zoomed) {
+			else if((m_Camera.localPosition - m_ZoomPosition).magnitude >= 1.0f  && !m_Zoomed) {
 				EnableMeshRendererOnTarget();
 			}
 		}
@@ -228,12 +199,18 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	
 	public void setFreeCameraEnabled(bool enabled){
 		m_FreeCameraEnabled = enabled;
+		if(!enabled) m_Zoomed = false;
 	}
 	
 	public void setFreeCameraPosition(Vector3 pos, Vector3 rot){
 		m_FreeCameraPosition = pos;
 		m_FreeCameraRotation = rot;
 		m_FreeCameraStartRotation = m_Camera.rotation.eulerAngles;
+	}
+
+	public void resetCameraTransform() {
+		m_ZoomPosition = m_CameraOriginPosition;
+		m_Camera.transform.localRotation = Quaternion.Euler(Vector3.zero);
 	}
 }
 

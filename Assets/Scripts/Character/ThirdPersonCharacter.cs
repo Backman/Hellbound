@@ -75,10 +75,6 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	// Handles user input
 	public void move(Vector3 move, bool crouch, Vector3 lookDirection){
 
-		if(m_ZoomInput) {
-			return;
-		}
-
 		if(move.magnitude > 1.0f){
 			move.Normalize();
 		}
