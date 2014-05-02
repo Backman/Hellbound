@@ -7,26 +7,23 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 	void Start () {
 		Messenger.AddListener<GameObject, bool>("onDrinkAntidote", onDrinkAntidote);
 		Messenger.AddListener<GameObject, bool>("onDrinkPoison", onDrinkPoison);
+		Messenger.AddListener<GameObject, bool>("openDoor", openDoor);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-	
+
 	public void onDrinkAntidote(GameObject antidote, bool tr){
-		GameObject parent = antidote.transform.parent.gameObject;
-		foreach(Interactable inter in parent.GetComponentsInChildren<Interactable>()){
-			inter.setPuzzleState("unavailable");
-		}
+		Interactable inter = antidote.GetComponent<Interactable>();
+		inter.setPuzzleState("unavailable");
 		Debug.Log("You drank antidote!");
 	}
 	
 	public void onDrinkPoison(GameObject poison, bool tr){
-		GameObject parent = poison.transform.parent.gameObject;
-		foreach(Interactable inter in parent.GetComponentsInChildren<Interactable>()){
-			inter.setPuzzleState("unavailable");
-		}
+		Interactable inter = poison.GetComponent<Interactable>();
+		inter.setPuzzleState("unavailable");
 		Debug.Log("You drank poison!");
+	}
+
+	public void openDoor(GameObject door, bool tr) {
+		Debug.Log ("Open door");
+		door.SetActive (false);
 	}
 }
