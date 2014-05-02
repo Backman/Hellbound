@@ -21,7 +21,6 @@ public class PressurePlate : Interactable {
 		Messenger.AddListener<bool>("notify wind symbol", notifyWind);
 
 		m_Machine = new StateMachine<PressurePlate>(this, new GoodState());
-		renderer.material.color = Color.green;
 		m_Machine.addState (new BadState());
 	}
 	
