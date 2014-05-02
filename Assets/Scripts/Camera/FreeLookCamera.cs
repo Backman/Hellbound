@@ -79,6 +79,10 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		}
 	}
 
+	protected void LateUpdate(){
+
+	}
+
 	void OnDisable() {
 		Screen.lockCursor = false;
 	}
