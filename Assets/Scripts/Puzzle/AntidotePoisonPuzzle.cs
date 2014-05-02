@@ -23,6 +23,7 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 	}
 
 	public void openDoor(GameObject door, bool tr) {
+		Debug.Log ("Open door");
 		door.SetActive (false);
 	}
 }
