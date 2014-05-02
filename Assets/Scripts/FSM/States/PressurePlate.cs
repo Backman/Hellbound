@@ -30,11 +30,7 @@ public class PressurePlate : Interactable {
 	}
 
 	void OnTriggerEnter(Collider col) {
-		if(m_ActivateType == ActivateType.OnTrigger){
-			if(col.tag == "Player") {
-				activate();
-			}
-		}
+		activate();
 		PuzzleEvent.trigger("onTriggerEnter", gameObject, true);
 	}
 
@@ -43,7 +39,7 @@ public class PressurePlate : Interactable {
 	}*/
 
 	public override void activate () {
-		m_Machine.CurrentState.activate(this);
+		base.activate ();
 	}
 
 	public S changeState<S>() where S : State<PressurePlate> {
