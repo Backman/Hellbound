@@ -18,48 +18,22 @@ public class InteractText : MonoBehaviour {
 	private UIPlayTween r_Tweener;
 
 	private bool m_HasExamine = true;
-	private bool m_HasPickup = true;
+	private bool m_HasPickup = false;
 	private bool m_CanBeUsed = true;
 
 	public bool HasExamine {
 		get { return m_HasExamine; }
-		set {
-			m_HasExamine = value;
-			if(!m_HasExamine){
-				m_ExamineText.gameObject.SetActive(false);
-			} else {
-				m_ExamineText.gameObject.SetActive(true);
-			}
-		}
 	}
-
 	public bool HasPickup {
 		get { return m_HasPickup; }
-		set {
-			m_HasPickup = value;
-			if(!m_HasPickup){
-				m_PickupText.gameObject.SetActive(false);
-			} else {
-				m_PickupText.gameObject.SetActive(true);
-			}
-		}
 	}
-
 	public bool CanBeUsed {
 		get { return m_CanBeUsed; }
-		set {
-			m_CanBeUsed = value;
-			if(!m_CanBeUsed){
-				m_UseText.gameObject.SetActive(false);
-			} else {
-				m_UseText.gameObject.SetActive(true);
-			}
-		}
 	}
-
 	public GameObject Target {
 		get { return m_Target; }
 		set {
+			Debug.Log( "Used" );
 			m_Target = value;
 			m_WorldCamera =  NGUITools.FindCameraForLayer(m_Target.layer);
 		}
@@ -72,6 +46,19 @@ public class InteractText : MonoBehaviour {
 	
 	void Start() {
 		m_GUICamera = NGUITools.FindCameraForLayer(gameObject.layer);
+	}
+
+	public void setupInteractionTexts( string examineText, string useText ){
+		reposition();
+
+		m_HasExamine = ( examineText != "" );
+		m_CanBeUsed  = ( useText  	 != "" );
+
+		m_ExamineText.gameObject.SetActive( m_HasExamine );
+		m_UseText.gameObject.SetActive( m_CanBeUsed );
+		m_UseText.text =  "Press E to " + useText;
+
+		reposition();
 	}
 
 	public void active(bool value) {

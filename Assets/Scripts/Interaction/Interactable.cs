@@ -18,13 +18,14 @@ using System.Reflection;
 /// Anton Thorsell
 /// </summary>
 public abstract class Interactable : MonoBehaviour{
-	public enum ActivateType{ OnTrigger, OnClick };
-	public ActivateType m_ActivateType = ActivateType.OnClick;
-	public InventoryItem m_InventoryItem;
-	public UISprite m_Thumbnail;
+
+	public enum ActivateType{ OnClick, OnTrigger }
+	public ActivateType m_ActivateType;
 	public EventSound m_EventSound;
 
 	[HideInInspector] public string m_Description;
+	[HideInInspector] public string m_UseText;
+	public string m_PuzzleState = "";
 
 	protected bool m_Usable = false;
 	public bool Usable {
@@ -45,7 +46,7 @@ public abstract class Interactable : MonoBehaviour{
 		if (m_EventSound.m_PickUp) { 
 				FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathPickUp, gameObject.transform.position);
 		}
-
+	
 	}
 	
 	public virtual void examine() {
@@ -73,7 +74,8 @@ public abstract class Interactable : MonoBehaviour{
 		//Apply light
 		Messenger.Broadcast<GameObject> ("onFocus", gameObject);
 		Debug.Log("Gaining focus: " + gameObject.name );
-		if(m_EventSound != null) {
+
+		if (m_EventSound != null) {
 			if (m_EventSound.m_GainFocus) { 
 				FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathGainFocus, gameObject.transform.position);
 			}
@@ -85,9 +87,18 @@ public abstract class Interactable : MonoBehaviour{
 		//Remove light
 		Messenger.Broadcast ("leaveFocus");
 		Debug.Log("Leaving focus: " + gameObject.name );
-		if (m_EventSound.m_LoseFocus) { 
-			FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathLoseFocus, gameObject.transform.position);
+		if (m_EventSound != null) {
+			if (m_EventSound.m_LoseFocus) { 
+				FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathLoseFocus, gameObject.transform.position);
+			}
 		}
 	}
 
+	public string getPuzzleState(){
+		return m_PuzzleState;
+	}
+
+	public void setPuzzleState(string state) {
+		m_PuzzleState = state;
+	}
 }

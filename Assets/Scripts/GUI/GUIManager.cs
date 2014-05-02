@@ -27,8 +27,8 @@ public class GUIManager : Singleton<GUIManager> {
 	private UISprite r_ExamineWindow;
 	[SerializeField]
 	private UISprite r_SubtitlesWindow;
-
-	public InteractText m_InteractText;
+	[SerializeField]
+	private InteractText r_InteractText;
 
 	////////////////////////////////////////////////
 	[SerializeField] [Range (0, 1)]				  //	
@@ -46,16 +46,22 @@ public class GUIManager : Singleton<GUIManager> {
 	private bool m_SubtitlesDisplayed = false;
 	private bool m_InventoryIsUp = false;
 
-	private ExamineBehaviour   m_Examine;
-	private SubtitlesBehaviour m_Subtitles;
+	private ExamineLogic   m_Examine;
+	private SubtitlesLogic m_Subtitles;
 
 	private UILabel[] r_ExamineLabels;
 	private UILabel[] r_SubtitlesLables;
 
+	/// <summary>
+	/// Controlls wether the inventoryWindow is currently tweening or not
+	/// </summary>
+	private bool m_InventoryTweening = false;
+
 	public void Start(){
 		DontDestroyOnLoad( transform.gameObject );
-		Inventory.getInstance();
-//		m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().resetOnPlay = true;
+
+//TODO: INV_	Inventory.getInstance();	//For initialization
+
 		if( r_ExamineWindow == null ){
 			Debug.LogError("Error! No description window present!");
 		} 
@@ -81,7 +87,8 @@ public class GUIManager : Singleton<GUIManager> {
             Messenger.Broadcast<bool>("lock player input", m_GamePaused);
             pauseGame(m_GamePaused);
         }
-		if (Input.GetButtonDown("Inventory") && !m_GamePaused) {
+		if (Input.GetButtonDown("Inventory") && !m_GamePaused && !m_InventoryTweening) {
+			m_InventoryTweening = true;
 			m_InventoryIsUp = !m_InventoryIsUp;
 			inventory();
 		}
@@ -102,13 +109,20 @@ public class GUIManager : Singleton<GUIManager> {
         }
     }
 
+	public void doneTweening(){
+		m_InventoryTweening = false;
+	}
+	
 	public void inventory(){
+
 		m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().Play (true);
 		if(m_InventoryIsUp) {
 			m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().tweenGroup = 1;
-		} else {
+		} 
+		else {
 			m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().tweenGroup = 0;
 		}
+
 	}
 
 	public void journal(){
@@ -117,18 +131,21 @@ public class GUIManager : Singleton<GUIManager> {
 	}
 
 	/// <summary>
-	/// Will display a window with the supplied text.
+	/// Shows a simple textbox with the supplied text.
+	/// The button-string dictates which button that closes the window. It is optional, defaults to Examine
+	/// The lockMovement bool dictates if the players movement is locked while the text is visible, defaults to true
 	/// </summary>
 	/// <param name="text">Text.</param>
+	/// <param name="button">Button.</param>
 	/// <param name="lockMovement">If set to <c>true</c> lock movement.</param>
-	public void simpleShowText(string text, bool lockMovement = true){
+	public void simpleShowText(string text, string button = "Examine", bool lockMovement = true){
 		if( !m_Examining ){
 			m_Examining = true;
 			object[] args = new object[5];
 			args[0] = text;	
 			args[1] = lockMovement;
 			args[2] = "awaitInput";		//Method for making text advance
-			args[3] = "Examine";
+			args[3] = button;
 			args[4] = false;
 
 			StartCoroutine("examine", args);
@@ -146,6 +163,16 @@ public class GUIManager : Singleton<GUIManager> {
 			StartCoroutine("subtitles", subtitles);
 
 	}
+
+	public void setupInteractionTexts( string examineText, string useText ){
+		r_InteractText.setupInteractionTexts( examineText, useText );
+	}
+
+	public void interactTextActive( bool status ){
+		r_InteractText.active( status );
+	}
+
+
 	#region private functions
 	private void initExamineWindow(){
 		//Fetch the "NextSprite" among the ExaminWindows children
@@ -158,7 +185,7 @@ public class GUIManager : Singleton<GUIManager> {
 		r_ExamineLabels = t.GetComponentsInChildren<UILabel>();
 		r_ExamineLabels = r_ExamineLabels.OrderBy( x => x.name ).ToArray();
 		
-		m_Examine = gameObject.GetComponent<ExamineBehaviour>();
+		m_Examine = gameObject.AddComponent<ExamineLogic>();
 		m_Examine.initialize( r_ExamineLabels, sprite, m_ExamineTextSpeed,
 		                     m_ExamineNewLineWait, m_ExamineDoLinePadding );
 	}
@@ -171,7 +198,7 @@ public class GUIManager : Singleton<GUIManager> {
 		r_SubtitlesLables = t.GetComponentsInChildren<UILabel>();
 		r_SubtitlesLables = r_SubtitlesLables.OrderBy( x => x.name ).ToArray();
 		
-		m_Subtitles = gameObject.GetComponent<SubtitlesBehaviour>();
+		m_Subtitles = gameObject.AddComponent<SubtitlesLogic>();
 		m_Subtitles.initialize( r_SubtitlesLables );
 	}
 	#endregion

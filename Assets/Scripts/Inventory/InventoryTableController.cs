@@ -7,7 +7,8 @@ using System.Collections;
 /// By Arvd/Aleksi 2014-04-16
 /// </summary>
 public class InventoryTableController : MonoBehaviour {
-	
+
+	private static bool m_DoReposition = false;
 	private static UITable r_Table;
 	private static UIScrollView r_ScrollView;
 	
@@ -20,7 +21,15 @@ public class InventoryTableController : MonoBehaviour {
 	/// Unity is a mother fucking bullshit engine
 	/// </summary>
 	public static void reposition(){
-		r_Table.Reposition ();
-		//r_ScrollView.ResetPosition();
+		m_DoReposition = true;
 	}
+
+	void LateUpdate(){
+		if( m_DoReposition ){
+			r_Table.Reposition();
+			m_DoReposition = false;
+		}
+	}
+
+
 }

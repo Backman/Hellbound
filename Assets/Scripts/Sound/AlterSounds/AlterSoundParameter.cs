@@ -21,36 +21,51 @@ public class AlterSoundParameter : MonoBehaviour {
 
 	private bool m_Inside = false;
 	private List<FMOD.Studio.ParameterInstance> r_ParameterCollection = new List<FMOD.Studio.ParameterInstance>();
+
 	private float m_OriginalValue = 0f;
 	
 	void Start () 
 	{
-		foreach(GameObject g in g_GameObjects){
-			if(g.GetComponent<FMOD_StudioEventEmitter>() != null){
-				r_ParameterCollection.Add(g.GetComponent<FMOD_StudioEventEmitter>().getParameter(s_Parameter));
-			}
-		}
+		StartCoroutine ("waitForParameters");
 		if(m_FadeSpeed == 0f){
 			m_FadeSpeed = 1;
 		}
 	}
 
+	private IEnumerator waitForParameters()
+	{
+		int d = g_GameObjects.Length;
+
+
+		for (int n = 0; n != g_GameObjects.Length;) {
+			yield return new WaitForSeconds(0.01f);
+			r_ParameterCollection.Clear();
+			foreach(GameObject g in g_GameObjects){
+				if(g.GetComponent<FMOD_StudioEventEmitter>() != null){
+					r_ParameterCollection.Add(g.GetComponent<FMOD_StudioEventEmitter>().getParameter(s_Parameter));
+				}
+			}
+			n = r_ParameterCollection.Count;
+		}
+		yield return 0;
+	}
+
 
 	void OnTriggerEnter(Collider other){
 		if(other.GetComponent<Rigidbody>() != null){
-		if (m_UseFade && !m_Inside) {
-			m_Inside = true;
-			StartCoroutine("FadeIn");
-		}
-		else if (!m_UseFade && !m_Inside){
-			m_Inside = true;
-			foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-				if(r_ParameterCollection != null){
-					p.setValue(m_InsideParameter);
+			if (m_UseFade && !m_Inside) {
+				m_Inside = true;
+				StartCoroutine("FadeIn");
+			}
+			else if (!m_UseFade && !m_Inside){
+				m_Inside = true;
+				foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
+					if(r_ParameterCollection != null){
+						p.setValue(m_InsideParameter);
+					}
 				}
 			}
 		}
-	}
 	}
 
 
@@ -84,6 +99,7 @@ public class AlterSoundParameter : MonoBehaviour {
 			p.getValue(out noPointersPlease);
 		}
 	
+
 		m_OriginalValue = noPointersPlease;
 		float beginValue = noPointersPlease;
 		float current = noPointersPlease;
@@ -114,7 +130,7 @@ public class AlterSoundParameter : MonoBehaviour {
 			p.getValue(out noPointersPlease);
 		}
 		
-		m_OriginalValue = noPointersPlease;
+
 		float beginValue = noPointersPlease;
 		current = noPointersPlease;
 
@@ -133,6 +149,10 @@ public class AlterSoundParameter : MonoBehaviour {
 			}
 			Debug.Log(current);
 			yield return new WaitForSeconds(0.01f);
+		}
+
+		if (m_DestroyOnExit) {
+			Destroy(gameObject);
 		}
 
 		yield return 0;
