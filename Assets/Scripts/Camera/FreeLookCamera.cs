@@ -68,7 +68,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		Messenger.AddListener<bool>("lock player input", lockInput);
 	}
 
-	protected override void Update() {
+	protected void Update() {
 		base.Update ();
 
 		handleZoomInput();
