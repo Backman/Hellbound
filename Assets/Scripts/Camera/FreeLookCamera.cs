@@ -27,7 +27,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	private Vector3 m_CameraOriginPosition;
 	private Vector3 m_ZoomPosition;
 
-	private float m_LookAngle = 00.0f;
+	private float m_LookAngle;
 	private float m_TiltAngle;
 
 	private float m_OriginalFollowSpeed;
@@ -60,6 +60,8 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		m_Pivot = m_Camera.parent;
 
 		m_OriginalFollowSpeed = m_FollowSpeed;
+		
+		m_LookAngle = transform.rotation.y;
 	}
 
 	protected void Start(){
