@@ -43,6 +43,7 @@ public class ThirdPersonController : MonoBehaviour {
 
 	public void lockInput(bool lockInput) {
 		m_LockedInput = lockInput;
+		r_Character.zoomed(lockInput);
 	}
 
 	// FixedUpdate is called in sync with physics
