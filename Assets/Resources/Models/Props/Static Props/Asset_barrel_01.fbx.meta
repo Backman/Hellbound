@@ -1,12 +1,18 @@
 fileFormatVersion: 2
-guid: 2618c1a2b3ab68149aefffb2ed48dc04
+guid: 90c0858d8db3787468fe4a0e2b528663
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Asset_barrel_01
+    100004: mupp:stones1:polySurface1
+    100006: transform39
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
+    400002: Asset_barrel_01
+    400004: mupp:stones1:polySurface1
+    400006: transform39
+    2300000: Asset_barrel_01
+    3300000: Asset_barrel_01
     4300000: Asset_barrel_01
     9500000: //RootNode
   materials:

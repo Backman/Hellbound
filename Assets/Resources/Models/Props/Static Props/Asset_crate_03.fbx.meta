@@ -1,12 +1,110 @@
 fileFormatVersion: 2
-guid: 20a016008ea08424399f66213222d6f2
+guid: cecb6982f51053b48b8863151066e015
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Asset_crate_03
+    100004: mupp:stones1:polySurface1
+    100006: polySurface248
+    100008: polySurface249
+    100010: polySurface250
+    100012: polySurface251
+    100014: polySurface252
+    100016: polySurface253
+    100018: polySurface254
+    100020: polySurface255
+    100022: polySurface256
+    100024: polySurface257
+    100026: polySurface258
+    100028: polySurface259
+    100030: polySurface260
+    100032: polySurface261
+    100034: polySurface262
+    100036: polySurface263
+    100038: polySurface264
+    100040: polySurface265
+    100042: polySurface266
+    100044: polySurface267
+    100046: polySurface268
+    100048: polySurface269
+    100050: polySurface270
+    100052: transform39
+    100054: transform40
+    100056: transform41
+    100058: transform42
+    100060: transform43
+    100062: transform44
+    100064: transform45
+    100066: transform46
+    100068: transform47
+    100070: transform48
+    100072: transform49
+    100074: transform50
+    100076: transform51
+    100078: transform52
+    100080: transform53
+    100082: transform54
+    100084: transform55
+    100086: transform56
+    100088: transform57
+    100090: transform58
+    100092: transform59
+    100094: transform60
+    100096: transform61
+    100098: transform62
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
+    400002: Asset_crate_03
+    400004: mupp:stones1:polySurface1
+    400006: polySurface248
+    400008: polySurface249
+    400010: polySurface250
+    400012: polySurface251
+    400014: polySurface252
+    400016: polySurface253
+    400018: polySurface254
+    400020: polySurface255
+    400022: polySurface256
+    400024: polySurface257
+    400026: polySurface258
+    400028: polySurface259
+    400030: polySurface260
+    400032: polySurface261
+    400034: polySurface262
+    400036: polySurface263
+    400038: polySurface264
+    400040: polySurface265
+    400042: polySurface266
+    400044: polySurface267
+    400046: polySurface268
+    400048: polySurface269
+    400050: polySurface270
+    400052: transform39
+    400054: transform40
+    400056: transform41
+    400058: transform42
+    400060: transform43
+    400062: transform44
+    400064: transform45
+    400066: transform46
+    400068: transform47
+    400070: transform48
+    400072: transform49
+    400074: transform50
+    400076: transform51
+    400078: transform52
+    400080: transform53
+    400082: transform54
+    400084: transform55
+    400086: transform56
+    400088: transform57
+    400090: transform58
+    400092: transform59
+    400094: transform60
+    400096: transform61
+    400098: transform62
+    2300000: Asset_crate_03
+    3300000: Asset_crate_03
     4300000: Asset_crate_03
     9500000: //RootNode
   materials:

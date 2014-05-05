@@ -1,12 +1,18 @@
 fileFormatVersion: 2
-guid: 83a4aedae2290fa4abc6768a3e5e0619
+guid: 507dd6e632678d849ada8f8c8f91ed74
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
+    100000: Asset_stone_boulder_014
+    100002: //RootNode
+    100004: Stones_toolbag:Stones_toolbag
+    100006: transform2
+    400000: Asset_stone_boulder_014
+    400002: //RootNode
+    400004: Stones_toolbag:Stones_toolbag
+    400006: transform2
+    2300000: Asset_stone_boulder_014
+    3300000: Asset_stone_boulder_014
     4300000: Asset_stone_boulder_014
     9500000: //RootNode
   materials:
@@ -27,7 +33,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: .129999995
+    globalScale: .100000001
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
