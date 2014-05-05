@@ -13,13 +13,17 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 	public void onDrinkAntidote(GameObject antidote, bool tr){
 		Interactable inter = antidote.GetComponent<Interactable>();
 		inter.setPuzzleState("unavailable");
+		antidote.SetActive (false);
 		Debug.Log("You drank antidote!");
+		Messenger.Broadcast ("clear focus");
 	}
 	
 	public void onDrinkPoison(GameObject poison, bool tr){
 		Interactable inter = poison.GetComponent<Interactable>();
 		inter.setPuzzleState("unavailable");
+		poison.SetActive (false);
 		Debug.Log("You drank poison!");
+		Messenger.Broadcast ("clear focus");
 	}
 
 	public void openDoor(GameObject door, bool tr) {
