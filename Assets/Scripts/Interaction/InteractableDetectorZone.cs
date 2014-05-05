@@ -14,6 +14,7 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 
 	void Start () {
 		Messenger.AddListener("clear focus", clearFocus);
+		Messenger.AddListener<Interactable>("add focus", addFocus);
 		r_GUIManager = GUIManager.Instance;
 	}
 
@@ -88,6 +89,11 @@ public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
 		r_InFocus = null;		
 		r_GUIManager.interactTextActive( false );
 	//	r_GUIManager.m_InteractText.gameObject.SetActive(false);
+	}
+	
+	public void addFocus(Interactable inter) {
+		r_InFocus = inter;
+		r_GUIManager.interactTextActive( true );
 	}
 }
 
