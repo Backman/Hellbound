@@ -15,6 +15,7 @@ public class Behaviour_PickUp : Interactable {
 	public override void activate () {
 		PuzzleEvent.trigger ("onPickUpInteractable", gameObject, true);
 		m_FSM.CurrentState.activate( this );
+		base.activate ();
 	}
 	
 	public override void examine () {
