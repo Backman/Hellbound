@@ -70,10 +70,10 @@ public class VolumeControl : MonoBehaviour {
 	//since fmod already knows about every sound that exists in the scene
 	public void ChangeVolume(float newVolume, string tagToBeChanged)
 	{
-		m_Volume[tagToBeChanged].setFaderLevel (newVolume);
+		m_Volume[tagToBeChanged].setFaderLevel(newVolume);
 	}
 
-	private void LoadVolume(){
+	private void SaveVolume(){
 		float setThis = 0f;
 		
 		m_Volume ["Master"].getFaderLevel(out setThis);
@@ -86,7 +86,7 @@ public class VolumeControl : MonoBehaviour {
 		PlayerPrefs.SetFloat ("Music", setThis);
 	}
 
-	private void SaveVolume(){
+	private void LoadVolume(){
 		ChangeVolume (PlayerPrefs.GetFloat ("Master", 1f), "Master");
 		ChangeVolume (PlayerPrefs.GetFloat ("SFX", 1f), "SFX");
 		ChangeVolume (PlayerPrefs.GetFloat ("Voice", 1f), "Voice");

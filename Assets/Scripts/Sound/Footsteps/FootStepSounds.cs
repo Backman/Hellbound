@@ -23,12 +23,11 @@ public class FootStepSounds : MonoBehaviour {
 
 	private GetDominantTexture surfaceTexture;
 
-	private FootstepSurface m_StandingOn;
-	private int m_HighestPriority;
+	private FootstepSurface m_StandingOn; //checkthis
 
 	//a pointer to the sound-parameter (this can change the sound the emitter makes,
 	//for example footsteps on wood or stone)
-	private FMOD.Studio.ParameterInstance m_Parameter = null;
+	private FMOD.Studio.ParameterInstance m_Parameter;
 
 	//we only want one footstepsound for every step
 	private bool m_Once = true;
@@ -41,7 +40,6 @@ public class FootStepSounds : MonoBehaviour {
 			m_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
 		}
 
-
 		FBack = FootBack.GetComponent<FootStepsHitBoxes> ();
 		OtherFBack = OtherFootBack.GetComponent<FootStepsHitBoxes> ();
 
@@ -49,37 +47,42 @@ public class FootStepSounds : MonoBehaviour {
 		m_Parameter = m_Emitter.getParameter("Surface");
 	}
 
-	void OnTriggerEnter(Collider other){
-		if(other.GetComponent<FootstepSurface>() != null){
-
-			FootstepSurface newobject = other.GetComponent<FootstepSurface> ();
-
-				if(m_StandingOn == null){
-					m_StandingOn = newobject;
-				}
-				if(m_StandingOn.m_Priority < newobject.m_Priority){
-					m_StandingOn = newobject;
-				}
-		}
-	}
 
 	void OnTriggerStay(Collider other){
+
+
+		if(other.GetComponent<FootstepSurface>() != null){
+			
+			FootstepSurface newobject = other.GetComponent<FootstepSurface> ();
+			
+			if(m_StandingOn == null){
+				m_StandingOn = newobject;
+			}
+			if(m_StandingOn.m_Priority < newobject.m_Priority){
+				m_StandingOn = newobject;
+			}
+
+		}
 
 		//if our whole foot is placed on the ground, we havent played a sound this
 		//"step" and the other foots backcollider isnt hitting anything we can play a sound
 		//(this means that we are still moving foward)
 		if(m_StandingOn != null){
+
+
 			if(m_StandingOn.m_UseFootstepSurface){
-				m_Parameter.setValue(m_StandingOn.m_Surface);
+					m_Parameter.setValue(m_StandingOn.m_Surface);
 			}
 			else if (surfaceTexture != null) {
 				m_Parameter.setValue(surfaceTexture.m_SurfaceType);
 			}
+
 			if(FBack.b_IsHitting && m_Once && !OtherFBack.b_IsHitting){
 				m_Once = false;
-				m_Emitter.Stop();
 				m_Emitter.Play();
+				m_StandingOn = null;
 			}
+
 			//if both backcolliders are hitting something we know we have stopped moving
 			//(we can add a sound for "footstepstop" or something here)
 			if(FBack.b_IsHitting && OtherFBack.b_IsHitting){
@@ -88,19 +91,11 @@ public class FootStepSounds : MonoBehaviour {
 		}
 	}
 
-
 	//when the foot leaves the ground we can once again take a step
 	void OnTriggerExit(Collider other){
-		FootstepSurface fssOther = other.GetComponent<FootstepSurface> ();
-		if(fssOther != null){
-			if(!FBack.b_IsHitting){
-				
-				if(m_StandingOn == fssOther){
-					m_Once = true;
-					m_StandingOn = null;
-				}
-
-			}
+		if(other.GetComponent<FootstepSurface>() != null){
+			m_Once = true;
 		}
 	}
+
 }

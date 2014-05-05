@@ -10,7 +10,6 @@ public class SoundTesting : MonoBehaviour {
 	/// </summary>
 
 	public float volume = 0.5f;
-
 	public string Tag = "Master";
 
 	private VolumeControl m_VC;
@@ -24,11 +23,11 @@ public class SoundTesting : MonoBehaviour {
 	{
 		if(Input.GetKeyDown(KeyCode.O))
 		{
-			m_VC.ChangeVolume(volume, Tag);
+			m_VC.ChangeVolume(0f, "SFX");
 		}
 		if(Input.GetKeyDown(KeyCode.P))
 		{
-			m_VC.ChangeVolume(0f, "Master");
+			m_VC.ChangeVolume(1f, "SFX");
 		}
 	}
 }
