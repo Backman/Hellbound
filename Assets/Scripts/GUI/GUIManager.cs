@@ -64,7 +64,6 @@ public class GUIManager : Singleton<GUIManager> {
 	private bool m_InventoryTweening = false;
 	
 	public void Start(){
-		DontDestroyOnLoad( transform.gameObject );
 		
 		//TODO: INV_ Inventory.getInstance(); //For initialization
 		
