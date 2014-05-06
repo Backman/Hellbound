@@ -27,7 +27,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	private Vector3 m_CameraOriginPosition;
 	private Vector3 m_ZoomPosition;
 
-	private float m_LookAngle;
+	private float m_LookAngle = 90.0f;
 	private float m_TiltAngle;
 
 	private float m_OriginalFollowSpeed;
@@ -60,11 +60,13 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		m_Pivot = m_Camera.parent;
 
 		m_OriginalFollowSpeed = m_FollowSpeed;
-		
-		m_LookAngle = transform.rotation.y;
 	}
 
 	protected void Start(){
+		base.Start ();
+
+		m_LookAngle = m_Target.rotation.eulerAngles.y;
+
 		Messenger.AddListener<bool>("lock player input", lockInput);
 	}
 
@@ -99,7 +101,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		else{
 			float x = Input.GetAxis("Mouse X");
 			float y = Input.GetAxis("Mouse Y");
-	
+
 			// Smooth the user input
 			if(m_TurnSmoothing > 0.0f) {
 				m_SmoothX = Mathf.SmoothDamp(m_SmoothX, x, ref m_SmoothXVelocity, m_TurnSmoothing);

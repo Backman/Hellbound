@@ -1,8 +1,19 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<< HEAD
 guid: c109bfe31196baa4283e9ff5da48414e
 =======
 guid: 0fad41f010ac7e146bc3b0954de1d030
 >>>>>>> 9f85290fbe957422bda1746fee79dc0b926c389c
+=======
+<<<<<<< HEAD
+guid: c824616f5a92a07408a3d26b6425f4cf
+=======
+guid: 0fad41f010ac7e146bc3b0954de1d030
+>>>>>>> arvid
+=======
+guid: 94f7622355e480045bfe9948f2b26674
+>>>>>>> 2740bec6a8f2baa5c96e6d0d0f53ed23d5d618a2
+>>>>>>> origin
 NativeFormatImporter:
   userData: 
