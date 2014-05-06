@@ -45,6 +45,9 @@ public class GUIManager : Singleton<GUIManager> {
 	////////////////////////////////////////////////
 	
 	private bool m_GamePaused = false;
+	public bool GamePaused {
+		get { return m_GamePaused; }
+	}
 	private bool m_Examining = false;
 	private bool m_SubtitlesDisplayed = false;
 	private bool m_InventoryIsUp = false;
@@ -87,7 +90,6 @@ public class GUIManager : Singleton<GUIManager> {
 	void Update() {
 		if (Input.GetButtonDown("Pause")) {
 			m_GamePaused = !m_GamePaused;
-			Messenger.Broadcast<bool>("lock player input", m_GamePaused);
 			pauseGame(m_GamePaused);
 		}
 		if (Input.GetButtonDown("Inventory") && !m_GamePaused && !m_InventoryTweening) {
@@ -105,9 +107,11 @@ public class GUIManager : Singleton<GUIManager> {
 	public void pauseGame(bool pause) {
 		if (pause) {
 			PauseMenu.getInstance().showPauseWindow();
+			Time.timeScale = 0.0f;
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 		} else {
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(false);
+			Time.timeScale = 1.0f;
 			Messenger.Broadcast("reset pause window");
 		}
 	}
