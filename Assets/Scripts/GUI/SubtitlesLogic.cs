@@ -64,6 +64,10 @@ public class SubtitlesLogic: MonoBehaviour {
 	/// Args[1] = (bool)  allow quick skip
 	/// Args[2] = (string) scroll method
 	/// Args[3] = (obj) scroll method argument
+	/// Args[4] = (bool) Line Padding
+	/// Args[5] = (bool) Using sounds (true if acceptable path found)
+	/// Args[6] = (string) SoundPath
+	/// Args[7] = (vector3) SoundPosition
 	/// </summary>
 	IEnumerator feedText( object[] args ){
 		//Place all words in a stack
@@ -74,7 +78,11 @@ public class SubtitlesLogic: MonoBehaviour {
 		}
 		object[] feedLineArgs = new object[2];
 		feedLineArgs[1] = args[3];
-		
+
+		if ((bool)args[5]) {
+			FMOD_StudioSystem.instance.PlayOneShot((string)args[6], (Vector3)args[7]);
+		}
+
 		foreach( UILabel label in r_SubtitlesLabels ){
 			if( words.Count == 0 ){
 				break;
