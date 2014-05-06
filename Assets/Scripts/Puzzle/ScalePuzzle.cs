@@ -60,7 +60,7 @@ public class ScalePuzzle : MonoBehaviour {
 			cube.SetActive(true);
 		}
 		for(int i = 0; i < m_Cubes.Count; ++i){
-			InventoryLogic.Instance.removeItem("cube key");
+			//InventoryLogic.Instance.removeItem("cube key");
 		}
 		r_FreeLookCamera.setFreeCameraPosition(inspectCubesDummy.transform.position, inspectCubesDummy.transform.localRotation.eulerAngles);
 		r_FreeLookCamera.setFreeCameraEnabled(true);
@@ -231,6 +231,7 @@ public class ScalePuzzle : MonoBehaviour {
 						}
 					}
 					if(clearedPuzzle){
+						PuzzleEvent.trigger("onScalePuzzleCleared", gameObject, false);
 						Debug.Log("Cleared puzzle!");
 						puzzleActive = false;
 						break;
@@ -265,7 +266,7 @@ public class ScalePuzzle : MonoBehaviour {
 				else if(Input.GetButtonDown("Jump")){
 					// Cube is no longer placed on the table, jump over object when navigating
 					m_CubePlaceUsed[m_CurrentIndex] = false;
-					r_ObjectInFocus.transform.position = inspectCubesDummy.transform.position + Vector3.forward * 0.3f;
+					r_ObjectInFocus.transform.position = inspectCubesDummy.transform.position +  inspectCubesDummy.transform.forward * 0.5f;
 					r_ObjectInFocus.renderer.material.color = Color.white;
 					m_ExaminatingCube = true;
 				}
