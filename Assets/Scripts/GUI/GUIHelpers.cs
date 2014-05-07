@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// This file contains helper functions as well as namespace definitions
+/// This file contains helper functions,
+/// data container definitions
+/// as well as namespace definitions
 /// for GUI helpers for the project Hellbound.
 /// 
 /// Created by Simon
@@ -19,6 +21,11 @@ namespace MyGUI{
 		public  float TextSpeed { get{ return (float) (1.0f - textSpeed); } }
 		[SerializeField][Multiline]
 		public string Text;
+	}
+	[System.Serializable]
+	public class NoteSettings{
+		[SerializeField][Multiline]
+		public string text;
 	}
 
 	public class Tools{
