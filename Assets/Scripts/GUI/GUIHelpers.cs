@@ -17,6 +17,10 @@ namespace MyGUI{
 		[SerializeField][Range (0, 1)]
 		private float textSpeed;
 		public  float TextSpeed { get{ return (float) (1.0f - textSpeed); } }
+
+		public string SoundPath = "event:/";
+		public Transform SoundPosition;
+
 		[SerializeField][Multiline]
 		public string Text;
 	}
