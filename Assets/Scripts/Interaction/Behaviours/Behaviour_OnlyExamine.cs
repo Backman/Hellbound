@@ -1,6 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Behaviour_ only examine.
+/// 
+/// This script is attached to objects which can only be
+/// interacted with via the examine-action. 
+/// </summary>
 public class Behaviour_OnlyExamine : Interactable {
 
 	public ExamineState m_State = new ExamineState();
