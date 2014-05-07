@@ -72,7 +72,6 @@ public class FreeLookCamera : PivotBasedCameraRig {
 
 	protected void Update() {
 		base.Update ();
-		Debug.Log("Accessing "+GUIManager.Instance.name);
 		if(!GUIManager.Instance.GamePaused){
 			handleZoomInput();
 
