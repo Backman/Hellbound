@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
+
 
 [System.Serializable]
 public class PauseWindow {
@@ -12,6 +14,7 @@ public class PauseWindow {
 	public GameObject r_SaveLoadWindow;
 	public GameObject r_SettingsWindow;
 }
+
 
 /// <summary>
 /// This class handles the GUI window that displays text messages
@@ -27,15 +30,14 @@ public class GUIManager : Singleton<GUIManager> {
 	private UISprite r_ExamineWindow;
 	[SerializeField]
 	private UISprite r_SubtitlesWindow;
-
+	[SerializeField]
+	private InteractText r_InteractText;
+	
+	
 	private Queue m_MonologeQueue = new Queue ();
 	private bool WritingDialouge = false;
-
-	public InteractText m_InteractText;
-
-	private Queue m_MonologeQueue = new Queue ();
-	private bool WritingDialouge = false;
-
+	
+	
 	////////////////////////////////////////////////
 	[SerializeField] [Range (0, 1)]	//
 	public float m_WindowFadeTime = 0.0f;	//
@@ -47,39 +49,33 @@ public class GUIManager : Singleton<GUIManager> {
 	public bool m_ExamineDoLinePadding = false;	//
 	////////////////////////////////////////////////
 	
+	
 	private bool m_GamePaused = false;
 	private bool m_Examining = false;
 	private bool m_SubtitlesDisplayed = false;
 	private bool m_InventoryIsUp = false;
-<<<<<<< HEAD
-
-	private ExamineBehaviour   m_Examine;
-	private SubtitlesBehaviour m_Subtitles;
-
-=======
+	
 	
 	private ExamineLogic m_Examine;
 	private SubtitlesLogic m_Subtitles;
 	
->>>>>>> 4afa832fd1d0ebb59e8b7443413d38b2371d0b56
+	
 	private UILabel[] r_ExamineLabels;
 	private UILabel[] r_SubtitlesLables;
+	
 	
 	/// <summary>
 	/// Controlls wether the inventoryWindow is currently tweening or not
 	/// </summary>
 	private bool m_InventoryTweening = false;
 	
+	
 	public void Start(){
-<<<<<<< HEAD
-		DontDestroyOnLoad( transform.gameObject );
-		Inventory.getInstance();
-//		m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().resetOnPlay = true;
-=======
+		
 		
 		//TODO: INV_ Inventory.getInstance(); //For initialization
 		
->>>>>>> 4afa832fd1d0ebb59e8b7443413d38b2371d0b56
+		
 		if( r_ExamineWindow == null ){
 			Debug.LogError("Error! No description window present!");
 		}
@@ -88,6 +84,7 @@ public class GUIManager : Singleton<GUIManager> {
 			r_ExamineWindow.transform.localScale = new Vector3(1.0f, 0.0f, 1.0f);
 			initExamineWindow();
 		}
+		
 		
 		if( r_SubtitlesWindow == null ){
 			Debug.LogError("Error! No subtitles window present!");
@@ -98,6 +95,7 @@ public class GUIManager : Singleton<GUIManager> {
 			initSubtitleWindow();
 		}
 	}
+	
 	
 	void Update() {
 		if (Input.GetButtonDown("Pause")) {
@@ -117,6 +115,7 @@ public class GUIManager : Singleton<GUIManager> {
 		}
 	}
 	
+	
 	public void pauseGame(bool pause) {
 		if (pause) {
 			PauseMenu.getInstance().showPauseWindow();
@@ -127,11 +126,14 @@ public class GUIManager : Singleton<GUIManager> {
 		}
 	}
 	
+	
 	public void doneTweening(){
 		m_InventoryTweening = false;
 	}
 	
+	
 	public void inventory(){
+		
 		
 		m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().Play (true);
 		if(m_InventoryIsUp) {
@@ -141,32 +143,34 @@ public class GUIManager : Singleton<GUIManager> {
 			m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().tweenGroup = 0;
 		}
 		
+		
 	}
+	
 	
 	public void journal(){
 		PauseMenu.getInstance ().showJournal();
 		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 	}
 	
+	
 	/// <summary>
-	/// Will display a window with the supplied text.
+	/// Shows a simple textbox with the supplied text.
+	/// The button-string dictates which button that closes the window. It is optional, defaults to Examine
+	/// The lockMovement bool dictates if the players movement is locked while the text is visible, defaults to true
 	/// </summary>
 	/// <param name="text">Text.</param>
+	/// <param name="button">Button.</param>
 	/// <param name="lockMovement">If set to <c>true</c> lock movement.</param>
-	public void simpleShowText(string text, bool lockMovement = true){
+	public void simpleShowText(string text, string button = "Examine", bool lockMovement = true){
 		if( !m_Examining ){
 			m_Examining = true;
 			object[] args = new object[5];
 			args[0] = text;	
 			args[1] = lockMovement;
-<<<<<<< HEAD
-			args[2] = "awaitInput";		//Method for making text advance
-			args[3] = "Examine";
-=======
 			args[2] = "awaitInput";	//Method for making text advance
 			args[3] = button;
->>>>>>> 4afa832fd1d0ebb59e8b7443413d38b2371d0b56
 			args[4] = false;
+			
 			
 			StartCoroutine("examine", args);
 		}
@@ -175,43 +179,39 @@ public class GUIManager : Singleton<GUIManager> {
 		}
 	}
 	
+	
 	/// <summary>
 	/// Shows the subtitles.
 	/// </summary>
 	public void showSubtitles( MyGUI.SubtitlesSettings[] subtitles ){
-<<<<<<< HEAD
-
-			foreach (MyGUI.SubtitlesSettings sts in subtitles) {
-				m_MonologeQueue.Enqueue(sts);
-			}
-
-=======
+		
 		
 		foreach (MyGUI.SubtitlesSettings sts in subtitles) {
 			m_MonologeQueue.Enqueue(sts);
 		}
 		
->>>>>>> 4afa832fd1d0ebb59e8b7443413d38b2371d0b56
+		
 		if (!WritingDialouge) {
 			WritingDialouge = true;
 			StartCoroutine("subtitles", subtitles);
 		}
-<<<<<<< HEAD
-	}
-=======
+		
 		
 	}
+	
 	
 	public void setupInteractionTexts( string examineText, string useText ){
 		r_InteractText.setupInteractionTexts( examineText, useText );
 	}
+	
 	
 	public void interactTextActive( bool status ){
 		r_InteractText.active( status );
 	}
 	
 	
->>>>>>> 4afa832fd1d0ebb59e8b7443413d38b2371d0b56
+	
+	
 	#region private functions
 	private void initExamineWindow(){
 		//Fetch the "NextSprite" among the ExaminWindows children
@@ -219,68 +219,81 @@ public class GUIManager : Singleton<GUIManager> {
 		UISprite sprite = t.FindChild("NextSprite").GetComponent<UISprite>();
 		sprite.alpha = 0.0f;
 		
+		
 		//Fetch the "ExamineTextLabels" among the ExamineWindows children, then
 		//sort them
 		r_ExamineLabels = t.GetComponentsInChildren<UILabel>();
 		r_ExamineLabels = r_ExamineLabels.OrderBy( x => x.name ).ToArray();
 		
-		m_Examine = gameObject.GetComponent<ExamineBehaviour>();
+		
+		m_Examine = gameObject.AddComponent<ExamineLogic>();
 		m_Examine.initialize( r_ExamineLabels, sprite, m_ExamineTextSpeed,
 		                     m_ExamineNewLineWait, m_ExamineDoLinePadding );
 	}
 	
+	
 	private void initSubtitleWindow(){
 		Transform t = r_SubtitlesWindow.transform;
+		
 		
 		//Fetch the "ExamineTextLabels" among the ExamineWindows children, then
 		//sort them
 		r_SubtitlesLables = t.GetComponentsInChildren<UILabel>();
 		r_SubtitlesLables = r_SubtitlesLables.OrderBy( x => x.name ).ToArray();
 		
-		m_Subtitles = gameObject.GetComponent<SubtitlesBehaviour>();
+		
+		m_Subtitles = gameObject.AddComponent<SubtitlesLogic>();
 		m_Subtitles.initialize( r_SubtitlesLables );
 	}
 	#endregion
 	
 	
+	
+	
 	IEnumerator examine(object[] args){
+		
 		
 		if( (bool) args[1] ){
 			Messenger.Broadcast("lock player input", true );
 		}
 		
+		
 		r_SubtitlesWindow.GetComponent<TweenPosition>().PlayForward();
+		
 		
 		StartCoroutine( m_Examine.clearLables() );
 		yield return StartCoroutine( "showWindow", r_ExamineWindow );
 		yield return StartCoroutine( m_Examine.showText( args ) );	
 		yield return StartCoroutine( "hideWindow", r_ExamineWindow );
 		
+		
 		Messenger.Broadcast("lock player input", false );
+		
 		
 		m_Examining = false;
 		r_SubtitlesWindow.GetComponent<TweenPosition>().PlayReverse();
 	}
 	
+	
 	IEnumerator subtitles(MyGUI.SubtitlesSettings[] subtitles){
-<<<<<<< HEAD
-
-=======
 		
->>>>>>> 4afa832fd1d0ebb59e8b7443413d38b2371d0b56
+		
 		object[] args = new object[8];
 		StartCoroutine( m_Subtitles.clearLables() );
 		
+		
 		yield return StartCoroutine( "showWindow", r_SubtitlesWindow );	
-<<<<<<< HEAD
-
+		
+		
 		while(m_MonologeQueue.Count != 0){
-
+			
+			
 			MyGUI.SubtitlesSettings useThis = (MyGUI.SubtitlesSettings)(m_MonologeQueue.Dequeue());
-
+			
+			
 			args[0] = useThis.Text;	
 			args[1] = useThis.DisplayTime;
-			args[2] = "awaitTime";		//Method for making text advance
+			args[2] = "awaitTime";	//Method for making text advance
 			args[3] = useThis.TextSpeed;
 			args[4] = false;
 
@@ -292,69 +305,21 @@ public class GUIManager : Singleton<GUIManager> {
 				}
 			}
 			else{
-				args[5] = false;
-			}
+			args[5] = false;
+			} 
+			
 			
 			yield return StartCoroutine( m_Subtitles.showSubtitles( args ) );
 			StartCoroutine( m_Subtitles.clearLables() );
-
-
-		}
-		/*
-		foreach( MyGUI.SubtitlesSettings subtitle in subtitles ){
-			args[0] = subtitle.Text;	
-			args[1] = subtitle.DisplayTime;
-			args[2] = "awaitTime";		//Method for making text advance
-			args[3] = subtitle.TextSpeed;
-			args[4] = false;
-
-			if(subtitle.SoundPath == "" || subtitle.SoundPath == "event:/"){
-				args[5] = true;
-				args[6] = subtitle.SoundPath;
-				if(subtitle.SoundPosition.transform != null){
-					args[7] = subtitle.SoundPosition.transform.position;
-				}
-			}
-			else{
-				args[5] = false;
-			}
-
-			yield return StartCoroutine( m_Subtitles.showSubtitles( args ) );
-			StartCoroutine( m_Subtitles.clearLables() );
-
-		}*/
-=======
-		
-		while(m_MonologeQueue.Count != 0){
 			
-			MyGUI.SubtitlesSettings useThis = (MyGUI.SubtitlesSettings)(m_MonologeQueue.Dequeue());
 			
-			args[0] = useThis.Text;	
-			args[1] = useThis.DisplayTime;
-			args[2] = "awaitTime";	//Method for making text advance
-			args[3] = useThis.TextSpeed;
-			args[4] = false;
-			
-	/*	TODO:if(useThis.SoundPath == "" || useThis.SoundPath == "event:/"){
-				args[5] = true;
-				args[6] = useThis.SoundPath;
-				if(useThis.SoundPosition.transform != null){
-					args[7] = useThis.SoundPosition.transform.position;
-				}
-			}
-			else{ */
-				args[5] = false;
-	//		} 
-			
-			yield return StartCoroutine( m_Subtitles.showSubtitles( args ) );
-			StartCoroutine( m_Subtitles.clearLables() );
 			
 			
 		}
->>>>>>> 4afa832fd1d0ebb59e8b7443413d38b2371d0b56
 		WritingDialouge = false;
 		yield return StartCoroutine( "hideWindow", r_SubtitlesWindow );
 	}
+	
 	
 	#region General Coroutines
 	/// <summary>
@@ -368,9 +333,11 @@ public class GUIManager : Singleton<GUIManager> {
 			col.a += Time.deltaTime / m_WindowFadeTime;
 			window.color = col;
 			
+			
 			scale = window.transform.localScale;
 			scale.y += Time.deltaTime / m_WindowFadeTime;
 			window.transform.localScale = scale;
+			
 			
 			yield return null;
 		}
@@ -379,6 +346,7 @@ public class GUIManager : Singleton<GUIManager> {
 		window.color = col;	
 		window.transform.localScale = scale;
 	}
+	
 	
 	/// <summary>
 	/// Hides the window in a smooth way
@@ -391,14 +359,17 @@ public class GUIManager : Singleton<GUIManager> {
 			col.a -= Time.deltaTime / m_WindowFadeTime;
 			window.color = col;
 			
+			
 			scale = window.transform.localScale;
 			scale.y -= Time.deltaTime / m_WindowFadeTime;
 			window.transform.localScale = scale;
+			
 			
 			yield return null;
 		}
 		col.a = 0.0f;
 		scale.y = 0.0f;
+		
 		
 		window.color = col;
 		window.transform.localScale = scale;
