@@ -29,7 +29,6 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 				if (_instance == null)
 				{
 					_instance = (T) FindObjectOfType(typeof(T));
-					
 					if ( FindObjectsOfType(typeof(T)).Length > 1 )
 					{
 						Debug.LogError("[Singleton] Something went really wrong " +
@@ -54,7 +53,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 						          _instance.gameObject.name);
 					}
 				}
-				
+
 				return _instance;
 			}
 		}
@@ -70,6 +69,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 	/// So, this was made to be sure we're not creating that buggy ghost object.
 	/// </summary>
 	public void OnDestroy () {
+		Debug.Log("Destroying" + gameObject.name);
 		applicationIsQuitting = true;
 	}
 }

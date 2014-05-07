@@ -5,7 +5,6 @@ using System.Collections;
 public class LockedState : State<LockedInteractable> {
 
 	public override void activate (LockedInteractable entity)
-	{
-		Debug.Log( this.ToString() + " is locked");
+	{		
 	}
 }

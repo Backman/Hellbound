@@ -23,7 +23,7 @@
 //#define LOG_ALL_MESSAGES
 //#define LOG_ADD_LISTENER
 //#define LOG_BROADCAST_MESSAGE
-#define REQUIRE_LISTENER
+//#define REQUIRE_LISTENER
 
 using System;
 using System.Collections.Generic;
@@ -75,8 +75,9 @@ static internal class Messenger {
 				}
 			}
 			
-			if (!wasFound)
+			if (!wasFound){
 				messagesToRemove.Add( pair.Key );
+			}
 		}
 		
 		foreach (string message in messagesToRemove) {
@@ -305,6 +306,7 @@ public sealed class MessengerHelper : MonoBehaviour {
 	
 	//Clean up eventTable every time a new level loads.
 	public void OnDisable() {
+		Debug.Log("CleanUp");
 		Messenger.Cleanup();
 	}
 }
