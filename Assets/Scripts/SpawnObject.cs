@@ -19,7 +19,6 @@ public class SpawnObject : MonoBehaviour {
 			if(m_SpawnObject != null && !m_Triggered){
 				StartCoroutine(spawnObject());
 				m_Triggered = true;
-				Debug.Log (m_Triggered);
 			}
 		}
 	}

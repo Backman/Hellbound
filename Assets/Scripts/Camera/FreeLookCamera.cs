@@ -73,11 +73,13 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	protected void Update() {
 		base.Update ();
 
-		handleZoomInput();
+		if(!GUIManager.Instance.GamePaused){
+			handleZoomInput();
 
-		handleRotationMovement();
-		if(m_LockCursor && Input.GetMouseButtonUp(0)) {
-			Screen.lockCursor = m_LockCursor;
+			handleRotationMovement();
+			if(m_LockCursor && Input.GetMouseButtonUp(0)) {
+				Screen.lockCursor = m_LockCursor;
+			}
 		}
 	}
 
