@@ -173,12 +173,22 @@ public class PuzzleLogic : MonoBehaviour{
         }
 		return m_Logic;
     }
+
+	void OnDestroy() {
+
+	}
+
+	void Awake(){
+	}
     
     void Start(){
     	int index = 0;
 		foreach(EventData eventData in m_Logic.getEvents()){
 			int idx = index;
-			Messenger.AddListener(eventData.getName(), 
+
+			//Debug.Log(gameObject.name + " is adding listner "+eventData.getName() );
+
+			Messenger.AddListener(eventData.getName(),
 				delegate(GameObject obj, bool triggerOnlyForMe){
 					//string requiredState = m_Logic.getEvent(idx).getRequiredObjectState();
 					bool doCall = true;
