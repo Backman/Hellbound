@@ -27,10 +27,9 @@ public class InventoryLogic{
 			Debug.LogError("Invalid item passed!");
 			return false;
 		}
-
+		
 		m_Items.Add(itemName);
 		addItemToTable( itemName, itemSprite );
-
 		//TODO: Check if part of combine item
 		//TODO: Do logic if item is part of combie
 
@@ -66,16 +65,17 @@ public class InventoryLogic{
 	private void removeItemFromTable( string itemName ){
 		bool itemRemoved = false;
 		foreach( Transform child in r_Table.transform ){
-			if (child.name == itemName && !itemRemoved){
-				GameObject.Destroy( child.gameObject );
+			if (child.name == itemName){
+				GameObject.DestroyImmediate( child.gameObject );
 				itemRemoved = true;
+				break;
 			}
 		}
 
 		if( !itemRemoved ){
 			Debug.LogError("No child: " + itemName + " found in itemTable" );
 		}
-		InventoryTableController.reposition();		
+		InventoryTableController.reposition();
 	}
 	#endregion
 }
