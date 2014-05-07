@@ -213,15 +213,18 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	}
 	private IEnumerator activateBenjamin(){
 		Transform benjamin = m_Target.FindChild("Benjamin");
-		yield return new WaitForSeconds( 0.1f);
-		benjamin.gameObject.SetActive(true);
-		
-		/*SkinnedMeshRenderer[] renderers = m_Target.GetComponentsInChildren<SkinnedMeshRenderer>();
-		
-		foreach(SkinnedMeshRenderer m in renderers){
-			m.enabled = true;
-		}*/
-		m_FollowSpeed = m_OriginalFollowSpeed;
+		if(!benjamin.gameObject.activeSelf) {
+			Debug.Log ("Enabling");
+			yield return new WaitForSeconds( 0.1f);
+			benjamin.gameObject.SetActive(true);
+			
+			/*SkinnedMeshRenderer[] renderers = m_Target.GetComponentsInChildren<SkinnedMeshRenderer>();
+			
+			foreach(SkinnedMeshRenderer m in renderers){
+				m.enabled = true;
+			}*/
+			m_FollowSpeed = m_OriginalFollowSpeed;
+		}
 	}
 }
 
