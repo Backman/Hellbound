@@ -87,7 +87,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 		convertMoveInput();
 
-		turnTowardsCameraForward();
+		//turnTowardsCameraForward();
 
 		preventStandingInLowHeadroom();
 
@@ -107,7 +107,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 		updateAnimator();
 
-		rigidbody.velocity = m_Velocity;
+		//rigidbody.velocity = m_Velocity;
 	}
 
 	public void zoomed(bool zoomed){
