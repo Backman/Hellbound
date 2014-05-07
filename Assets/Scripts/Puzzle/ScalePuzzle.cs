@@ -62,6 +62,10 @@ public class ScalePuzzle : MonoBehaviour {
 		for(int i = 0; i < m_Cubes.Count; ++i){
 			//InventoryLogic.Instance.removeItem("cube key");
 		}
+
+		Messenger.Broadcast<bool>("lock player input", true);
+		Messenger.Broadcast("clear focus");
+
 		r_FreeLookCamera.setFreeCameraPosition(inspectCubesDummy.transform.position, inspectCubesDummy.transform.localRotation.eulerAngles);
 		r_FreeLookCamera.setFreeCameraEnabled(true);
 		StartCoroutine("inputLogic");
@@ -273,6 +277,7 @@ public class ScalePuzzle : MonoBehaviour {
 				else if(Input.GetKeyDown(KeyCode.UpArrow) && (m_GoodCubes.Count > 0 || m_EvilCubes.Count > 0)){
 					r_ObjectInFocus.renderer.material.color = Color.white;
 					yield return StartCoroutine("removeFromScale");
+					r_ObjectInFocus = getFirstCube(ref m_CurrentIndex);
 					r_ObjectInFocus.renderer.material.color = Color.black;
 				}
 			}
@@ -293,7 +298,7 @@ public class ScalePuzzle : MonoBehaviour {
 				Vector3 pivot = bound.center;
 
 				transform.RotateAround(pivot, Vector3.up, -x);
-				transform.RotateAround(pivot, Vector3.right, y);
+				transform.RotateAround(pivot, Vector3.right, -y);
 			}
 			if(Input.GetButtonDown("Jump")) {
 				if(r_ScaleInFocus == m_LeftScale) {
@@ -351,8 +356,20 @@ public class ScalePuzzle : MonoBehaviour {
 				jump = false;
 			}
 			else if(Input.GetKeyDown(KeyCode.DownArrow)){
-				r_ScaleInFocus.renderer.material.color = Color.white;
-				break;
+				bool cubes = false;
+				int idx = 0;
+				foreach(bool v in m_CubePlaceUsed){
+					cubes = v;
+
+					if(cubes) {
+						idx++;
+					}
+				}
+				Debug.Log ("available cubes: " + idx);
+				if(cubes) {
+					r_ScaleInFocus.renderer.material.color = Color.white;
+					break;
+				}
 			}
 			yield return null;
 		}

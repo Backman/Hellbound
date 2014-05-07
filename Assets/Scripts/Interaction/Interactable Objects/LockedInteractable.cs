@@ -22,7 +22,14 @@ public class LockedInteractable : Interactable {
 		m_FSM = new StateMachine<LockedInteractable>(this, m_LockedState);
 		m_FSM.addState(m_OpenedState);
 	}
-	
+
+	void OnDisable(){
+		Debug.Log("Disabeling " + gameObject.name );
+	}
+	void OnDestroy(){
+		Debug.Log("Destroy " + gameObject.name );
+	}
+
 	public override void useWith (GameObject obj) {
 		Interactable key = obj.GetComponent<Interactable>();
 
