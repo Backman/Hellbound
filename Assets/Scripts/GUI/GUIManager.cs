@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -14,8 +14,11 @@ public class PauseWindow {
 }
 
 /// <summary>
-/// This class handles the GUI window that displays text messages
-/// to the player as the player for example examines items.
+/// This class handles the GUI window that displays NGUI 
+/// widgets to the player.
+/// 
+/// This class mostly acts as a relay which will
+/// call functions further down in the hierarcy.
 ///
 /// Created by Simon
 /// </summary>
@@ -29,6 +32,9 @@ public class GUIManager : Singleton<GUIManager> {
 	private UISprite r_SubtitlesWindow;
 	[SerializeField]
 	private InteractText r_InteractText;
+
+	private LoadingLogic r_LoadingLogic;
+	private NotesLogic   r_NotesLogic;
 
 	private Queue m_MonologeQueue = new Queue ();
 	private bool WritingDialouge = false;
@@ -45,6 +51,9 @@ public class GUIManager : Singleton<GUIManager> {
 	////////////////////////////////////////////////
 	
 	private bool m_GamePaused = false;
+	public bool GamePaused {
+		get { return m_GamePaused; }
+	}
 	private bool m_Examining = false;
 	private bool m_SubtitlesDisplayed = false;
 	private bool m_InventoryIsUp = false;
@@ -54,14 +63,15 @@ public class GUIManager : Singleton<GUIManager> {
 	
 	private UILabel[] r_ExamineLabels;
 	private UILabel[] r_SubtitlesLables;
-	
+
 	/// <summary>
 	/// Controlls wether the inventoryWindow is currently tweening or not
 	/// </summary>
 	private bool m_InventoryTweening = false;
-	
-	public void Start(){
-		
+
+
+	public void Awake(){
+		DontDestroyOnLoad( gameObject );
 		//TODO: INV_ Inventory.getInstance(); //For initialization
 		
 		if( r_ExamineWindow == null ){
@@ -81,12 +91,21 @@ public class GUIManager : Singleton<GUIManager> {
 			r_SubtitlesWindow.transform.localScale = new Vector3(1.0f, 0.0f, 1.0f);
 			initSubtitleWindow();
 		}
+
+		r_LoadingLogic = GetComponentInChildren<LoadingLogic>();
+		if( r_LoadingLogic == null ){
+			Debug.LogError("Error. No loading logic found");
+		}
+
+		r_NotesLogic = GetComponentInChildren<NotesLogic>();
+		if( r_NotesLogic == null ){
+			Debug.LogError("Error! No notes logic found!");
+		}
 	}
 	
 	void Update() {
 		if (Input.GetButtonDown("Pause")) {
 			m_GamePaused = !m_GamePaused;
-			Messenger.Broadcast<bool>("lock player input", m_GamePaused);
 			pauseGame(m_GamePaused);
 		}
 		if (Input.GetButtonDown("Inventory") && !m_GamePaused && !m_InventoryTweening) {
@@ -104,9 +123,11 @@ public class GUIManager : Singleton<GUIManager> {
 	public void pauseGame(bool pause) {
 		if (pause) {
 			PauseMenu.getInstance().showPauseWindow();
+			Time.timeScale = 0.0f;
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 		} else {
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(false);
+			Time.timeScale = 1.0f;
 			Messenger.Broadcast("reset pause window");
 		}
 	}
@@ -131,7 +152,11 @@ public class GUIManager : Singleton<GUIManager> {
 		PauseMenu.getInstance ().showJournal();
 		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 	}
-	
+
+	public void loadLevel( string levelName, string loadMessage ){
+		r_LoadingLogic.loadLevel(levelName, loadMessage);
+	}
+
 	/// <summary>
 	/// Shows a simple textbox with the supplied text.
 	/// The button-string dictates which button that closes the window. It is optional, defaults to Examine
@@ -179,6 +204,10 @@ public class GUIManager : Singleton<GUIManager> {
 	
 	public void interactTextActive( bool status ){
 		r_InteractText.active( status );
+	}
+
+	public void showNote( MyGUI.NoteSettings noteSettings ){
+		r_NotesLogic.showNote( noteSettings );
 	}
 	
 	
@@ -317,4 +346,5 @@ public class GUIManager : Singleton<GUIManager> {
 		window.transform.localScale = scale;
 	}
 	#endregion
+
 }
