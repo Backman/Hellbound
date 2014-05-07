@@ -16,7 +16,7 @@ public class LoadLevelTrigger : MonoBehaviour {
 
 	void OnTriggerEnter( Collider col ){
 		if( col.tag == "Player" ){
-			LoadingLogic.Instance.loadLevel( m_LevelToLoad, m_LoadMessage );
+			GUIManager.Instance.loadLevel( m_LevelToLoad, m_LoadMessage );
 			gameObject.SetActive(false);
 		}
 	}
