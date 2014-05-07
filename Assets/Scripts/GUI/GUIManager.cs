@@ -65,12 +65,6 @@ public class GUIManager : Singleton<GUIManager> {
 	/// </summary>
 	private bool m_InventoryTweening = false;
 
-	void Awake(){
-		if( GUIManager.Instance != this ){
-			Debug.Log("This was a copy. Destroying "+gameObject.name);
-			GameObject.Destroy(gameObject);
-		}
-	}
 
 	public void Start(){
 		DontDestroyOnLoad( gameObject );
