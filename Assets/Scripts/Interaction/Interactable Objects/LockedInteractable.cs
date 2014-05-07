@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -28,7 +28,6 @@ public class LockedInteractable : Interactable {
 
 		if(m_NeedsToBeOpen.Contains (key)){
 			m_InteractableKeyState[key] = true;
-
 		}
 		if( allKeys() ){
 			m_FSM.changeState<OpenedState>();
@@ -47,20 +46,19 @@ public class LockedInteractable : Interactable {
 
 		//If all needed items were in inventory, remove them from inventory
 		//and change state to open state
-		if( all ){
+		if( all && allOpen() ){
 			foreach( string s in m_NeedsItems ){
 				m_ItemKeyState[s] = true;
 				InventoryLogic.Instance.removeItem( s );
 			}
-		}
-
-		if (allKeys ()) {
 			m_FSM.changeState<OpenedState>();
 		} else {
 			GUIManager.Instance.simpleShowText(m_LockedText, "Use");
 		}
 
+		PuzzleEvent.trigger("onOpenInteractable", gameObject, false);
 		m_FSM.CurrentState.activate (this);
+
 	}
 	
 	private void initializeKeyState(){
@@ -73,14 +71,24 @@ public class LockedInteractable : Interactable {
 		//Debug.Log ("Dictionary size: " + m_KeyState.Count);
 	}
 	
-	public bool allKeys() {
+	public bool allItems() {
+		bool ret = true;
 		foreach( bool b in m_ItemKeyState.Values){
-			if( b == false ) return b;
+			ret = ret & b;
 		}
-		foreach( bool b in m_InteractableKeyState.Values){
-			if(b == false) return b;
+		return ret;
+	}
+
+	public bool allOpen(){
+		bool ret = true;
+		foreach( bool b in m_InteractableKeyState.Values ){
+			ret = ret & b;
 		}
-		return true;
+		return ret;
+	}
+
+	public bool allKeys(){
+		return ( allItems() && allOpen() ) == true;
 	}
 	
 	public override void examine () {
