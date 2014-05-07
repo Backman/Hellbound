@@ -14,6 +14,9 @@ public class DescriptionWindow : MonoBehaviour {
 	void Start () {
 		Messenger.AddListener("reset pause window", reset);
 		Messenger.AddListener<string>("set description text", setDescription);
+		
+		Messenger.MarkAsPermanent("reset pause window");
+		Messenger.MarkAsPermanent("set description text");
 	}
 
 	public void reset() {

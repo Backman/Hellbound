@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -30,6 +30,8 @@ public class GUIManager : Singleton<GUIManager> {
 	[SerializeField]
 	private InteractText r_InteractText;
 
+	private LoadingLogic r_LoadingLogic;
+
 	private Queue m_MonologeQueue = new Queue ();
 	private bool WritingDialouge = false;
 
@@ -57,14 +59,21 @@ public class GUIManager : Singleton<GUIManager> {
 	
 	private UILabel[] r_ExamineLabels;
 	private UILabel[] r_SubtitlesLables;
-	
+
 	/// <summary>
 	/// Controlls wether the inventoryWindow is currently tweening or not
 	/// </summary>
 	private bool m_InventoryTweening = false;
-	
+
+	void Awake(){
+		if( GUIManager.Instance != this ){
+			Debug.Log("This was a copy. Destroying "+gameObject.name);
+			GameObject.Destroy(gameObject);
+		}
+	}
+
 	public void Start(){
-		DontDestroyOnLoad(gameObject);
+		DontDestroyOnLoad( gameObject );
 		//TODO: INV_ Inventory.getInstance(); //For initialization
 		
 		if( r_ExamineWindow == null ){
@@ -83,6 +92,11 @@ public class GUIManager : Singleton<GUIManager> {
 			r_SubtitlesWindow.alpha = 0.0f;
 			r_SubtitlesWindow.transform.localScale = new Vector3(1.0f, 0.0f, 1.0f);
 			initSubtitleWindow();
+		}
+
+		r_LoadingLogic = GetComponentInChildren<LoadingLogic>();
+		if( r_LoadingLogic == null ){
+			Debug.LogError("Error. No loading logic found");
 		}
 	}
 	
@@ -135,7 +149,11 @@ public class GUIManager : Singleton<GUIManager> {
 		PauseMenu.getInstance ().showJournal();
 		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 	}
-	
+
+	public void loadLevel( string levelName, string loadMessage ){
+		r_LoadingLogic.loadLevel(levelName, loadMessage);
+	}
+
 	/// <summary>
 	/// Shows a simple textbox with the supplied text.
 	/// The button-string dictates which button that closes the window. It is optional, defaults to Examine
@@ -321,4 +339,5 @@ public class GUIManager : Singleton<GUIManager> {
 		window.transform.localScale = scale;
 	}
 	#endregion
+
 }
