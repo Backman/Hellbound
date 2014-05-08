@@ -10,7 +10,7 @@ public class RopeSound : MonoBehaviour {
 	private Vector3 acceleration = new Vector3();
 	private Vector3 lastVelocity = new Vector3();
 
-	// Use this for initialization
+	// i am in need of that goddamn rope sound
 	void Start (){
 		//m_event = FMOD_StudioSystem.instance.GetEvent ("");
 		//m_event.start ();
@@ -30,11 +30,14 @@ public class RopeSound : MonoBehaviour {
 
 	private float getLargestAcceleration(Vector3 vec3){
 		float ret = 0f;
-		if(vec3.x >= vec3.y){
-			ret = vec3.x;
+		float x = System.Math.Abs (vec3.x);
+		float y = System.Math.Abs (vec3.y);
+
+		if(x >= y){
+			ret = x;
 		}
 		else{
-			ret = vec3.y;
+			ret = y;
 		}
 
 		//400f beacuse i expect the number will be between 0 and 40 and i
