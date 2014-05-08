@@ -12,20 +12,22 @@ public class RopeSound : MonoBehaviour {
 
 	// i am in need of that goddamn rope sound
 	void Start (){
-		//m_event = FMOD_StudioSystem.instance.GetEvent ("");
-		//m_event.start ();
-		//m_event.getParameter ("", out m_parameter);
 		m_body = gameObject.GetComponent<Rigidbody> ();
+		m_event = FMOD_StudioSystem.instance.GetEvent ("event:/SFX/Static_Emitters/Hanged_Man");
+		m_event.start ();
+		m_event.getParameter ("Speed", out m_parameter);
 	}
 	
 	// Update is called once per frame
 	void Update (){
-		acceleration = (m_body.rigidbody.velocity - lastVelocity) / Time.fixedDeltaTime;
-		lastVelocity = rigidbody.rigidbody.velocity;
+		acceleration = m_body.rigidbody.velocity;
+
+		//acceleration = (m_body.rigidbody.velocity - lastVelocity) / Time.fixedDeltaTime;
+		//lastVelocity = rigidbody.rigidbody.velocity;
 
 		Debug.Log (getLargestAcceleration(acceleration));
+		m_parameter.setValue(getLargestAcceleration(acceleration));
 	}
-
 
 
 	private float getLargestAcceleration(Vector3 vec3){
@@ -43,8 +45,14 @@ public class RopeSound : MonoBehaviour {
 		//400f beacuse i expect the number will be between 0 and 40 and i
 		//also want the result to be somewhere between 0 and 10
 
-		ret = (ret * 100f) / 400f;
+		ret = (ret * 100f) / 10f;
 
 		return ret;
+	}
+
+	void OnDisable()
+	{
+		m_event.stop ();
+		m_event.release ();
 	}
 }
