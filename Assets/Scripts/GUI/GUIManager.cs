@@ -14,8 +14,11 @@ public class PauseWindow {
 }
 
 /// <summary>
-/// This class handles the GUI window that displays text messages
-/// to the player as the player for example examines items.
+/// This class handles the GUI window that displays NGUI 
+/// widgets to the player.
+/// 
+/// This class mostly acts as a relay which will
+/// call functions further down in the hierarcy.
 ///
 /// Created by Simon
 /// </summary>
@@ -31,6 +34,7 @@ public class GUIManager : Singleton<GUIManager> {
 	private InteractText r_InteractText;
 
 	private LoadingLogic r_LoadingLogic;
+	private NotesLogic   r_NotesLogic;
 
 	private Queue m_MonologeQueue = new Queue ();
 	private bool WritingDialouge = false;
@@ -65,14 +69,8 @@ public class GUIManager : Singleton<GUIManager> {
 	/// </summary>
 	private bool m_InventoryTweening = false;
 
-	void Awake(){
-		if( GUIManager.Instance != this ){
-			Debug.Log("This was a copy. Destroying "+gameObject.name);
-			GameObject.Destroy(gameObject);
-		}
-	}
 
-	public void Start(){
+	public void Awake(){
 		DontDestroyOnLoad( gameObject );
 		//TODO: INV_ Inventory.getInstance(); //For initialization
 		
@@ -97,6 +95,11 @@ public class GUIManager : Singleton<GUIManager> {
 		r_LoadingLogic = GetComponentInChildren<LoadingLogic>();
 		if( r_LoadingLogic == null ){
 			Debug.LogError("Error. No loading logic found");
+		}
+
+		r_NotesLogic = GetComponentInChildren<NotesLogic>();
+		if( r_NotesLogic == null ){
+			Debug.LogError("Error! No notes logic found!");
 		}
 	}
 	
@@ -201,6 +204,10 @@ public class GUIManager : Singleton<GUIManager> {
 	
 	public void interactTextActive( bool status ){
 		r_InteractText.active( status );
+	}
+
+	public void showNote( MyGUI.NoteSettings noteSettings ){
+		r_NotesLogic.showNote( noteSettings );
 	}
 	
 	
