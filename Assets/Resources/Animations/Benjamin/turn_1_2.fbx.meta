@@ -234,6 +234,7 @@ ModelImporter:
     7400000: Stand half turn left
     7400002: Stand half turn right
     9500000: //RootNode
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -253,7 +254,7 @@ ModelImporter:
       name: Stand half turn left
       takeName: Stand Turn 1_2
       firstFrame: 1223
-      lastFrame: 1261
+      lastFrame: 1257
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -507,7 +508,7 @@ ModelImporter:
       name: Stand half turn right
       takeName: Stand Turn 1_2
       firstFrame: 1223
-      lastFrame: 1261
+      lastFrame: 1257
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
