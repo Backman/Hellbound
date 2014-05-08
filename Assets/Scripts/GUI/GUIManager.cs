@@ -278,16 +278,16 @@ public class GUIManager : Singleton<GUIManager> {
 			args[3] = useThis.TextSpeed;
 			args[4] = false;
 			
-	/*	TODO:if(useThis.SoundPath == "" || useThis.SoundPath == "event:/"){
+			if(useThis.SoundPath != "" && useThis.SoundPath != "event:/"){
 				args[5] = true;
 				args[6] = useThis.SoundPath;
-				if(useThis.SoundPosition.transform != null){
-					args[7] = useThis.SoundPosition.transform.position;
+				if(useThis.SoundPosition != null){
+					args[7] = useThis.SoundPosition.position;
 				}
 			}
-			else{ */
+			else{ 
 				args[5] = false;
-	//		} 
+			} 
 			
 			yield return StartCoroutine( m_Subtitles.showSubtitles( args ) );
 			StartCoroutine( m_Subtitles.clearLables() );
