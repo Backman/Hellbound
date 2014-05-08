@@ -234,6 +234,7 @@ ModelImporter:
     7400000: walk right
     7400002: walk left
     9500000: //RootNode
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -252,12 +253,12 @@ ModelImporter:
     - serializedVersion: 16
       name: walk right
       takeName: walk turn
-      firstFrame: 873
-      lastFrame: 910
+      firstFrame: 876
+      lastFrame: 908.5
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
-      cycleOffset: .529999971
+      cycleOffset: .50999999
       loop: 0
       loopTime: 1
       loopBlend: 1
@@ -506,8 +507,8 @@ ModelImporter:
     - serializedVersion: 16
       name: walk left
       takeName: walk turn
-      firstFrame: 873
-      lastFrame: 910
+      firstFrame: 876
+      lastFrame: 908.5
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

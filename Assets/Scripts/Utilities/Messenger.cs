@@ -75,8 +75,9 @@ static internal class Messenger {
 				}
 			}
 			
-			if (!wasFound)
+			if (!wasFound){
 				messagesToRemove.Add( pair.Key );
+			}
 		}
 		
 		foreach (string message in messagesToRemove) {
@@ -305,6 +306,7 @@ public sealed class MessengerHelper : MonoBehaviour {
 	
 	//Clean up eventTable every time a new level loads.
 	public void OnDisable() {
+		Debug.Log("CleanUp");
 		Messenger.Cleanup();
 	}
 }

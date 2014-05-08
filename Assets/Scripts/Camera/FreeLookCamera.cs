@@ -27,7 +27,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	private Vector3 m_CameraOriginPosition;
 	private Vector3 m_ZoomPosition;
 
-	private float m_LookAngle;
+	private float m_LookAngle = 90.0f;
 	private float m_TiltAngle;
 
 	private float m_OriginalFollowSpeed;
@@ -60,22 +60,25 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		m_Pivot = m_Camera.parent;
 
 		m_OriginalFollowSpeed = m_FollowSpeed;
-		
-		m_LookAngle = transform.rotation.y;
 	}
 
 	protected void Start(){
+		base.Start ();
+
+		m_LookAngle = m_Target.rotation.eulerAngles.y;
+
 		Messenger.AddListener<bool>("lock player input", lockInput);
 	}
 
 	protected void Update() {
 		base.Update ();
+		if(!GUIManager.Instance.GamePaused){
+			handleZoomInput();
 
-		handleZoomInput();
-
-		handleRotationMovement();
-		if(m_LockCursor && Input.GetMouseButtonUp(0)) {
-			Screen.lockCursor = m_LockCursor;
+			handleRotationMovement();
+			if(m_LockCursor && Input.GetMouseButtonUp(0)) {
+				Screen.lockCursor = m_LockCursor;
+			}
 		}
 	}
 
@@ -99,7 +102,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		else{
 			float x = Input.GetAxis("Mouse X");
 			float y = Input.GetAxis("Mouse Y");
-	
+
 			// Smooth the user input
 			if(m_TurnSmoothing > 0.0f) {
 				m_SmoothX = Mathf.SmoothDamp(m_SmoothX, x, ref m_SmoothXVelocity, m_TurnSmoothing);
@@ -177,15 +180,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	}
 
 	void EnableMeshRendererOnTarget(){
-		Transform benjamin = m_Target.FindChild("Benjamin");
-		benjamin.gameObject.SetActive(true);
-	
-		/*SkinnedMeshRenderer[] renderers = m_Target.GetComponentsInChildren<SkinnedMeshRenderer>();
-		
-		foreach(SkinnedMeshRenderer m in renderers){
-			m.enabled = true;
-		}*/
-		m_FollowSpeed = m_OriginalFollowSpeed;
+		StartCoroutine( "activateBenjamin" );
 	}
 
 	public void lockInput(bool lockInput){
@@ -214,6 +209,21 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	public void resetCameraTransform() {
 		m_ZoomPosition = m_CameraOriginPosition;
 		m_Camera.transform.localRotation = Quaternion.Euler(Vector3.zero);
+	}
+	private IEnumerator activateBenjamin(){
+		Transform benjamin = m_Target.FindChild("Benjamin");
+		if(!benjamin.gameObject.activeSelf) {
+			Debug.Log ("Enabling");
+			yield return new WaitForSeconds( 0.1f);
+			benjamin.gameObject.SetActive(true);
+			
+			/*SkinnedMeshRenderer[] renderers = m_Target.GetComponentsInChildren<SkinnedMeshRenderer>();
+			
+			foreach(SkinnedMeshRenderer m in renderers){
+				m.enabled = true;
+			}*/
+			m_FollowSpeed = m_OriginalFollowSpeed;
+		}
 	}
 }
 

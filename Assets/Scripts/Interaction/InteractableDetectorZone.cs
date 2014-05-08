@@ -7,7 +7,7 @@ using System.Collections;
 /// 
 /// Created by Simon
 /// </summary>
-public class InteractableDetectorZone : Singleton<InteractableDetectorZone> {
+public class InteractableDetectorZone : MonoBehaviour {
 
 	private Interactable r_InFocus = null;
 	private GUIManager   r_GUIManager;
