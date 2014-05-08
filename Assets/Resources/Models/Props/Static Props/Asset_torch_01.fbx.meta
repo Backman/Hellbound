@@ -1,13 +1,61 @@
 fileFormatVersion: 2
-guid: 121e53a0bbf3d3e4d8eff8a28fa22116
+guid: 345638871718afa4a86975984ab4d715
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
+    100002: polySurface139
+    100004: polySurface233
+    100006: polySurface233 1
+    100008: polySurface234
+    100010: polySurface235
+    100012: polySurface236
+    100014: polySurface237
+    100016: polySurface238
+    100018: polySurface239
+    100020: polySurface240
+    100022: polySurface241
+    100024: polySurface242
+    100026: polySurface243
+    100028: transform17
+    100030: transform18
+    100032: transform19
+    100034: transform20
+    100036: transform21
+    100038: transform22
+    100040: transform23
+    100042: transform24
+    100044: transform25
+    100046: transform26
+    100048: transform27
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Fence_wood_05
+    400002: polySurface139
+    400004: polySurface233
+    400006: polySurface233 1
+    400008: polySurface234
+    400010: polySurface235
+    400012: polySurface236
+    400014: polySurface237
+    400016: polySurface238
+    400018: polySurface239
+    400020: polySurface240
+    400022: polySurface241
+    400024: polySurface242
+    400026: polySurface243
+    400028: transform17
+    400030: transform18
+    400032: transform19
+    400034: transform20
+    400036: transform21
+    400038: transform22
+    400040: transform23
+    400042: transform24
+    400044: transform25
+    400046: transform26
+    400048: transform27
+    2300000: polySurface233
+    3300000: polySurface233
+    4300000: polySurface233
     9500000: //RootNode
   materials:
     importMaterials: 1
