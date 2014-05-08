@@ -234,6 +234,7 @@ ModelImporter:
     7400000: walk right sharp
     7400002: walk left sharp
     9500000: //RootNode
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -257,7 +258,7 @@ ModelImporter:
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
-      cycleOffset: .409999996
+      cycleOffset: .879999995
       loop: 0
       loopTime: 1
       loopBlend: 1
