@@ -11,17 +11,23 @@ public class TipsHandler : MonoBehaviour {
 	[HideInInspector]
 	public GameObject r_Prefab;
 	public Tips[] tips;
+	public GameObject tipsPanel;
 
 	void Start(){
-		GameObject tipsPanel = GameObject.FindGameObjectWithTag ("TipsPanel");
+
+		GameObject tipsPanel = null;
+		while (tipsPanel == null) {
+			tipsPanel = GameObject.FindGameObjectWithTag("TipsPanel");
+		}
+
 
 		int Finished_Buttons = 0;
 
 		foreach (Tips t in tips) {
 
-			GameObject newTips = (GameObject)Instantiate(r_Prefab);
+			GameObject newTips = Instantiate(r_Prefab) as GameObject;
 
-			newTips.transform.parent = GameObject.FindGameObjectWithTag("TipsPanel").transform;
+			tipsPanel.transform.parent = newTips.transform;
 
 			newTips.name = "TipsButton";
 			newTips.GetComponentInChildren<UILabel>().text = t.Text;
@@ -30,6 +36,5 @@ public class TipsHandler : MonoBehaviour {
 
 			Finished_Buttons++;
 		}
-
 	}
 }
