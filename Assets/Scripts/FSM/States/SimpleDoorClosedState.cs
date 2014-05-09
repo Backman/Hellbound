@@ -17,6 +17,7 @@ public class SimpleDoorClosedState : State<Behaviour_DoorSimple> {
 		base.activate (entity);
 		entity.Used = true;
 		entity.m_Moving = true;
-		entity.Tweener.PlayForward();
+		entity.Tweener.playDirection = AnimationOrTween.Direction.Forward;
+		entity.Tweener.Play(true);
 	}
 }

@@ -28,13 +28,15 @@ public class Behaviour_DoorSimple : Interactable {
 	/**********************************************************************/
 	
 	/********** Manipulations *******************************************/
-	private TweenRotation m_Tweener; 
-	public  TweenRotation Tweener{
+	[SerializeField]
+	private UIPlayTween m_Tweener = null; 
+	public  UIPlayTween Tweener{
 		get{ return m_Tweener; } 
 	}
 	/**********************************************************************/
 
 	/************* Behaviours *********************************************/
+	public bool m_UsableByPlayer = true;
 	public bool m_OneShot = true;
 	private bool m_Used = false;	//This bool is modified by the closed state
 	public bool Used{	
@@ -46,10 +48,12 @@ public class Behaviour_DoorSimple : Interactable {
 	#endregion
 	protected override void Awake(){
 		base.Awake();
-		
-		m_Tweener = GetComponent<TweenRotation>();
-		if( m_Tweener == null ){
-			Debug.LogError("Error! No tweener present! " + gameObject.name + " " + gameObject.transform.position);
+
+		if( m_Tweener == null ){ 
+			m_Tweener = GetComponent<UIPlayTween>();
+			if( m_Tweener == null ){
+				Debug.LogWarning("Error! No tweener present! " + gameObject.name + " " + gameObject.transform.position);
+			}
 		}
 		
 		m_FSM = new StateMachine<Behaviour_DoorSimple>(this, m_Locked);
@@ -70,7 +74,7 @@ public class Behaviour_DoorSimple : Interactable {
 	}
 	
 	public override void activate(){
-		if( !(m_Used & m_OneShot) && !m_Moving  ){
+		if( !(m_Used & m_OneShot) && m_UsableByPlayer && !m_Moving  ){
 			base.activate();
 			m_FSM.CurrentState.activate(this);
 		}
@@ -91,14 +95,16 @@ public class Behaviour_DoorSimple : Interactable {
 			m_FSM.changeState<SimpleDoorClosedState>();
 			m_CurrentState = CurrentState.Closed;
 		}
-		
-		Messenger.Broadcast("clear focus");
+
+	}
+	public void movementDoneUpdateFocus(){
+		movementDone();
+		Messenger.Broadcast("update focus");
 	}
 
 	public bool close(){
 		if( m_CurrentState == CurrentState.Open ){
 			m_FSM.CurrentState.activate(this);
-			m_FSM.changeState<SimpleDoorClosedState>();
 			return true;
 		} else {
 			Debug.Log("You are trying to close an illigal door. "+gameObject.name + " "+gameObject.transform.position);
@@ -109,7 +115,6 @@ public class Behaviour_DoorSimple : Interactable {
 	public bool open(){
 		if( m_CurrentState == CurrentState.Closed ){
 			m_FSM.CurrentState.activate(this);
-			m_FSM.changeState<SimpleDoorOpenedState>();
 			return true;
 		} else {
 			Debug.Log("You are trying to open an illigal door. "+gameObject.name + " "+gameObject.transform.position);
@@ -138,5 +143,10 @@ public class Behaviour_DoorSimple : Interactable {
 		} else {
 			Debug.Log("The door was not locked. " +gameObject.name + " "+gameObject.transform.position);
 		}
+	}
+
+	public void unlockAndOpen(){
+		unlockDoor();
+		open();
 	}
 }
