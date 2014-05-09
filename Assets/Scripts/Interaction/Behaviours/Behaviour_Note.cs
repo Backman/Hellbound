@@ -13,7 +13,9 @@ using System.Collections;
 /// </summary>
 public class Behaviour_Note : Interactable {
 
+//	[Tooltip("The 'Use' text as well as the 'Examine' description")]
 	public NoteState m_State = new NoteState();
+//	[Tooltip("The actual text that will be displayed on the note if it is used")]
 	public MyGUI.NoteSettings m_NoteSettings;
 	
 	private StateMachine<Behaviour_Note> m_FSM;

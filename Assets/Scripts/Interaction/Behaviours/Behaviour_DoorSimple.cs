@@ -17,18 +17,23 @@ using System.Collections;
 public class Behaviour_DoorSimple : Interactable {
 	#region Variables
 	/******************** State Logic***************************************/
+//	[Tooltip("The properties for the doors 'Locked' state.\nClick the |> to expand")]
 	public  SimpleDoorLockedState m_Locked = new SimpleDoorLockedState();
+//	[Tooltip("The properties for the doors 'Closed' state.\nClick the |> to expand")]
 	public  SimpleDoorClosedState m_Closed = new SimpleDoorClosedState();
+//	[Tooltip("The properties for the doors 'Open' state.\nClick the |> to expand")]
 	public  SimpleDoorOpenedState m_Opened = new SimpleDoorOpenedState();
 	
 	public enum CurrentState{ Locked, Open, Closed };
+	[Tooltip("This variable controlls which state the door starts in.")]
 	public CurrentState m_CurrentState = CurrentState.Closed;	
 	
 	private StateMachine<Behaviour_DoorSimple> m_FSM;
 	/**********************************************************************/
 	
 	/********** Manipulations *******************************************/
-	[SerializeField]
+	[SerializeField][Tooltip("This field points to which tweener the door system should play. " +
+							 "If no tweener is present, the script will search for a tweener on this object")]
 	private UIPlayTween m_Tweener = null; 
 	public  UIPlayTween Tweener{
 		get{ return m_Tweener; } 
@@ -36,7 +41,9 @@ public class Behaviour_DoorSimple : Interactable {
 	/**********************************************************************/
 
 	/************* Behaviours *********************************************/
+	[Tooltip("Regulates if the player can activate this door or not.\nRemember to clear the 'Use text' field under every state if this is set")]
 	public bool m_UsableByPlayer = true;
+	[Tooltip("Regulates if the door can be ACTIVATED BY THE PLAYER more than once")]
 	public bool m_OneShot = true;
 	private bool m_Used = false;	//This bool is modified by the closed state
 	public bool Used{	

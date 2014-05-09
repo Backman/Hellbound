@@ -11,12 +11,14 @@ using System.Collections.Generic;
 /// </summary>
 public class Behaviour_TriggerSimpleDoor : MonoBehaviour
 {
-	public enum Action {Open, Close, Toggle, Lock, Unlock};
+	public enum Action {Open, Close, Toggle, Lock, Unlock, UnlockAndOpen};
 	public List<Behaviour_DoorSimple> m_DoorToAffect;
 
+	[Tooltip("Which behaviour will this zone trigger on the door")]
 	public Action m_Action = Action.Open;
+	[Tooltip("Regulates if this zone can be triggered more than once")]
 	public bool m_OneShot = true;
-	
+	[Tooltip("Which tag must the GameObject have to be able to trigger this zone")]
 	public string m_ColliderTag = "Player";
 
 	private bool m_Used = false;
@@ -25,6 +27,7 @@ public class Behaviour_TriggerSimpleDoor : MonoBehaviour
 		if(other.tag == m_ColliderTag && !(m_Used & m_OneShot) ){
 			PuzzleEvent.trigger("onTriggerEnter", gameObject, true);
 			foreach( Behaviour_DoorSimple door in m_DoorToAffect ){
+				m_Used = true;
 				switch( m_Action ){
 				case Action.Close:
 					m_Used = door.close();
@@ -34,15 +37,15 @@ public class Behaviour_TriggerSimpleDoor : MonoBehaviour
 					break;
 				case Action.Toggle:
 					door.toggle();
-					m_Used = true;
 					break;
 				case Action.Lock:
 					door.lockDoor();
-					m_Used = true;
 					break;
 				case Action.Unlock:
 					door.unlockDoor();
-					m_Used = true;
+					break;
+				case Action.UnlockAndOpen:
+					door.unlockAndOpen();
 					break;
 				}				
 			}

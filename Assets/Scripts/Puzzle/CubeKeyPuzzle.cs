@@ -81,6 +81,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	
 	public void onCubeKeyDoorUse(GameObject obj, bool tr){
 		Interactable interact = obj.GetComponent<Interactable>();
+
 		interact.setPuzzleState("zoomed in");
 		
 		r_FreeLookCamera.setFreeCameraPosition(inspectCubesDummy.transform.position, inspectCubesDummy.transform.localRotation.eulerAngles);
@@ -391,9 +392,16 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	}
 	
 	public void onRequestOpenCubeDoor(GameObject obj, bool tr){
-		gameObject.SetActive(false);
+		obj.SetActive(false);
+		obj.transform.parent.gameObject.GetComponent<UIPlayTween>().Play(true);
+		obj.GetComponent<Interactable>().enabled = false;
+
 		zoomOut(gameObject, false);
-		
+
+		foreach(GameObject go in availableCubesToPlace) {
+			go.SetActive(false);
+		}
+
 		foreach(Behaviour_PickUp inter in m_Cubes) {
 			InventoryLogic.Instance.addItem (inter.m_ItemName, inter.m_ItemThumbnail);
 		}
