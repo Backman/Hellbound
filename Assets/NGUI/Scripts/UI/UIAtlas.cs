@@ -165,7 +165,7 @@ public class UIAtlas : MonoBehaviour
 			}
 			else
 			{
-				float val = Mathf.Clamp(value, 0.25f, 4f);
+				float val = Mathf.Clamp(value, 0.0021f, float.MaxValue);//Mathf.Clamp(value, 0.25f, 4f);
 
 				if (mPixelSize != val)
 				{

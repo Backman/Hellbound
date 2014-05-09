@@ -21,7 +21,23 @@ public class OutlinesToTarget : MonoBehaviour {
 	}
 
 	public void onFocus(GameObject obj) {
-	/*	Mesh mesh = obj.GetComponent<Mesh>();
+		m_Target = new GameObject("outline_copy");
+		m_Target.transform.position = obj.transform.position;
+		m_Target.transform.rotation = obj.transform.rotation;
+		m_Target.transform.localScale = obj.transform.localScale;
+		m_Target.transform.parent = obj.transform;
+		//l for local
+		Mesh m = obj.GetComponent<MeshFilter> ().mesh;
+		MeshFilter lMeshFilter = m_Target.AddComponent<MeshFilter> ();
+		lMeshFilter.mesh = m;
+
+		MeshRenderer lMeshRenderer = m_Target.AddComponent<MeshRenderer>();
+
+		lMeshRenderer.sharedMaterial = m_Material;
+
+
+		/*
+		Mesh mesh = obj.GetComponent<Mesh>();
 		GameObject temp = new GameObject("Duplicant");
 		MeshFilter meshFilter = temp.AddComponent<MeshFilter>();
 		temp.AddComponent<MeshRenderer>();
@@ -29,7 +45,7 @@ public class OutlinesToTarget : MonoBehaviour {
 		Mesh tempMesh = temp.GetComponent<Mesh>();
 		tempMesh.vertices = mesh.vertices;
 		tempMesh.colors = mesh.colors;
-		tempMesh.triangles = mesh.triangles;
+		tempMesh.triangles = mesh.triangles;a
 		tempMesh.normals = mesh.normals;
 
 		//meshFilter.sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
@@ -45,10 +61,11 @@ public class OutlinesToTarget : MonoBehaviour {
 
 		temp.renderer.sharedMaterial = m_Material;
 
-		m_Target = temp;	*/
+		m_Target = temp;
+		*/
 	}
 
 	public void leaveFocus(){
-		Destroy (m_Target);
+		Destroy(m_Target);
 	}
 }

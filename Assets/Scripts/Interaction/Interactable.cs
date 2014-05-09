@@ -72,7 +72,6 @@ public abstract class Interactable : MonoBehaviour{
 	
 	public virtual void gainFocus(){
 		//Apply light
-		Messenger.Broadcast<GameObject> ("onFocus", gameObject);
 		Debug.Log("Gaining focus: " + gameObject.name );
 
 		if (m_EventSound != null) {
