@@ -48,7 +48,7 @@ public class InteractableDetectorZone : MonoBehaviour {
 			r_InFocus = ii;
 			r_CachedFocus = ii;
 			r_InFocus.gainFocus();
-
+			Messenger.Broadcast<GameObject>("onFocus", r_InFocus.gameObject);
 			setupInteractText();
 
 			r_GUIManager.interactTextActive( true );
