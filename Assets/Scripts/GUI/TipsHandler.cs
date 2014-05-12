@@ -27,9 +27,13 @@ public class TipsHandler : MonoBehaviour {
 
 			//--------------
 			Vector3 newPosition = new Vector3(0f,-((float)(Finished_Buttons)*525),0f);
+			Debug.Log(newPosition);
 
 			newTips.transform.localPosition = newPosition;
+
+			Debug.Log(newTips.transform.localPosition);
 			//------------
+
 			Finished_Buttons++;
 		}
 	}
