@@ -20,6 +20,6 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 	}
 	
 	public void onDoorPoisonDrunk(GameObject thisObject, bool triggerOnlyForThis){
-		gameObject.SetActive(false);
+		gameObject.GetComponent<Behaviour_DoorSimple>().unlockAndOpen();
 	}
 }

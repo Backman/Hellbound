@@ -11,7 +11,6 @@ using System.Collections.Generic;
 public class Behaviour_OnlyUse : Interactable {
 	public UseState m_State = new UseState();
 
-
 	private StateMachine<Behaviour_OnlyUse> m_FSM;
 
 	protected override void Start ()

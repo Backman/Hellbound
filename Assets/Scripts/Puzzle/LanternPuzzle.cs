@@ -4,11 +4,16 @@ using System.Collections;
 public class LanternPuzzle : MonoBehaviour {
 	
 	private int lanternsPlaced = 0;
+	private UIPlayTween r_Tweener = null;
 	// Use this for initialization
+
+	void Awake(){
+		r_Tweener = gameObject.GetComponent<UIPlayTween>();
+	}
+
 	void Start () {
 		Messenger.AddListener<GameObject, bool>("onPickupLantern", onPickupLantern);
 		Messenger.AddListener<GameObject, bool>("onLanternPlaced", onLanternPlaced);
-
 		Messenger.AddListener<GameObject, bool>("removeLanternFromInventory", removeLanternFromInventory);
 	}
 	
@@ -32,7 +37,7 @@ public class LanternPuzzle : MonoBehaviour {
 			++lanternsPlaced;
 			PuzzleEvent.trigger("requestRemoveLanternFromInventory", obj, false);
 			if(lanternsPlaced == 2){
-				Destroy(gameObject);
+				gameObject.GetComponent<Behaviour_DoorSimple>().unlockAndOpen();
 			}
 		}
 	}
