@@ -9,12 +9,14 @@ using System.Collections;
 /// </summary>
 public class InteractableDetectorZone : MonoBehaviour {
 
+	private Interactable r_CachedFocus = null;
 	private Interactable r_InFocus = null;
 	private GUIManager   r_GUIManager;
 
 	void Start () {
 		Messenger.AddListener("clear focus", clearFocus);
 		Messenger.AddListener<Interactable>("add focus", addFocus);
+		Messenger.AddListener("update focus", updateFocus);
 		r_GUIManager = GUIManager.Instance;
 	}
 
@@ -41,12 +43,11 @@ public class InteractableDetectorZone : MonoBehaviour {
 	/// </summary>
 	void OnTriggerEnter( Collider col ){
 		//TODO: Add detection for which interactable is in focus if several objects are within the zone.
-
 		Interactable ii = col.gameObject.GetComponent<Interactable>();
 		if( ii != null ){
 			r_InFocus = ii;
+			r_CachedFocus = ii;
 			r_InFocus.gainFocus();
-
 			setupInteractText();
 
 			r_GUIManager.interactTextActive( true );
@@ -61,6 +62,7 @@ public class InteractableDetectorZone : MonoBehaviour {
 		if( r_InFocus != null && col.gameObject == r_InFocus.gameObject ){
 			r_InFocus.loseFocus();
 			r_InFocus = null;
+			r_CachedFocus = null;
 
 			r_GUIManager.interactTextActive( false );
 		}
@@ -85,7 +87,7 @@ public class InteractableDetectorZone : MonoBehaviour {
 	}
 
 	public void clearFocus(){
-		Messenger.Broadcast ("leaveFocus");
+		r_InFocus.loseFocus();
 		r_InFocus = null;		
 		r_GUIManager.interactTextActive( false );
 	//	r_GUIManager.m_InteractText.gameObject.SetActive(false);
@@ -93,7 +95,16 @@ public class InteractableDetectorZone : MonoBehaviour {
 	
 	public void addFocus(Interactable inter) {
 		r_InFocus = inter;
+		setupInteractText();
 		r_GUIManager.interactTextActive( true );
+	}
+
+	public void updateFocus(){
+		r_InFocus = r_CachedFocus;
+		if( r_InFocus != null ){
+			setupInteractText();
+			r_GUIManager.interactTextActive( true );
+		}
 	}
 }
 

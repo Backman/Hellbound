@@ -5,16 +5,18 @@ using System.Collections.Generic;
 /// <summary>
 /// Class for switching between settings panels (graphics, sounds, etc?...).
 /// </summary>
-public class SettingsMenuControl : UISprite {
+public class SettingsMenuControl : MonoBehaviour {//UISprite {
 	/// <summary>
 	/// Lazy solution to not having to create another class to hold list
 	/// </summary>
 	private static List<SettingsMenuControl> m_Settings = new List<SettingsMenuControl>();
+	public bool Active = false;
 	// Use this for initialization
 	void Start() {
 		m_Settings.Add(this);
-		gameObject.SetActive(true);
-		gameObject.GetComponent<UISprite>().alpha = 1.0f;
+		//gameObject.SetActive(true);
+		gameObject.SetActive(Active);
+		//gameObject.GetComponent<UISprite>().alpha = 1.0f;
 	}
 	
 	public void show(){
