@@ -3,19 +3,19 @@ using System.Collections;
 
 public class TipsButton : MonoBehaviour {
 
-
+	private UILabel r_Label;
 
 	// Use this for initialization
 	void Start () {
-		transform.GetChild (0).gameObject.SetActive(false);
+		r_Label = GetComponent<UILabel> ();
+		r_Label.enabled = false;
 	}
 
-
 	public void OnClick(){
-		transform.GetChild (0).gameObject.SetActive(true);
+		r_Label.enabled = true;
 	}
 
 	public void OnDisable(){
-		transform.GetChild (0).gameObject.SetActive(false);
+		r_Label.enabled = false;
 	}
 }

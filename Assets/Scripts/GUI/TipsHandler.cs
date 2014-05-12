@@ -11,29 +11,25 @@ public class TipsHandler : MonoBehaviour {
 	[HideInInspector]
 	public GameObject r_Prefab;
 	public Tips[] tips;
-	public GameObject tipsPanel;
 
-	void Start(){
-
-		GameObject tipsPanel = null;
-		while (tipsPanel == null) {
-			tipsPanel = GameObject.FindGameObjectWithTag("TipsPanel");
-		}
-
+	void Awake(){
 
 		int Finished_Buttons = 0;
-
 		foreach (Tips t in tips) {
 
 			GameObject newTips = Instantiate(r_Prefab) as GameObject;
-
-			tipsPanel.transform.parent = newTips.transform;
-
+			newTips.transform.parent = gameObject.transform;
+			
 			newTips.name = "TipsButton";
 			newTips.GetComponentInChildren<UILabel>().text = t.Text;
-			Vector3 newValue = new Vector3(0f,(float)(Finished_Buttons * 525), 0);
-			newTips.transform.position = newValue;
+			Vector3 scaleValue = new Vector3(1f,1f,1f);
+			newTips.transform.localScale = scaleValue;
 
+			//--------------
+			Vector3 newPosition = new Vector3(0f,-((float)(Finished_Buttons)*525),0f);
+
+			newTips.transform.localPosition = newPosition;
+			//------------
 			Finished_Buttons++;
 		}
 	}
