@@ -78,12 +78,14 @@ public class Behaviour_DoorSimple : Interactable {
 			m_FSM.changeState<SimpleDoorOpenedState>();
 			break;
 		}
+
 	}
 	
 	public override void activate(){
 		if( !(m_Used & m_OneShot) && m_UsableByPlayer && !m_Moving  ){
 			base.activate();
 			m_FSM.CurrentState.activate(this);
+			PuzzleEvent.trigger("onUseDoor", gameObject, true);
 		}
 	}
 	
