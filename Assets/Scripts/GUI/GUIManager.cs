@@ -8,7 +8,7 @@ using System.Linq;
 public class PauseWindow {
 	public GameObject r_MainWindow;
 	public GameObject r_InventoryWindow;
-	public GameObject r_JournalWindow;
+	public GameObject r_HintWindow;
 	public GameObject r_SaveLoadWindow;
 	public GameObject r_SettingsWindow;
 }
