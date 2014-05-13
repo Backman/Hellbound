@@ -22,14 +22,15 @@ public class TipsHandler : MonoBehaviour {
 			
 			newTips.name = "TipsButton";
 			newTips.GetComponentInChildren<TipsButton>().m_Tips = t.Text;
+
+			int tipsNR = Finished_Buttons+1;
 			
-			
-			newTips.GetComponentInChildren<TipsButton>().m_MainLabel = "Tips #" + Finished_Buttons.ToString();
+			newTips.GetComponentInChildren<TipsButton>().m_MainLabel = "Tips #" + tipsNR.ToString();
 			Vector3 scaleValue = new Vector3(1f,1f,1f);
 			newTips.transform.localScale = scaleValue;
 			
 			//--------------
-			Vector3 newPosition = new Vector3(0f,-((float)(Finished_Buttons)*525),0f);
+			Vector3 newPosition = new Vector3(0f,-((float)(Finished_Buttons)*450),0f);
 			
 			newTips.transform.localPosition = newPosition;
 			
