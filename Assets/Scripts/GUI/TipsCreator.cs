@@ -26,7 +26,7 @@ public class TipsCreator : MonoBehaviour {
 			newTips.transform.localScale = scaleValue;
 			
 			//--------------
-			Vector3 newPosition = new Vector3(0f,-((float)(Finished_Buttons)*450),0f);
+			Vector3 newPosition = new Vector3(0f,-((float)(Finished_Buttons)*550),0f);
 			
 			newTips.transform.localPosition = newPosition;
 			
