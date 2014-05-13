@@ -10,6 +10,7 @@ public class PressurePlatePuzzle : MonoBehaviour {
 		Messenger.AddListener<GameObject, bool>("requestSetWindFormation", requestSetWindFormation);
 		Messenger.AddListener<GameObject, bool>("requestSetWaterFormation", requestSetWaterFormation);
 		Messenger.AddListener<GameObject, bool>("requestLowerCeiling", requestLowerCeiling);	
+		Messenger.AddListener<GameObject, bool>("requestStartRoof", requestStartRoof);
 	}
 	
 	// Update is called once per frame
@@ -85,5 +86,9 @@ public class PressurePlatePuzzle : MonoBehaviour {
 	public void requestLowerCeiling(GameObject obj, bool tr){
 		Messenger.Broadcast ("lower roof");
 		PuzzleEvent.cancel("onTriggerEnter");
+	}
+
+	public void requestStartRoof(GameObject obj, bool tr){
+		Messenger.Broadcast ("start roof");
 	}
 }

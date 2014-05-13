@@ -32,6 +32,11 @@ public class PressurePlate : Interactable {
 	void OnTriggerEnter(Collider col) {
 		activate();
 		PuzzleEvent.trigger("onTriggerEnter", gameObject, true);
+		gameObject.GetComponent<PuzzleLogic>().enabled = false;
+	}
+
+	void OnTriggerExit(Collider col) {
+		gameObject.GetComponent<PuzzleLogic>().enabled = true;
 	}
 
 	/*public void reason() {
