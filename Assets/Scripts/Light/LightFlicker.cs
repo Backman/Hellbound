@@ -7,9 +7,10 @@ public class LightFlicker : MonoBehaviour {
 	private float m_MPi;
 	private float m_SPi;
 
-	public float mainFloat = 0.08f;
-	public float secondaryFloat = 0.08f;
-
+	public float mainFloat = 0.04f;
+	public float secondaryFloat = 0.05f;
+	public float MaxFloat = 0.2f;
+	public bool addMovement = false;
 
 	void Start () {
 		r_Light = GetComponent<Light> ();
@@ -18,28 +19,30 @@ public class LightFlicker : MonoBehaviour {
 
 	void Update () {
 
-
 		float x = getMainPI ();
-		float y = getSecondaryPI ();
+		float z = getSecondaryPI ();
 
+		if (addMovement) {
+			transform.localPosition = new Vector3 (x/2f,transform.localPosition.y, z/2f);
+		}
 
-		if(x >= y){
+		if(x >= z){
 			r_Light.intensity = x;
 		}
 		else{
-			r_Light.intensity = y;
+			r_Light.intensity = z;
 		}
 	}
 
 	private float getMainPI()
 	{
 		float ret = 0f;
-		
+
 		if (m_MPi >= Mathf.PI) {
 			m_MPi = 0f;
 		}
 		m_MPi += mainFloat;
-		ret = Mathf.Sin(m_MPi);
+		ret = Mathf.Sin(m_MPi) + MaxFloat;
 
 		return ret;
 	}
@@ -48,11 +51,11 @@ public class LightFlicker : MonoBehaviour {
 	{
 		float ret = 0f;
 		
-		if (m_SPi >= Mathf.PI) {
+		if (m_SPi >= Mathf.PI*2f) {
 			m_SPi = 0f;
 		}
 		m_SPi += secondaryFloat;
-		ret = Mathf.Sin(m_SPi) + 0.2f;
+		ret = Mathf.Sin(m_SPi) + MaxFloat;
 		
 		return ret;
 	}
