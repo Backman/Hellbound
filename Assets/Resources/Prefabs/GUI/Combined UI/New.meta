@@ -1,5 +1,6 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<< HEAD
 guid: f5f3ebd030487da4fba25b622d8e8d65
 =======
 <<<<<<< HEAD
@@ -8,6 +9,9 @@ guid: 98475782f636d8046bbdc5ae829938f9
 guid: 150da115515eda145984d7001452198e
 >>>>>>> d67078f493e2f647b4b43d4d6e164847c5250389
 >>>>>>> 8c9ce3ec7faa33925abaf970cad394317cda9008
+=======
+guid: db74b872595edd14d81f1e99ff78b026
+>>>>>>> cadea26bf82b724a79c681679978f91a18cfb5e2
 folderAsset: yes
 DefaultImporter:
   userData: 
