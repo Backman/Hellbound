@@ -18,7 +18,7 @@ public class PointToMove : MonoBehaviour {
 		if (mTargets.Count != 0) {
 			if(mTargets[0] != null){
 				Vector3 move = mTargets [0].transform.position - transform.position;
-				r_Character.move (move, false, move);
+				r_Character.move (move, false, transform.position + Camera.main.transform.forward * 100.0f);
 				if (collider.bounds.Contains (mTargets [0].transform.position)) {
 					Debug.Log ("point reached");
 					mTargets.Remove (mTargets [0]);
