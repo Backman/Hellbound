@@ -1,36 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TipsHandler : MonoBehaviour {
-	
-	[System.Serializable]
-	public class Tips{
-		[SerializeField][Multiline]
-		public string Text;
-	}
+public class TipsCreator : MonoBehaviour { 
+
 	[HideInInspector]
 	public GameObject r_Prefab;
-	public Tips[] tips;
-	
-	void Awake(){
-		
+
+	void Start(){
+		TipsHandler TH = GameObject.Find ("TipsHandler").GetComponent<TipsHandler>();
+
+		TipsHandler.Tips[] tips = TH.tips;
+
 		int Finished_Buttons = 0;
-		foreach (Tips t in tips) {
+
+		foreach (TipsHandler.Tips t in tips) {
 			
 			GameObject newTips = Instantiate(r_Prefab) as GameObject;
 			newTips.transform.parent = gameObject.transform;
 			
 			newTips.name = "TipsButton";
 			newTips.GetComponentInChildren<TipsButton>().m_Tips = t.Text;
+			newTips.GetComponentInChildren<TipsButton>().m_MainLabel = t.Title;
 
-			int tipsNR = Finished_Buttons+1;
-			
-			newTips.GetComponentInChildren<TipsButton>().m_MainLabel = "Tips #" + tipsNR.ToString();
 			Vector3 scaleValue = new Vector3(1f,1f,1f);
 			newTips.transform.localScale = scaleValue;
 			
 			//--------------
-			Vector3 newPosition = new Vector3(0f,-((float)(Finished_Buttons)*450),0f);
+			Vector3 newPosition = new Vector3(0f,-((float)(Finished_Buttons)*550),0f);
 			
 			newTips.transform.localPosition = newPosition;
 			
