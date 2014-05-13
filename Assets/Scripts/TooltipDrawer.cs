@@ -13,4 +13,6 @@ public class TooltipDrawer : PropertyDrawer
 		EditorGUI.PropertyField(position, prop, content, true);
 
 	}
+
+	
 }
