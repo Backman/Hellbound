@@ -73,6 +73,7 @@ public abstract class Interactable : MonoBehaviour{
 	public virtual void gainFocus(){
 		//Apply light
 		Debug.Log("Gaining focus: " + gameObject.name );
+		Messenger.Broadcast<GameObject> ("onFocus", gameObject);
 
 		if (m_EventSound != null) {
 			if (m_EventSound.m_GainFocus) { 
@@ -85,6 +86,8 @@ public abstract class Interactable : MonoBehaviour{
 	public virtual void loseFocus(){
 		//Remove light
 		Debug.Log("Leaving focus: " + gameObject.name );
+		Messenger.Broadcast ("leaveFocus");
+
 		if (m_EventSound != null) {
 			if (m_EventSound.m_LoseFocus) { 
 				FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathLoseFocus, gameObject.transform.position);
