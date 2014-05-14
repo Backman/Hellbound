@@ -4,59 +4,46 @@ using System.Collections;
 public class LightFlicker : MonoBehaviour {
 
 	private Light r_Light;
-	private float m_MPi;
-	private float m_SPi;
-
-	public float mainFloat = 0.04f;
-	public float secondaryFloat = 0.05f;
-	public float MaxFloat = 0.2f;
-	public bool addMovement = false;
+	private float[] m_Pi = new float[5];
+	public float movementIntensity = 1f;
 
 	void Start () {
 		r_Light = GetComponent<Light> ();
+
+
+		m_Pi [0] = 0f;
+		m_Pi [1] = 0f;
+		m_Pi [2] = 0f;
+		m_Pi [3] = 0f;
+		m_Pi [4] = 0f;
+
 	}
 
 
 	void Update () {
 
-		float x = getMainPI ();
-		float z = getSecondaryPI ();
+		float amount = (Mathf.Sin(m_Pi[0]) / 4f) + (Mathf.Sin (m_Pi[1]) / 4f) + 1f;
 
-		if (addMovement) {
-			transform.localPosition = new Vector3 (x/2f,transform.localPosition.y, z/2f);
-		}
+		float z = Mathf.Cos(m_Pi[3]);
+		float x = Mathf.Sin(m_Pi[2]);
+		Vector3 newVec = new Vector3(x/amount, (amount*movementIntensity)+1f, z/amount);
+		transform.localPosition = newVec;
 
-		if(x >= z){
-			r_Light.intensity = x;
-		}
-		else{
-			r_Light.intensity = z;
-		}
+		r_Light.intensity = amount;
+
+		UpdatePIValues();
 	}
 
-	private float getMainPI()
+	private void UpdatePIValues()
 	{
-		float ret = 0f;
+		for(int i = 0; i < m_Pi.Length; i++) {
+			float rand = Random.Range(0.01f, 0.1f);
+			m_Pi[i] += rand;
 
-		if (m_MPi >= Mathf.PI) {
-			m_MPi = 0f;
+			if(m_Pi[i] >= Mathf.PI*2f)
+			{
+				m_Pi[i] = 0f;
+			}
 		}
-		m_MPi += mainFloat;
-		ret = Mathf.Sin(m_MPi) + MaxFloat;
-
-		return ret;
-	}
-
-	private float getSecondaryPI()
-	{
-		float ret = 0f;
-		
-		if (m_SPi >= Mathf.PI*2f) {
-			m_SPi = 0f;
-		}
-		m_SPi += secondaryFloat;
-		ret = Mathf.Sin(m_SPi) + MaxFloat;
-		
-		return ret;
 	}
 }
