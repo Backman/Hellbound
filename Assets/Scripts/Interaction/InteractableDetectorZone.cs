@@ -44,7 +44,7 @@ public class InteractableDetectorZone : MonoBehaviour {
 	void OnTriggerEnter( Collider col ){
 		//TODO: Add detection for which interactable is in focus if several objects are within the zone.
 		Interactable ii = col.gameObject.GetComponent<Interactable>();
-		if( ii != null ){
+		if( ii != null && ii.enabled ){
 			r_InFocus = ii;
 			r_CachedFocus = ii;
 			r_InFocus.gainFocus();
