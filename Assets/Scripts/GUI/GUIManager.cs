@@ -166,6 +166,10 @@ public class GUIManager : Singleton<GUIManager> {
 		r_LoadingLogic.loadLevel(levelName, loadMessage);
 	}
 
+	public void loadLevel( int sceneNumber, string loadMessage ){
+		r_LoadingLogic.loadLevel(sceneNumber, loadMessage);
+	}
+
 	/// <summary>
 	/// Shows a simple textbox with the supplied text.
 	/// The button-string dictates which button that closes the window. It is optional, defaults to Examine
