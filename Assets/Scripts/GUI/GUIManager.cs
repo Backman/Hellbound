@@ -106,8 +106,7 @@ public class GUIManager : Singleton<GUIManager> {
 	
 	void Update() {
 		if (Input.GetButtonDown("Pause")) {
-			m_GamePaused = !m_GamePaused;
-			pauseGame(m_GamePaused);
+			togglePause();
 		}
 		if (Input.GetButtonDown("Inventory") && !m_GamePaused && !m_InventoryTweening) {
 			m_InventoryTweening = true;
@@ -120,7 +119,12 @@ public class GUIManager : Singleton<GUIManager> {
 			journal();
 		}
 	}
-	
+
+	public void togglePause(){
+		m_GamePaused = !m_GamePaused;
+		pauseGame(m_GamePaused);
+	}
+
 	public void pauseGame(bool pause) {
 		if (pause) {
 			PauseMenu.getInstance().showPauseWindow();
