@@ -11,6 +11,8 @@ public class LoadLevelTrigger : MonoBehaviour {
 	[SerializeField][Tooltip("Which level to load when this zone is triggered.\nIf this field is left blank, this zone will reload the current level.")]
 	private string m_LevelToLoad = "";
 	private bool m_Used = false;
+	public bool useNumber = false;
+	public int sceneNumber;
 
 	[Multiline] [SerializeField]
 	private string m_LoadMessage;
@@ -24,8 +26,14 @@ public class LoadLevelTrigger : MonoBehaviour {
 
 	void OnTriggerEnter( Collider col ){
 		if( col.tag == "Player" && !m_Used){
-			GUIManager.Instance.loadLevel( m_LevelToLoad , m_LoadMessage );
-			m_Used = true;
+			if(useNumber){
+				GUIManager.Instance.loadLevel( sceneNumber , m_LoadMessage );
+				m_Used = true;
+			}
+			else{
+				GUIManager.Instance.loadLevel( m_LevelToLoad , m_LoadMessage );
+				m_Used = true;
+			}
 		}
 	}
 }

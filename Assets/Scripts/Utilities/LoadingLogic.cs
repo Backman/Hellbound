@@ -34,9 +34,36 @@ public class LoadingLogic : MonoBehaviour {
 		}
 	}
 
-	public void loadLevel( string levelName, string loadMessage ){
+	public void loadLevel( int sceneNumber, string loadMessage ){
 	
 
+		object[] args = new object[2];
+		args[0] = sceneNumber;
+		args[1] = loadMessage;
+		StartCoroutine( "loadLevelWithNumber_CR", args );
+
+		Messenger.Cleanup ();
+	}
+
+	IEnumerator loadLevelWithNumber_CR( object[] args ){
+		loadingMessage = (string) args[1];
+		
+		r_LoadingScreenTweener.PlayForward();
+		r_LoadingMessageTweener.PlayForward();
+		
+		yield return new WaitForSeconds( 4.0f );
+		
+		Application.LoadLevel( (int) args[0] );
+		
+		r_LoadingScreenTweener.PlayReverse();
+		r_LoadingMessageTweener.PlayReverse();
+		
+		loadingMessage = "";
+	}
+
+	public void loadLevel( string levelName, string loadMessage ){
+		
+		
 		object[] args = new object[2];
 		args[0] = levelName;
 		args[1] = loadMessage;
