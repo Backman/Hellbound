@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// By: Aleksi Lindeman
 /// </summary>
 public class Game {
-	private static string m_CurrentSavegame = "savegame.hbsg";
+	private static string m_CurrentSavegame = "data.hbsg";
 	private static GameData m_CurrentGameData = null;
 	
 	//public static void setCurrentSavegame(string savegame){
@@ -15,12 +15,21 @@ public class Game {
 		//m_CurrentGameData = GameData.load(m_CurrentSavegame);
 	//}
 	
-	public bool doesSavegameExist(){
+	public static bool doesSavegameExist(){
 		GameData gameData = GameData.load(m_CurrentSavegame);
 		if(gameData != null){
 			return true;
 		}
 		return false;
+	}
+	
+	/// <summary>
+	/// Creates a new savegame file. Overrides if it already exists
+	/// </summary>
+	public static void createSavegame(){
+		GameData gameData = new GameData();
+		gameData.save(m_CurrentSavegame);
+		m_CurrentGameData = gameData;
 	}
 	
 	public static void setCurrentSavegameCheckpoint(string checkpointID){
@@ -45,6 +54,7 @@ public class Game {
 	public static void load(){
 		m_CurrentGameData = GameData.load(m_CurrentSavegame);
 		if(m_CurrentGameData != null){
+			Debug.Log("Attempting to load from checkpoint: "+m_CurrentGameData.currentCheckpointID);
 			Checkpoint checkpoint = Checkpoints.getCheckpointFromID(m_CurrentGameData.currentCheckpointID);
 			if(checkpoint != null){
 				checkpoint.load();

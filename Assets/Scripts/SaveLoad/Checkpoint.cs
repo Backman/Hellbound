@@ -71,20 +71,37 @@ public class Checkpoint : MonoBehaviour {
 	[SerializeField] string m_LoadingMessage = "";
 	[SerializeField] Vector3 m_SpawnPosition = new Vector3(0.0f, 0.0f, 0.0f);
 	[SerializeField] Vector3 m_SpawnRotation = new Vector3(0.0f, 0.0f, 0.0f);
+	private bool m_DoLoad = false;
 	
 	// Use this for initialization
 	void Start () {
 		Checkpoints.add(this);
+		Debug.Log("Add checkpoint: "+m_UniqueID);
+		Messenger.AddListener<GameObject>("onGameObjectInitialized", playerInitialized);
 	}
 	
-	void OnTriggerEnter(Collider col){
-		if(col.tag == "Player" && !Game.hasCheckpointBeenUsed(this)){
-			Debug.Log("Save checkpoint "+m_UniqueID);
-			Game.setCurrentSavegameCheckpoint(m_UniqueID);
+	public void start(){
+		Start();
+	}
+	
+	public void playerInitialized(GameObject gameObject){
+		if(m_DoLoad && gameObject.tag == "Player"){
+			gameObject.transform.position = m_SpawnPosition;
+			gameObject.transform.rotation = Quaternion.Euler(m_SpawnRotation);
+			m_DoLoad = false;
 		}
 	}
 	
 	public void load(){
+		//LoadingLogic.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
+		//GUIManager.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
+		m_DoLoad = true;
+		if(Application.CanStreamedLevelBeLoaded(m_SceneToLoad)){
+			Application.LoadLevel(m_SceneToLoad);
+		} 
+		else{
+			Debug.LogWarning ("You cant load this name or scene.");
+		}
 		foreach(ObjectState objectState in m_ObjectStates){
 			if(objectState.getObject() && objectState.getObject().GetComponent<Interactable>()){
 				objectState.getObject().GetComponent<Interactable>().setPuzzleState(objectState.getState());
@@ -97,10 +114,10 @@ public class Checkpoint : MonoBehaviour {
 				}
 			}
 		}
-		LoadingLogic.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
-		GameObject player = GameObject.FindGameObjectWithTag("Player");
-		player.transform.position = m_SpawnPosition;
-		player.transform.rotation = Quaternion.Euler(m_SpawnRotation);
+		
+		// This probably wont work since game objects have not been initialized yet, and therefore
+		// there are no game objects with puzzle logic attached when this is called, even if the scene has
+		// game objects with puzzle logic.
 		PuzzleEvent.trigger("onCheckpointLoad", gameObject, false);
 	}
 	
@@ -117,6 +134,7 @@ public class Checkpoint : MonoBehaviour {
 	}
 	
 	public string getSceneToLoad(){
+		//return Application.loadedLevelName;
 		return m_SceneToLoad;
 	}
 	
