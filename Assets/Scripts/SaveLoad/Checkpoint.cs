@@ -97,7 +97,7 @@ public class Checkpoint : MonoBehaviour {
 				}
 			}
 		}
-		LoadingLogic.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
+		GUIManager.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
 		player.transform.position = m_SpawnPosition;
 		player.transform.rotation = Quaternion.Euler(m_SpawnRotation);
