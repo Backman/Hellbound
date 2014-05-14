@@ -21,7 +21,6 @@ public class PressurePlate : Interactable {
 		Messenger.AddListener<bool>("notify wind symbol", notifyWind);
 
 		m_Machine = new StateMachine<PressurePlate>(this, new GoodState());
-		renderer.material.color = Color.green;
 		m_Machine.addState (new BadState());
 	}
 	
@@ -31,12 +30,16 @@ public class PressurePlate : Interactable {
 	}
 
 	void OnTriggerEnter(Collider col) {
-		if(m_ActivateType == ActivateType.OnTrigger){
-			if(col.tag == "Player") {
-				activate();
-			}
+		if (col.tag == "Player") {
+			activate();
+			Debug.Log ("Entering");
+			PuzzleEvent.trigger("onTriggerEnter", gameObject, true);
 		}
-		PuzzleEvent.trigger("onTriggerEnter", gameObject, true);
+	}
+
+	void OnTriggerExit(Collider other) {
+	
+		Debug.Log ("LEaving");
 	}
 
 	/*public void reason() {
@@ -44,7 +47,7 @@ public class PressurePlate : Interactable {
 	}*/
 
 	public override void activate () {
-		m_Machine.CurrentState.activate(this);
+		base.activate ();
 	}
 
 	public S changeState<S>() where S : State<PressurePlate> {

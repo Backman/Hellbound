@@ -90,6 +90,10 @@ public class CameraCollision : MonoBehaviour {
 				hitSomething = true;
 			}
 		}
+		// Hit something so move the camera to a better position
+		Protecting = hitSomething;
+		m_CurrentDistance = Mathf.SmoothDamp(m_CurrentDistance, targetDistance, ref m_MoveVelocity, m_CurrentDistance > targetDistance ? m_ClipMoveTime : m_ReturnTime);
+		m_CurrentDistance = Mathf.Clamp(m_CurrentDistance, m_ClosestDistance, m_OriginalDistance);
 
 		// Visualise the camera clip effect in the editor
 		if(hitSomething) {
@@ -97,10 +101,7 @@ public class CameraCollision : MonoBehaviour {
 			m_Camera.localPosition = -Vector3.forward * m_CurrentDistance;
 		}
 
-		// Hit something so move the camera to a better position
-		Protecting = hitSomething;
-		m_CurrentDistance = Mathf.SmoothDamp(m_CurrentDistance, targetDistance, ref m_MoveVelocity, m_CurrentDistance > targetDistance ? m_ClipMoveTime : m_ReturnTime);
-		m_CurrentDistance = Mathf.Clamp(m_CurrentDistance, m_ClosestDistance, m_OriginalDistance);
+
 	}
 
 	public class RayHitComparer : IComparer {

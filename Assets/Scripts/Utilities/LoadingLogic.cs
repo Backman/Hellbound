@@ -6,7 +6,7 @@ using System.Collections;
 /// 
 /// Created by Simon
 /// </summary>
-public class LoadingLogic : Singleton<LoadingLogic> {
+public class LoadingLogic : MonoBehaviour {
 
 	UISprite  r_LoadingScreen;
 	UITweener r_LoadingScreenTweener;
@@ -36,15 +36,16 @@ public class LoadingLogic : Singleton<LoadingLogic> {
 
 	public void loadLevel( string levelName, string loadMessage ){
 	
+
 		object[] args = new object[2];
 		args[0] = levelName;
 		args[1] = loadMessage;
 		StartCoroutine( "loadLevel_CR", args );
-
+		
+		Messenger.Cleanup ();
 	}
 
-	IEnumerator loadLevel_CR( object[] args ){	
-		Debug.Log("Call");
+	IEnumerator loadLevel_CR( object[] args ){
 		loadingMessage = (string) args[1];
 
 		r_LoadingScreenTweener.PlayForward();

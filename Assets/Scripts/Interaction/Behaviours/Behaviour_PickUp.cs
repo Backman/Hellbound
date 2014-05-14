@@ -2,7 +2,11 @@
 using System.Collections;
 
 public class Behaviour_PickUp : Interactable {
+	[Tooltip("This field decides what name this item will be identified with.\nSince items are added to- and removed from- the inventory via name identifying," +
+			 "that means that if two items have the same name they will be treated as copies of one another.\n" +
+			 "The name only mattes for the inventory logic.")]
 	public string   m_ItemName;
+	[Tooltip("The item sprite which will be displayed in the inventory after the item's been picked up")]
 	public UISprite m_ItemThumbnail;
 	
 	public KeyState m_State;	
@@ -15,6 +19,7 @@ public class Behaviour_PickUp : Interactable {
 	public override void activate () {
 		PuzzleEvent.trigger ("onPickUpInteractable", gameObject, true);
 		m_FSM.CurrentState.activate( this );
+		base.activate ();
 	}
 	
 	public override void examine () {

@@ -15,6 +15,7 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 		inter.setPuzzleState("unavailable");
 		antidote.SetActive (false);
 		Debug.Log("You drank antidote!");
+		StartCoroutine("stopSickness");
 		Messenger.Broadcast ("clear focus");
 	}
 	
@@ -28,6 +29,19 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 
 	public void openDoor(GameObject door, bool tr) {
 		Debug.Log ("Open door");
-		door.SetActive (false);
+		door.GetComponent<Behaviour_DoorSimple>().unlockAndOpen();
+	}
+
+	IEnumerator stopSickness() {
+		float t = 1.0f;
+		MotionBlur motionBlur = Camera.main.GetComponent<MotionBlur>();
+		while(t > 0.0f) {
+			motionBlur.blurAmount = t * 0.8f;
+			t -= Time.deltaTime;
+			
+			yield return null;
+		}
+		motionBlur.blurAmount = 0.0f;
+		motionBlur.enabled = false;
 	}
 }

@@ -19,12 +19,12 @@ using System.Reflection;
 /// </summary>
 public abstract class Interactable : MonoBehaviour{
 
-	public enum ActivateType{ OnClick, OnTrigger }
-	public ActivateType m_ActivateType;
 	public EventSound m_EventSound;
 
 	[HideInInspector] public string m_Description;
 	[HideInInspector] public string m_UseText;
+	[Tooltip("This field is best left alone. The programmers reserve this field to themselves.\n" +
+	         "Unless you have explicit knowledge about this field, DO NOT MODIFY.")]
 	public string m_PuzzleState = "";
 
 	protected bool m_Usable = false;
@@ -72,8 +72,8 @@ public abstract class Interactable : MonoBehaviour{
 	
 	public virtual void gainFocus(){
 		//Apply light
-		Messenger.Broadcast<GameObject> ("onFocus", gameObject);
 		Debug.Log("Gaining focus: " + gameObject.name );
+		Messenger.Broadcast<GameObject> ("onFocus", gameObject);
 
 		if (m_EventSound != null) {
 			if (m_EventSound.m_GainFocus) { 
@@ -85,8 +85,9 @@ public abstract class Interactable : MonoBehaviour{
 	
 	public virtual void loseFocus(){
 		//Remove light
-		Messenger.Broadcast ("leaveFocus");
 		Debug.Log("Leaving focus: " + gameObject.name );
+		Messenger.Broadcast ("leaveFocus");
+
 		if (m_EventSound != null) {
 			if (m_EventSound.m_LoseFocus) { 
 				FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathLoseFocus, gameObject.transform.position);
