@@ -71,37 +71,57 @@ public class Checkpoint : MonoBehaviour {
 	[SerializeField] string m_LoadingMessage = "";
 	[SerializeField] Vector3 m_SpawnPosition = new Vector3(0.0f, 0.0f, 0.0f);
 	[SerializeField] Vector3 m_SpawnRotation = new Vector3(0.0f, 0.0f, 0.0f);
+	private bool m_LoadPlayer = false;
+	private bool m_LoadUI = false;
 	
 	// Use this for initialization
 	void Start () {
 		Checkpoints.add(this);
+		//Debug.Log("Add checkpoint: "+m_UniqueID);
+		Messenger.AddListener<GameObject>("onGameObjectInitialized", playerInitialized);
 	}
 	
-	void OnTriggerEnter(Collider col){
-		if(col.tag == "Player" && !Game.hasCheckpointBeenUsed(this)){
-			Debug.Log("Save checkpoint "+m_UniqueID);
-			Game.setCurrentSavegameCheckpoint(m_UniqueID);
+	public void start(){
+		Start();
+	}
+	
+	public void playerInitialized(GameObject gameObject){
+		if(m_LoadPlayer && gameObject.tag == "Player"){
+			gameObject.transform.position = m_SpawnPosition;
+			gameObject.transform.rotation = Quaternion.Euler(m_SpawnRotation);
+			m_LoadPlayer = false;
+		}
+		
+		if(m_LoadUI && gameObject.GetComponent<SetupUILogic>() != null){
+			foreach(InventoryItemSaver inventoryItem in m_InventoryItems){
+				if(inventoryItem.getPickupItem() != null){
+					Debug.Log("Add "+inventoryItem.getAmount()+" "+inventoryItem.getPickupItem().m_ItemName);
+					for(int i = 0; i < inventoryItem.getAmount(); ++i){
+						InventoryLogic.Instance.addItem(inventoryItem.getPickupItem().m_ItemName, inventoryItem.getPickupItem().m_ItemThumbnail);
+					}
+				}
+			}
+			m_LoadUI = false;
 		}
 	}
 	
 	public void load(){
+		//LoadingLogic.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
+		//GUIManager.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
+		m_LoadPlayer = true;
+		m_LoadUI = true;
+		if(Application.CanStreamedLevelBeLoaded(m_SceneToLoad)){
+			Application.LoadLevel(m_SceneToLoad);
+		} 
+		else{
+			Debug.LogWarning ("You cant load this name or scene.");
+		}
+		
 		foreach(ObjectState objectState in m_ObjectStates){
 			if(objectState.getObject() && objectState.getObject().GetComponent<Interactable>()){
 				objectState.getObject().GetComponent<Interactable>().setPuzzleState(objectState.getState());
 			}
 		}
-		foreach(InventoryItemSaver inventoryItem in m_InventoryItems){
-			if(inventoryItem.getPickupItem() != null){
-				for(int i = 0; i < inventoryItem.getAmount(); ++i){
-					InventoryLogic.Instance.addItem(inventoryItem.getPickupItem().m_ItemName, inventoryItem.getPickupItem().m_ItemThumbnail);
-				}
-			}
-		}
-		GUIManager.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
-		GameObject player = GameObject.FindGameObjectWithTag("Player");
-		player.transform.position = m_SpawnPosition;
-		player.transform.rotation = Quaternion.Euler(m_SpawnRotation);
-		PuzzleEvent.trigger("onCheckpointLoad", gameObject, false);
 	}
 	
 	public List<ObjectState> getObjectStates(){
@@ -117,6 +137,7 @@ public class Checkpoint : MonoBehaviour {
 	}
 	
 	public string getSceneToLoad(){
+		//return Application.loadedLevelName;
 		return m_SceneToLoad;
 	}
 	

@@ -11,13 +11,13 @@ public class Death_ClockPuzzle : MonoBehaviour {
 	void Awake() {
 		Messenger.AddListener<GameObject, bool>("onPickupClock", onPickupClock);
 		Messenger.AddListener<GameObject, bool>("onClockPickedUp", onClockPickedUp);
-		Messenger.AddListener<GameObject, bool>("onPickUpKey", onPickUpKey);
 		Messenger.AddListener<GameObject, bool>("onKillNPC", onKillNPC);
 	}
 
 	public void onPickupClock(GameObject go, bool tr) {
 		Interactable inter = go.GetComponent<Interactable>();
 		if(inter != null) {
+			//TODO Start ticking sound
 			inter.setPuzzleState("pickedUp");
 		}
 	}
@@ -29,25 +29,19 @@ public class Death_ClockPuzzle : MonoBehaviour {
 		}
 	}
 
-	public void onPickUpKey(GameObject go, bool tr) {
-		Interactable inter = go.GetComponent<Interactable>();
-		if(inter != null) {
-			inter.setPuzzleState("pickedUp");
-
-		}
-	}
-
 	public void onKillNPC(GameObject go, bool tr) {
-		Debug.Log("Play the pancy scream/kill sound");
+
 		KillNPCTrigger trigger = go.GetComponent<KillNPCTrigger>();
 		if(trigger != null) {
+			GameObject coffin = trigger.m_Coffin;
+			Transform coffinPos = coffin.transform;
+
 			FMODAsset asset = trigger.m_FMODAsset;
-			Transform emitterPos = trigger.m_EmitterPosition;
 			if(asset != null) {
-				FMOD_StudioSystem.instance.PlayOneShot(asset, emitterPos.position);
+				FMOD_StudioSystem.instance.PlayOneShot(asset, coffinPos.position);
 			}
+			coffin.rigidbody.useGravity = true;
 			go.SetActive(false);
-			trigger.Used = true;
 		}
 	}
 }
