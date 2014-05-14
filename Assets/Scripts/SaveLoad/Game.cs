@@ -27,6 +27,7 @@ public class Game {
 	/// Creates a new savegame file. Overrides if it already exists
 	/// </summary>
 	public static void createSavegame(){
+		Debug.Log("Create new savegame!");
 		GameData gameData = new GameData();
 		gameData.save(m_CurrentSavegame);
 		m_CurrentGameData = gameData;
