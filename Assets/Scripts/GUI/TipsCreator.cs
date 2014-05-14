@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
-
+//anton
 public class TipsCreator : MonoBehaviour { 
 
 	[HideInInspector]

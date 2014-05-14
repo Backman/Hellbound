@@ -30,13 +30,16 @@ public class PressurePlate : Interactable {
 	}
 
 	void OnTriggerEnter(Collider col) {
-		activate();
-		PuzzleEvent.trigger("onTriggerEnter", gameObject, true);
-		gameObject.GetComponent<PuzzleLogic>().enabled = false;
+		if (col.tag == "Player") {
+			activate();
+			Debug.Log ("Entering");
+			PuzzleEvent.trigger("onTriggerEnter", gameObject, true);
+		}
 	}
 
-	void OnTriggerExit(Collider col) {
-		gameObject.GetComponent<PuzzleLogic>().enabled = true;
+	void OnTriggerExit(Collider other) {
+	
+		Debug.Log ("LEaving");
 	}
 
 	/*public void reason() {

@@ -29,6 +29,7 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			else{
 				interObj.setPuzzleState("good");
 			}
+			if(interObj.gameObject == obj) interObj.setPuzzleState("good");
 		}
 		// Cancel event to prevent other logic with different condition to run
 		PuzzleEvent.cancel("onTriggerEnter");
@@ -45,6 +46,7 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			else{
 				interObj.setPuzzleState("good");
 			}
+			if(interObj.gameObject == obj) interObj.setPuzzleState("good");
 		}
 		// Cancel event to prevent other logic with different condition to run
 		PuzzleEvent.cancel("onTriggerEnter");
@@ -61,6 +63,7 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			else{
 				interObj.setPuzzleState("good");
 			}
+			if(interObj.gameObject == obj) interObj.setPuzzleState("good");
 		}
 		// Cancel event to prevent other logic with different condition to run
 		PuzzleEvent.cancel("onTriggerEnter");
@@ -77,6 +80,7 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			else{
 				interObj.setPuzzleState("good");
 			}
+			if(interObj.gameObject == obj) interObj.setPuzzleState("good");
 		}
 		Debug.Log ("Callllling");
 		// Cancel event to prevent other logic with different condition to run
@@ -90,5 +94,6 @@ public class PressurePlatePuzzle : MonoBehaviour {
 
 	public void requestStartRoof(GameObject obj, bool tr){
 		Messenger.Broadcast ("start roof");
+		PuzzleEvent.cancel("onTriggerEnter");
 	}
 }

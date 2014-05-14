@@ -392,7 +392,6 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	}
 	
 	public void onRequestOpenCubeDoor(GameObject obj, bool tr){
-		obj.SetActive(false);
 		obj.transform.parent.gameObject.GetComponent<UIPlayTween>().Play(true);
 		obj.GetComponent<Interactable>().enabled = false;
 

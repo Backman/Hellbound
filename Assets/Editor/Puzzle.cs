@@ -117,7 +117,11 @@ public class Puzzle : Editor {
 							GUILayout.Label("'s state equals", GUILayout.Width(85f));
 						}
 						*/
-						GameObject obj = (GameObject)EditorGUILayout.ObjectField(objectState.getObject(), typeof(GameObject));
+						Interactable interObj = null;
+						if(objectState.getObject() != null){
+							interObj = objectState.getObject().GetComponent<Interactable>();
+						} 
+						Interactable obj = (Interactable)EditorGUILayout.ObjectField(interObj, typeof(Interactable));
 						GUILayout.Label("'s state equals", GUILayout.Width(85f));
                         string state = EditorGUILayout.TextField("", objectState.getState());
 						GUI.backgroundColor = Color.red;
@@ -130,7 +134,7 @@ public class Puzzle : Editor {
 						}
 						GUI.backgroundColor = Color.white;
 
-                        objectState.setObject(obj);
+                        objectState.setObject(obj == null ? null : obj.gameObject);
                         objectState.setState(state);
 					}
 					GUILayout.EndHorizontal();
