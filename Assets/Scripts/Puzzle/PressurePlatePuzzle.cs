@@ -10,6 +10,7 @@ public class PressurePlatePuzzle : MonoBehaviour {
 		Messenger.AddListener<GameObject, bool>("requestSetWindFormation", requestSetWindFormation);
 		Messenger.AddListener<GameObject, bool>("requestSetWaterFormation", requestSetWaterFormation);
 		Messenger.AddListener<GameObject, bool>("requestLowerCeiling", requestLowerCeiling);	
+		Messenger.AddListener<GameObject, bool>("requestStartRoof", requestStartRoof);
 	}
 	
 	// Update is called once per frame
@@ -28,6 +29,7 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			else{
 				interObj.setPuzzleState("good");
 			}
+			if(interObj.gameObject == obj) interObj.setPuzzleState("good");
 		}
 		// Cancel event to prevent other logic with different condition to run
 		PuzzleEvent.cancel("onTriggerEnter");
@@ -44,6 +46,7 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			else{
 				interObj.setPuzzleState("good");
 			}
+			if(interObj.gameObject == obj) interObj.setPuzzleState("good");
 		}
 		// Cancel event to prevent other logic with different condition to run
 		PuzzleEvent.cancel("onTriggerEnter");
@@ -60,6 +63,7 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			else{
 				interObj.setPuzzleState("good");
 			}
+			if(interObj.gameObject == obj) interObj.setPuzzleState("good");
 		}
 		// Cancel event to prevent other logic with different condition to run
 		PuzzleEvent.cancel("onTriggerEnter");
@@ -76,6 +80,7 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			else{
 				interObj.setPuzzleState("good");
 			}
+			if(interObj.gameObject == obj) interObj.setPuzzleState("good");
 		}
 		Debug.Log ("Callllling");
 		// Cancel event to prevent other logic with different condition to run
@@ -84,6 +89,11 @@ public class PressurePlatePuzzle : MonoBehaviour {
 	
 	public void requestLowerCeiling(GameObject obj, bool tr){
 		Messenger.Broadcast ("lower roof");
+		PuzzleEvent.cancel("onTriggerEnter");
+	}
+
+	public void requestStartRoof(GameObject obj, bool tr){
+		Messenger.Broadcast ("start roof");
 		PuzzleEvent.cancel("onTriggerEnter");
 	}
 }

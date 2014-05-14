@@ -8,16 +8,24 @@ using System.Collections;
 /// Created by Simon
 /// </summary>
 public class LoadLevelTrigger : MonoBehaviour {
-	[SerializeField]
-	private string m_LevelToLoad;
+	[SerializeField][Tooltip("Which level to load when this zone is triggered.\nIf this field is left blank, this zone will reload the current level.")]
+	private string m_LevelToLoad = "";
+	private bool m_Used = false;
 
 	[Multiline] [SerializeField]
 	private string m_LoadMessage;
 
+	void Awake(){
+		if( m_LevelToLoad.Trim() == "" ){
+			m_LevelToLoad = Application.loadedLevelName;
+		} 
+		Debug.Log(m_LevelToLoad);
+	}
+
 	void OnTriggerEnter( Collider col ){
-		if( col.tag == "Player" ){
-			GUIManager.Instance.loadLevel( m_LevelToLoad, m_LoadMessage );
-			gameObject.SetActive(false);
+		if( col.tag == "Player" && !m_Used){
+			GUIManager.Instance.loadLevel( m_LevelToLoad , m_LoadMessage );
+			m_Used = true;
 		}
 	}
 }
