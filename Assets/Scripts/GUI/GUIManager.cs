@@ -68,7 +68,7 @@ public class GUIManager : Singleton<GUIManager> {
 	/// Controlls wether the inventoryWindow is currently tweening or not
 	/// </summary>
 	private bool m_InventoryTweening = false;
-
+	private Camera r_MainCamera = null;
 
 	public void Awake(){
 		DontDestroyOnLoad( gameObject );
@@ -101,6 +101,7 @@ public class GUIManager : Singleton<GUIManager> {
 		if( r_NotesLogic == null ){
 			Debug.LogError("Error! No notes logic found!");
 		}
+		r_MainCamera = Camera.main;
 	}
 	
 	void Update() {
@@ -129,9 +130,13 @@ public class GUIManager : Singleton<GUIManager> {
 			PauseMenu.getInstance().showPauseWindow();
 			Time.timeScale = 0.0f;
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
+			r_MainCamera.GetComponent<PauseGameEffect>().StopCoroutine("pauseGame");
+			r_MainCamera.GetComponent<PauseGameEffect>().StartCoroutine("pauseGame", true);
 		} else {
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(false);
 			Time.timeScale = 1.0f;
+			r_MainCamera.GetComponent<PauseGameEffect>().StopCoroutine("pauseGame");
+			r_MainCamera.GetComponent<PauseGameEffect>().StartCoroutine("pauseGame", false);
 			Messenger.Broadcast("reset pause window");
 		}
 	}
@@ -159,6 +164,10 @@ public class GUIManager : Singleton<GUIManager> {
 
 	public void loadLevel( string levelName, string loadMessage ){
 		r_LoadingLogic.loadLevel(levelName, loadMessage);
+	}
+
+	public void loadLevel( int sceneNumber, string loadMessage ){
+		r_LoadingLogic.loadLevel(sceneNumber, loadMessage);
 	}
 
 	/// <summary>
