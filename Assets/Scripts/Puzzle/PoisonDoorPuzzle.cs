@@ -28,8 +28,10 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 		float t = 0.0f;
 		MotionBlur motionBlur = Camera.main.GetComponent<MotionBlur>();
 		motionBlur.enabled = true;
+		 
 		while(t < 1.0f) {
 			motionBlur.blurAmount = t * 0.8f;
+			
 			t += Time.deltaTime;
 
 			yield return null;

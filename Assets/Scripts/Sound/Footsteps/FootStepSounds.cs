@@ -35,17 +35,22 @@ public class FootStepSounds : MonoBehaviour {
 	//the start acceses and saves a few "pointers" to the necessary scrips and variables
 	//(this is to provide shortcuts to what we want to access and/or change)
 	void Start(){
-		
-		while (m_Emitter == null) {
-			m_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
+		try{
+		m_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
+		} catch {
+			Debug.LogWarning("No Emitter attached to this object");
 		}
+		
 		
 		FBack = FootBack.GetComponent<FootStepsHitBoxes> ();
 		OtherFBack = OtherFootBack.GetComponent<FootStepsHitBoxes> ();
 		
 		surfaceTexture = gameObject.GetComponent<GetDominantTexture> ();
-		m_Parameter = m_Emitter.getParameter("Surface");
-		Debug.Log ("done");
+		try{
+			m_Parameter = m_Emitter.getParameter("Surface");
+		} catch  {
+			Debug.LogWarning("FMOD parameter failed");
+		}
 	}
 	
 	
@@ -71,17 +76,16 @@ public class FootStepSounds : MonoBehaviour {
 
 			if(m_StandingOn.m_UseFootstepSurface){
 				m_Parameter.setValue(m_StandingOn.m_Surface);
-				Debug.Log("surface : " + m_StandingOn.m_Surface);
 			}
 			else if (surfaceTexture != null) {
 				m_Parameter.setValue(surfaceTexture.m_SurfaceType);
-				Debug.Log("terrain : " + surfaceTexture.m_SurfaceType);
 			}
 			
 			if(FBack.b_IsHitting && m_Once && !OtherFBack.b_IsHitting){
 				m_Once = false;
 				m_Emitter.Play();
 				m_StandingOn = null;
+				Debug.Log("playing");
 			}
 			
 			//if both backcolliders are hitting something we know we have stopped moving
