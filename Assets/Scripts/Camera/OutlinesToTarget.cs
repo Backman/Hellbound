@@ -40,7 +40,6 @@ public class OutlinesToTarget : MonoBehaviour {
 					GameObject lTarget = m_Target [m_Target.Count - 1];
 					lTarget.transform.position = each.transform.position;
 					lTarget.transform.rotation = each.transform.rotation;
-					lTarget.transform.localScale = each.transform.localScale;
 					lTarget.transform.parent = each.transform;
 					//l for local
 					Mesh m = each.GetComponent<MeshFilter> ().mesh;
@@ -48,7 +47,7 @@ public class OutlinesToTarget : MonoBehaviour {
 					lMeshFilter.mesh = m;
 
 					MeshRenderer lMeshRenderer = lTarget.AddComponent<MeshRenderer> ();
-
+					lTarget.transform.localScale = Vector3.one;
 					lMeshRenderer.sharedMaterial = m_Material;
 				}
 			}

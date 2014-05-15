@@ -150,6 +150,10 @@ public class FMODEditorExtension : MonoBehaviour
 
         int bankCount = 0;
 		string copyBanksString = "";
+		var banksToCopy = new List<System.IO.FileInfo>();
+		
+		bool hasNewStyleStringsBank = false; // PAS - hack fix for having two strings bank
+		
 		foreach (var fileInfo in info.GetFiles())
 		{
 			var ex = fileInfo.Extension;			
@@ -159,6 +163,8 @@ public class FMODEditorExtension : MonoBehaviour
 				FMOD.Studio.UnityUtil.Log("Ignoring unexpected file: \"" + fileInfo.Name + "\": unknown file type: \"" + fileInfo.Extension + "\"");
 				continue;
 			}
+			
+			hasNewStyleStringsBank = hasNewStyleStringsBank || fileInfo.FullName.Contains(".strings.bank");
 
             ++bankCount;
 
@@ -183,6 +189,7 @@ public class FMODEditorExtension : MonoBehaviour
 			}
 			
 			copyBanksString += fileInfo.Name + " " + bankMessage + "\n";
+			banksToCopy.Add(fileInfo);
 		}
 
         if (bankCount == 0)
@@ -197,8 +204,13 @@ public class FMODEditorExtension : MonoBehaviour
 		}
 		
 		string bankNames = "";
-		foreach (var fileInfo in info.GetFiles())
+		foreach (var fileInfo in banksToCopy)
 		{
+			if (hasNewStyleStringsBank && fileInfo.Extension.Equals(".strings"))
+			{
+				continue; // skip the stale strings bank
+			}
+			
 			System.IO.Directory.CreateDirectory(Application.dataPath + "/StreamingAssets");
 			var oldBankPath = Application.dataPath + "/StreamingAssets/" + fileInfo.Name;
 			fileInfo.CopyTo(oldBankPath, true);
@@ -206,7 +218,7 @@ public class FMODEditorExtension : MonoBehaviour
 			bankNames += fileInfo.Name + "\n";
 		}
 		System.IO.File.WriteAllText(Application.dataPath + "/StreamingAssets/FMOD_bank_list.txt", bankNames);
-		
+
 		return true;
 	}
 	
@@ -358,10 +370,11 @@ public class FMODEditorExtension : MonoBehaviour
 			}
 		}
 		
-		FMOD.System sys = null;
+		FMOD.System sys;
 		sFMODSystem.getLowLevelSystem(out sys);
-		uint version = 0;
-		if (!ERRCHECK (sys.getVersion(ref version)))
+		
+        uint version;
+		if (!ERRCHECK (sys.getVersion(out version)))
 		{
 			return;
 		}

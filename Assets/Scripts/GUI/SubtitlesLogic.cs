@@ -69,6 +69,8 @@ public class SubtitlesLogic: MonoBehaviour {
 	/// Args[6] = (string) SoundPath
 	/// Args[7] = (vector3) SoundPosition
 	/// </summary>
+
+
 	IEnumerator feedText( object[] args ){
 		//Place all words in a stack
 		string[] w = Regex.Split( (string)args[0] , @"(\s)" ); 
@@ -80,7 +82,10 @@ public class SubtitlesLogic: MonoBehaviour {
 		feedLineArgs[1] = args[3];
 
 		if ((bool)args[5]) {
-			FMOD_StudioSystem.instance.PlayOneShot((string)args[6], (Vector3)args[7]);
+
+			//FIX THIS THORSEEEELL
+			VoiceHandler.getInstance().addVoice((string)args[6], (GameObject)args[7]);
+			//FMOD_StudioSystem.instance.PlayOneShot((string)args[6], (Vector3)args[7]);
 		}
 
 		foreach( UILabel label in r_SubtitlesLabels ){

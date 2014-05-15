@@ -44,8 +44,7 @@ public class FMOD_StudioEventEmitter : MonoBehaviour
 	public FMOD.Studio.ParameterInstance getParameter(string name)
 	{
 		FMOD.Studio.ParameterInstance param = null;
-		ERRCHECK(evt.getParameter(name, out param));
-			
+		ERRCHECK (evt.getParameter (name, out param));
 		return param;
 	}
 

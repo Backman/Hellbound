@@ -27,7 +27,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	private Vector3 m_CameraOriginPosition;
 	private Vector3 m_ZoomPosition;
 
-	private float m_LookAngle = 90.0f;
+	private float m_LookAngle = 180.0f;
 	private float m_TiltAngle;
 
 	private float m_OriginalFollowSpeed;
@@ -44,7 +44,6 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	private Vector3 m_FreeCameraRotation = new Vector3(0.0f, 0.0f, 0.0f);
 	private Vector3 m_FreeCameraPosition = new Vector3(0.0f, 0.0f, 0.0f);
 
-	private bool m_LockedInput = false;
 
 	protected override void Awake () {
 		base.Awake ();
@@ -66,8 +65,6 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		base.Start ();
 
 		m_LookAngle = m_Target.rotation.eulerAngles.y;
-
-		Messenger.AddListener<bool>("lock player input", lockInput);
 	}
 
 	protected void Update() {
@@ -181,10 +178,6 @@ public class FreeLookCamera : PivotBasedCameraRig {
 
 	void EnableMeshRendererOnTarget(){
 		StartCoroutine( "activateBenjamin" );
-	}
-
-	public void lockInput(bool lockInput){
-		m_LockedInput = lockInput;
 	}
 	
 	public bool isFreeCameraEnabled(){
