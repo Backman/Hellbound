@@ -66,7 +66,7 @@ public class FootStepSounds : MonoBehaviour {
 		//if our whole foot is placed on the ground, we havent played a sound this
 		//"step" and the other foots backcollider isnt hitting anything we can play a sound
 		//(this means that we are still moving foward)
-		if(m_StandingOn != null){
+		if(m_StandingOn != null && m_Parameter != null){
 
 			if(m_StandingOn.m_UseFootstepSurface){
 				m_Parameter.setValue(m_StandingOn.m_Surface);
