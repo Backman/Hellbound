@@ -71,8 +71,8 @@ namespace FMOD
 				// Hack: force the low level binary to be loaded before accessing Studio API
 #if !UNITY_IPHONE || UNITY_EDITOR
 				FMOD.Studio.UnityUtil.Log("Attempting to call Memory_GetStats");
-				int temp1 = 0, temp2 = 0;
-				if (!ERRCHECK(FMOD.Memory.GetStats(ref temp1, ref temp2)))
+				int temp1, temp2;
+				if (!ERRCHECK(FMOD.Memory.GetStats(out temp1, out temp2)))
 				{
 					FMOD.Studio.UnityUtil.LogError("Memory_GetStats returned an error");
 					return false;
@@ -217,11 +217,11 @@ public class FMOD_StudioSystem : MonoBehaviour
         ERRCHECK(FMOD.Studio.Factory.System_Create(out system));
 		
 		FMOD.Studio.INITFLAGS flags = FMOD.Studio.INITFLAGS.NORMAL;
-		
+
 #if FMOD_LIVEUPDATE
 		flags |= FMOD.Studio.INITFLAGS.LIVEUPDATE;
 #endif
-		
+
 		FMOD.Studio.UnityUtil.Log("FMOD_StudioSystem: system.init");
 		FMOD.RESULT result = FMOD.RESULT.OK;
 		result = system.init(1024, flags, FMOD.INITFLAGS.NORMAL, global::System.IntPtr.Zero);
@@ -241,15 +241,29 @@ public class FMOD_StudioSystem : MonoBehaviour
 		isInitialized = true;
 	}
 	
-	void OnApplicationPause(bool pauseStatus) 
+	void OnApplicationPause(bool pauseStatus)
 	{
-		// TODO: pause master channelgroup
-    }
+		FMOD.System sys;
+		ERRCHECK(system.getLowLevelSystem(out sys));
+		
+		FMOD.Studio.UnityUtil.Log("Pause state changed to: " + pauseStatus);
+		
+		if (pauseStatus)
+		{
+			ERRCHECK(sys.mixerSuspend());
+		}
+		else
+		{
+			ERRCHECK(sys.mixerResume());
+		}
+	}
 	
 	void Update() 
 	{
 		if (isInitialized)
+		{
 			ERRCHECK(system.update());
+		}
 	}
 	
 	void OnDisable()

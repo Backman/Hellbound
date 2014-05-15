@@ -1,5 +1,3 @@
-//#define RUN_IN_BACKGROUND
-
 #if FMOD_LIVEUPDATE
 #  define RUN_IN_BACKGROUND
 #endif
@@ -39,11 +37,16 @@ public class FMOD_Listener : MonoBehaviour
 	{
 		string bankPath = "";
 		if (Application.platform == RuntimePlatform.WindowsEditor || 
-			Application.platform == RuntimePlatform.OSXEditor)
-		{
-			bankPath = Application.dataPath + "/StreamingAssets";
-		}
-		else if (Application.platform == RuntimePlatform.WindowsPlayer)
+			Application.platform == RuntimePlatform.OSXEditor ||
+		    Application.platform == RuntimePlatform.WindowsPlayer ||
+		    Application.platform == RuntimePlatform.LinuxPlayer
+#if PLATFORM_PS4
+		    || Application.platform == RuntimePlatform.PS4
+#endif
+#if UNITY_XBOXONE
+			|| Application.platform == RuntimePlatform.XboxOne
+#endif
+		    )
 		{
 			bankPath = Application.dataPath + "/StreamingAssets";
 		}
@@ -60,12 +63,6 @@ public class FMOD_Listener : MonoBehaviour
 		{
 			bankPath = "jar:file://" + Application.dataPath + "!/assets";
 		}
-#if PLATFORM_PS4
-		else if (Application.platform == RuntimePlatform.PS4)
-		{
-			bankPath = Application.dataPath + "/StreamingAssets";
-		}
-#endif
 		else
 		{		
 			FMOD.Studio.UnityUtil.LogError("Unknown platform!");
@@ -175,8 +172,8 @@ public class FMOD_Listener : MonoBehaviour
                 FMOD.Studio.UnityUtil.LogWarning("plugin not found: " + path);
             }
 			
-			uint handle = 0;
-			ERRCHECK(sys.loadPlugin(path, ref handle));
+			uint handle;
+			ERRCHECK(sys.loadPlugin(path, out handle));
 		}
 	}	
 	
@@ -188,19 +185,25 @@ public class FMOD_Listener : MonoBehaviour
 			{
 				return Application.dataPath + "/Plugins/x86";
 			}
-			else if (Application.platform == RuntimePlatform.WindowsPlayer)
+			else if (Application.platform == RuntimePlatform.WindowsPlayer ||
+			         Application.platform == RuntimePlatform.OSXEditor ||
+			         Application.platform == RuntimePlatform.OSXPlayer ||
+			         Application.platform == RuntimePlatform.OSXDashboardPlayer ||
+			         Application.platform == RuntimePlatform.LinuxPlayer
+#if PLATFORM_PS4
+				     || Application.platform == RuntimePlatform.PS4
+#endif
+#if UNITY_XBOXONE
+				     || Application.platform == RuntimePlatform.XboxOne
+#endif
+			    	)
 			{
 				return Application.dataPath + "/Plugins";
 			}
-			else if (Application.platform == RuntimePlatform.OSXEditor ||
-				Application.platform == RuntimePlatform.OSXPlayer ||
-				Application.platform == RuntimePlatform.OSXDashboardPlayer)
+			else if (Application.platform == RuntimePlatform.IPhonePlayer)
 			{
-				return Application.dataPath + "/Plugins";
-			}
-			else if (Application.platform == RuntimePlatform.OSXPlayer)
-			{
-				return Application.dataPath + "/Plugins";
+				FMOD.Studio.UnityUtil.LogError("Plugins not currently supported on iOS, contact support@fmod.org for more information");
+				return "";
 			}
 			else if (Application.platform == RuntimePlatform.Android)
 			{
@@ -208,12 +211,6 @@ public class FMOD_Listener : MonoBehaviour
 				string packageName = dirInfo.Parent.Name;
 				return "/data/data/" + packageName + "/lib";
 			}
-#if PLATFORM_PS4
-			else if (Application.platform == RuntimePlatform.PS4)
-			{
-				return Application.dataPath + "/Plugins";
-			}
-#endif
 			
 			FMOD.Studio.UnityUtil.LogError("Unknown platform!");
 			return "";
@@ -223,17 +220,22 @@ public class FMOD_Listener : MonoBehaviour
 	string GetPluginFileName(string rawName)
 	{
 		if (Application.platform == RuntimePlatform.WindowsEditor ||
-			Application.platform == RuntimePlatform.WindowsPlayer)
+			Application.platform == RuntimePlatform.WindowsPlayer
+#if UNITY_XBOXONE
+		    || Application.platform == RuntimePlatform.XboxOne
+#endif
+		    )
 		{
 			return rawName + ".dll";
 		}
 		else if (Application.platform == RuntimePlatform.OSXEditor ||
-			Application.platform == RuntimePlatform.OSXPlayer ||
-			Application.platform == RuntimePlatform.OSXDashboardPlayer)
+		         Application.platform == RuntimePlatform.OSXPlayer ||
+		         Application.platform == RuntimePlatform.OSXDashboardPlayer)
 		{
 			return rawName + ".dylib";
 		}
-		else if (Application.platform == RuntimePlatform.Android)
+		else if (Application.platform == RuntimePlatform.Android ||
+		         Application.platform == RuntimePlatform.LinuxPlayer)
 		{
 			return "lib" + rawName + ".so";
 		}

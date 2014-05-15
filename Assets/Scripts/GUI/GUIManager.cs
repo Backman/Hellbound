@@ -299,7 +299,7 @@ public class GUIManager : Singleton<GUIManager> {
 				args[5] = true;
 				args[6] = useThis.SoundPath;
 				if(useThis.SoundPosition != null){
-					args[7] = useThis.SoundPosition.position;
+					args[7] = useThis.SoundPosition;
 				}
 			}
 			else{ 

@@ -49,7 +49,6 @@ public class FootStepSounds : MonoBehaviour {
 		} catch  {
 			Debug.LogWarning("FMOD parameter failed");
 		}
-	//	Debug.Log ("done");
 	}
 	
 	
@@ -75,17 +74,16 @@ public class FootStepSounds : MonoBehaviour {
 
 			if(m_StandingOn.m_UseFootstepSurface){
 				m_Parameter.setValue(m_StandingOn.m_Surface);
-				Debug.Log("surface : " + m_StandingOn.m_Surface);
 			}
 			else if (surfaceTexture != null) {
 				m_Parameter.setValue(surfaceTexture.m_SurfaceType);
-				Debug.Log("terrain : " + surfaceTexture.m_SurfaceType);
 			}
 			
 			if(FBack.b_IsHitting && m_Once && !OtherFBack.b_IsHitting){
 				m_Once = false;
 				m_Emitter.Play();
 				m_StandingOn = null;
+				Debug.Log("playing");
 			}
 			
 			//if both backcolliders are hitting something we know we have stopped moving
