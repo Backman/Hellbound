@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(TooltipAttribute))]
@@ -16,3 +17,4 @@ public class TooltipDrawer : PropertyDrawer
 
 	
 }
+#endif
