@@ -20,8 +20,8 @@ public class LoadLevelTrigger : MonoBehaviour {
 	void Awake(){
 		if( m_LevelToLoad.Trim() == "" ){
 			m_LevelToLoad = Application.loadedLevelName;
-		} 
-		Debug.Log(m_LevelToLoad);
+		}
+		Debug.Log ("LoadLevelTrigger Awake Function");
 	}
 
 	void OnTriggerEnter( Collider col ){
