@@ -107,5 +107,6 @@ public class LoadingLogic : MonoBehaviour {
 		r_LoadingMessageTweener.PlayReverse();
 		Messenger.Broadcast<bool>("lock player input", false);
 		loadingMessage = "";
+		Messenger.Cleanup ();
 	}
 }
