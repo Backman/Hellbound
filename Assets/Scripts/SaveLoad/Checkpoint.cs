@@ -109,7 +109,7 @@ public class Checkpoint : MonoBehaviour {
 	public void load(){
 		//LoadingLogic.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
 		//GUIManager.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
-		if(Application.loadedLevelName != m_SceneToLoad && Application.CanStreamedLevelBeLoaded(m_SceneToLoad)){
+		if(/*Application.loadedLevelName != m_SceneToLoad && */Application.CanStreamedLevelBeLoaded(m_SceneToLoad)){
 			Application.LoadLevel(m_SceneToLoad);
 		} 
 		else{
@@ -121,7 +121,7 @@ public class Checkpoint : MonoBehaviour {
 				objectState.getObject().GetComponent<Interactable>().setPuzzleState(objectState.getState());
 			}
 		}
-
+		Debug.Log ("Player: " + r_Player);
 		if(r_Player){
 			Debug.Log("Respawn at: "+m_SpawnPosition.ToString());
 			r_Player.transform.position = m_SpawnPosition;
