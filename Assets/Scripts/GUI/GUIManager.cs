@@ -68,7 +68,7 @@ public class GUIManager : Singleton<GUIManager> {
 	/// Controlls wether the inventoryWindow is currently tweening or not
 	/// </summary>
 	private bool m_InventoryTweening = false;
-
+	private Camera r_MainCamera = null;
 
 	public void Awake(){
 		DontDestroyOnLoad( gameObject );
@@ -101,12 +101,12 @@ public class GUIManager : Singleton<GUIManager> {
 		if( r_NotesLogic == null ){
 			Debug.LogError("Error! No notes logic found!");
 		}
+		r_MainCamera = Camera.main;
 	}
 	
 	void Update() {
 		if (Input.GetButtonDown("Pause")) {
-			m_GamePaused = !m_GamePaused;
-			pauseGame(m_GamePaused);
+			togglePause();
 		}
 		if (Input.GetButtonDown("Inventory") && !m_GamePaused && !m_InventoryTweening) {
 			m_InventoryTweening = true;
@@ -119,15 +119,24 @@ public class GUIManager : Singleton<GUIManager> {
 			journal();
 		}
 	}
-	
+
+	public void togglePause(){
+		m_GamePaused = !m_GamePaused;
+		pauseGame(m_GamePaused);
+	}
+
 	public void pauseGame(bool pause) {
 		if (pause) {
 			PauseMenu.getInstance().showPauseWindow();
 			Time.timeScale = 0.0f;
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
+			r_MainCamera.GetComponent<PauseGameEffect>().StopCoroutine("pauseGame");
+			r_MainCamera.GetComponent<PauseGameEffect>().StartCoroutine("pauseGame", true);
 		} else {
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(false);
 			Time.timeScale = 1.0f;
+			r_MainCamera.GetComponent<PauseGameEffect>().StopCoroutine("pauseGame");
+			r_MainCamera.GetComponent<PauseGameEffect>().StartCoroutine("pauseGame", false);
 			Messenger.Broadcast("reset pause window");
 		}
 	}
