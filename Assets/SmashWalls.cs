@@ -34,7 +34,7 @@ public class SmashWalls : MonoBehaviour {
 			}
 			m_Walls[m_CurrentIndex++].GetComponent<TweenPosition>().PlayForward();
 			if(m_CurrentIndex == m_Walls.Count - 1) {
-				GUIManager.Instance.loadLevel( m_LevelToLoad, m_DeathText );
+				//GUIManager.Instance.loadLevel( m_LevelToLoad, m_DeathText );
 			}
 			m_Walls[m_CurrentIndex++].GetComponent<TweenPosition>().PlayForward();
 
