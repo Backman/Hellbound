@@ -23,6 +23,7 @@ public class ThirdPersonController : MonoBehaviour {
 	private bool m_Crouched = false;
 	private bool m_LockedInput = false;
     private bool m_PauseGame = false;
+	private int m_LockCounter = 0;
 	// Use this for initialization
 	void Start () {
 		Messenger.AddListener<bool>("lock player input", lockInput);
@@ -42,8 +43,15 @@ public class ThirdPersonController : MonoBehaviour {
 	}
 
 	public void lockInput(bool lockInput) {
-		m_LockedInput = lockInput;
-		r_Character.zoomed(lockInput);
+		m_LockCounter = lockInput ? m_LockCounter + 1 : m_LockCounter - 1;
+
+		if(m_LockCounter > 0 && !m_LockedInput) {
+			m_LockedInput = true;
+			r_Character.zoomed(true);
+		} else if (m_LockCounter <= 0 && m_LockedInput){
+			m_LockedInput = false;
+			r_Character.zoomed(false);
+		}
 	}
 
 	// FixedUpdate is called in sync with physics
