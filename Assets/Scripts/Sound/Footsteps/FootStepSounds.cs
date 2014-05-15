@@ -35,10 +35,12 @@ public class FootStepSounds : MonoBehaviour {
 	//the start acceses and saves a few "pointers" to the necessary scrips and variables
 	//(this is to provide shortcuts to what we want to access and/or change)
 	void Start(){
-		
-		while (m_Emitter == null) {
-			m_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
+		try{
+		m_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
+		} catch {
+			Debug.LogWarning("No Emitter attached to this object");
 		}
+		
 		
 		FBack = FootBack.GetComponent<FootStepsHitBoxes> ();
 		OtherFBack = OtherFootBack.GetComponent<FootStepsHitBoxes> ();
