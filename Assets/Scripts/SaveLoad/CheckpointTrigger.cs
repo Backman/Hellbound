@@ -3,6 +3,12 @@ using System.Collections;
 
 public class CheckpointTrigger : MonoBehaviour {
 	public Checkpoint r_CheckpointToTrigger;
+
+	void Awake() {
+		if (r_CheckpointToTrigger) {
+			r_CheckpointToTrigger.start ();
+		}
+	}
 	
 	void OnTriggerEnter(Collider col){
 		if(!Game.doesSavegameExist()){
