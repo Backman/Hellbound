@@ -44,8 +44,12 @@ public class FootStepSounds : MonoBehaviour {
 		OtherFBack = OtherFootBack.GetComponent<FootStepsHitBoxes> ();
 		
 		surfaceTexture = gameObject.GetComponent<GetDominantTexture> ();
-		m_Parameter = m_Emitter.getParameter("Surface");
-		Debug.Log ("done");
+		try{
+			m_Parameter = m_Emitter.getParameter("Surface");
+		} catch  {
+			Debug.LogWarning("FMOD parameter failed");
+		}
+	//	Debug.Log ("done");
 	}
 	
 	
