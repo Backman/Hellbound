@@ -21,7 +21,7 @@ namespace MyGUI{
 		public  float TextSpeed { get{ return (float) (1.0f - textSpeed); } }
 
 		public string SoundPath = "event:/";
-		public Transform SoundPosition;
+		public GameObject SoundPosition;
 
 		[SerializeField][Multiline]
 		public string Text;
