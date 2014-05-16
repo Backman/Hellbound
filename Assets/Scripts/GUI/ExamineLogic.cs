@@ -116,7 +116,7 @@ public class ExamineLogic : MonoBehaviour {
 
 	/// <summary>
 	/// This function detects if the player wishes to speed up
-	/// the text display. IF the player clicks "Fire2" as the text
+	/// the text display. IF the player clicks "Examine" as the text
 	/// is being printed, all text of that "frame" is displayed
 	/// instantaniously
 	/// </summary>

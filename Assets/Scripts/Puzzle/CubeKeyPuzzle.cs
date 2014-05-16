@@ -18,6 +18,8 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	
 	private bool m_CubesSwitching = false;
 
+	private float m_MovementCooldown = 0.5f;
+
 	FreeLookCamera r_FreeLookCamera;
 
 	Interactable r_Interactable;
@@ -169,6 +171,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	
 
 	IEnumerator inputLogic() {
+		float timer = m_MovementCooldown;
 		bool objectSelected = false;
 		int index = focusOnFirstCubeObject(out r_ObjectInFocus);
 		TweenPosition tweenPos = null;
@@ -180,6 +183,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 
 		//This while statement checks if there are any cubes in the wall or not
 		while( r_ObjectInFocus != null && !m_StopInputLogic){
+			timer += Time.deltaTime;
 			if( Input.GetButtonDown("Use") && init) {
 				zoomOut(gameObject, true);
 			}
@@ -218,15 +222,19 @@ public class CubeKeyPuzzle : MonoBehaviour {
 				}
 			}
 
-			if( Input.GetKeyDown( KeyCode.LeftArrow )  && !objectSelected ){
+			if( Input.GetAxis("Horizontal") < -0.5f  && !objectSelected && timer > m_MovementCooldown){
+				timer = 0.0f;
 				r_ObjectInFocus.renderer.sharedMaterial.color = col;
 				init = false;
 				index = goToPreviousCube(index, out r_ObjectInFocus);
 			} 
-			else if ( Input.GetKeyDown( KeyCode.RightArrow )  && !objectSelected ) {
+			else if ( Input.GetAxis("Horizontal") > 0.5f  && !objectSelected && timer > m_MovementCooldown ) {
+				timer = 0.0f;
 				r_ObjectInFocus.renderer.sharedMaterial.color = col;
 				init = false;
 				index = goToNextCube(index, out r_ObjectInFocus);
+			} else if( Mathf.Abs( Input.GetAxis("Horizontal") ) < 0.1 ) {
+				timer = m_MovementCooldown;
 			}
 			
 			yield return null;

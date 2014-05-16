@@ -3,8 +3,7 @@ using System.Collections;
 
 [ExecuteInEditMode]
 public class PauseGameEffect : MonoBehaviour {	
-	public float m_BlurSize = 1.0f;
-	
+	public float m_BlurSize = 1.0f;	
 	public Shader m_Shader = null;
 	
 	static Material m_Material = null;
