@@ -6,7 +6,7 @@ using System.Collections;
 
 	public override void activate (LanternHook entity)
 	{
-//TODO: INV_	if( Inventory.contains( keyItem ) 
+		base.activate (entity);
 	}
 
 	public override void reason (LanternHook entity) {
