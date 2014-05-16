@@ -140,6 +140,16 @@ public class GUIManager : Singleton<GUIManager> {
 			Messenger.Broadcast("reset pause window");
 		}
 	}
+
+	public void pauseExit(){
+		loadLevel (0, "");
+		togglePause ();
+		//DestroyThis ();
+	}
+
+	public void DestroyThis(){
+		Destroy (gameObject);
+	}
 	
 	public void doneTweening(){
 		m_InventoryTweening = false;
