@@ -32,9 +32,10 @@ public class InteractableDetectorZone : MonoBehaviour {
 				r_InFocus.examine();
 			}
 			
-			if( Input.GetButtonDown( "Pickup" ) ){
+/*			Depricated behaviour. Everything is done through the "Use" function nowadays
+ 			if( Input.GetButtonDown( "Pickup" ) ){
 				r_InFocus.pickUp();
-			}
+			}	*/
 		}
 	}
 

@@ -63,8 +63,8 @@ public class ThirdPersonController : MonoBehaviour {
 		}
 		
 		// Read inputs
-		float h = Input.GetAxis("Horizontal");
-		float v = Input.GetAxis("Vertical");
+		float h = r_Character.isMovable() ? Input.GetAxis ("Horizontal") : 0;
+		float v = r_Character.isMovable() ? Input.GetAxis("Vertical") : 0;
 
 		// Calculate move direction to pass to third person character
 		if(r_Camera){
