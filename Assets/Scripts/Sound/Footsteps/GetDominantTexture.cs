@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GetDominantTexture : MonoBehaviour {
-	
+
+	[HideInInspector]
 	public float m_SurfaceType = 0;
 	
 	private Terrain r_Terrain;
