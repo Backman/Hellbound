@@ -51,6 +51,8 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	Vector3 m_DeltaPosition;
 	// Use this for initialization
 	void Start () {
+
+
 		r_Animator = GetComponentInChildren<Animator>();
 		r_Collider = collider as CapsuleCollider;
 
@@ -67,6 +69,13 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	}
 
 	void Update() {
+		if( Input.GetKeyDown(KeyCode.F5) )
+			r_Animator.SetTrigger("Drink");
+		else if( Input.GetKeyDown(KeyCode.F6) )
+			r_Animator.SetTrigger("ActivateLow");
+		else if( Input.GetKeyDown(KeyCode.F7) )
+			r_Animator.SetTrigger("ActivateHigh");
+
 		m_DeltaPosition = transform.position - m_PreviousPosition;
 		m_PreviousPosition = transform.position;
 	}
@@ -180,15 +189,15 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 		if(m_Velocity.y < 5.0f){
 			m_OnGround = false;
-			rigidbody.useGravity = true;
+//			rigidbody.useGravity = true;
 			foreach(var hit in hits){
 				if(!hit.collider.isTrigger){
 					if(m_Velocity.y <= 0.0f){
-						rigidbody.position = Vector3.MoveTowards(rigidbody.position, hit.point, Time.deltaTime * m_AdvancedSettings.m_GroundStickyEffect);
+//						rigidbody.position = Vector3.MoveTowards(rigidbody.position, hit.point, Time.deltaTime * m_AdvancedSettings.m_GroundStickyEffect);
 					}
 
 					m_OnGround = true;
-					rigidbody.useGravity = false;
+//					rigidbody.useGravity = false;
 					break;
 				}
 			}
@@ -301,6 +310,10 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			v.y = rigidbody.velocity.y;
 			rigidbody.velocity = v;
 		}
+	}
+
+	public float triggerAnimation(string trigger){
+		r_Animator.SetTarget (trigger);
 	}
 
 	class RayHitComparer : IComparer {
