@@ -119,7 +119,7 @@ public class FMOD_Listener : MonoBehaviour
 		{
 			FMOD.Studio.UnityUtil.LogError("Too many listeners");
 		}
-		
+
 		sListener = this;
 		
 		LoadPlugins();
