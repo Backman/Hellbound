@@ -81,10 +81,32 @@ public class LoadingLogic : MonoBehaviour {
 		yield return new WaitForSeconds( 4.0f );
 
 		Application.LoadLevel( (string) args[0] );
+		
+		//Game.load();
+		r_LoadingScreenTweener.PlayReverse();
+		r_LoadingMessageTweener.PlayReverse();
+		loadingMessage = "";
+	}
+
+	public void loadLastCheckpoint(string loadMessage){
+		StartCoroutine( "loadLastCheckpoint_CR", loadMessage );
+	}
+
+	IEnumerator loadLastCheckpoint_CR(string loadMessage){
+		loadingMessage = loadMessage;
+		
+		r_LoadingScreenTweener.PlayForward();
+		r_LoadingMessageTweener.PlayForward();
+		Messenger.Broadcast<bool>("lock player input", true);
+		
+		yield return new WaitForSeconds( 4.0f );
+
+		Game.load();
 
 		r_LoadingScreenTweener.PlayReverse();
 		r_LoadingMessageTweener.PlayReverse();
-
+		Messenger.Broadcast<bool>("lock player input", false);
 		loadingMessage = "";
+		Messenger.Cleanup ();
 	}
 }

@@ -180,6 +180,10 @@ public class GUIManager : Singleton<GUIManager> {
 		r_LoadingLogic.loadLevel(sceneNumber, loadMessage);
 	}
 
+	public void loadLastCheckPoint(string loadMessage) {
+		r_LoadingLogic.loadLastCheckpoint(loadMessage);
+	}
+
 	/// <summary>
 	/// Shows a simple textbox with the supplied text.
 	/// The button-string dictates which button that closes the window. It is optional, defaults to Examine
@@ -305,7 +309,7 @@ public class GUIManager : Singleton<GUIManager> {
 				args[5] = true;
 				args[6] = useThis.SoundPath;
 				if(useThis.SoundPosition != null){
-					args[7] = useThis.SoundPosition.position;
+					args[7] = useThis.SoundPosition;
 				}
 			}
 			else{ 
