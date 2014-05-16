@@ -50,8 +50,9 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	Vector3 m_PreviousPosition;
 	Vector3 m_DeltaPosition;
 	// Use this for initialization
-	void Start () {
 
+	void Start () {
+		Messenger.AddListener<HbClips.Animation> ("activate animation", playAnimationClip);
 
 		r_Animator = GetComponentInChildren<Animator>();
 		r_Collider = collider as CapsuleCollider;
@@ -69,12 +70,13 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	}
 
 	void Update() {
-		if( Input.GetKeyDown(KeyCode.F5) )
+		if (Input.GetKeyDown (KeyCode.F4))
+				r_Animator.SetTrigger ("ActivateLow");
+		else if (Input.GetKeyDown (KeyCode.F2))
+				r_Animator.SetTrigger ("ActivateHigh");
+		else if (Input.GetKeyDown(KeyCode.F3))
 			r_Animator.SetTrigger("Drink");
-		else if( Input.GetKeyDown(KeyCode.F6) )
-			r_Animator.SetTrigger("ActivateLow");
-		else if( Input.GetKeyDown(KeyCode.F7) )
-			r_Animator.SetTrigger("ActivateHigh");
+
 
 		m_DeltaPosition = transform.position - m_PreviousPosition;
 		m_PreviousPosition = transform.position;
@@ -311,11 +313,37 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			rigidbody.velocity = v;
 		}
 	}
+	#region Interact animations	
+	/// <summary>
+	/// Plays an animation clip depending on passed argument.
+	/// </summary>
+	public void playAnimationClip( HbClips.Animation clip ){
 
-	public float triggerAnimation(string trigger){
-		r_Animator.SetTarget (trigger);
+		string animation = "";
+		switch (clip) {
+			case HbClips.Animation.ActivateLow:
+				animation = "ActivateLow";
+				break;
+			case HbClips.Animation.ActivateHigh:
+				animation = "ActivateHigh";
+				break;
+			case HbClips.Animation.Drink:
+				animation = "Drink";
+				break;
+			case HbClips.Animation.None:
+			default:
+				return;
+			}
+		r_Animator.SetTrigger(animation);
 	}
 
+	/// <summary>
+	/// Returns if the avatar is able to move/run
+	/// </summary>
+	public bool isMovable(){
+		return r_Animator.GetFloat("Used") == 0.0f ? true : false ;
+	}
+	#endregion
 	class RayHitComparer : IComparer {
 		public int Compare(object x, object y){
 			return ((RaycastHit)x).distance.CompareTo(((RaycastHit)y).distance);
