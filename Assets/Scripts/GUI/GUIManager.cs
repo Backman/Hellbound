@@ -140,6 +140,16 @@ public class GUIManager : Singleton<GUIManager> {
 			Messenger.Broadcast("reset pause window");
 		}
 	}
+
+	public void pauseExit(){
+		loadLevel (0, "");
+		togglePause ();
+		//DestroyThis ();
+	}
+
+	public void DestroyThis(){
+		Destroy (gameObject);
+	}
 	
 	public void doneTweening(){
 		m_InventoryTweening = false;
@@ -164,6 +174,14 @@ public class GUIManager : Singleton<GUIManager> {
 
 	public void loadLevel( string levelName, string loadMessage ){
 		r_LoadingLogic.loadLevel(levelName, loadMessage);
+	}
+
+	public void loadLevel( int sceneNumber, string loadMessage ){
+		r_LoadingLogic.loadLevel(sceneNumber, loadMessage);
+	}
+
+	public void loadLastCheckPoint(string loadMessage) {
+		r_LoadingLogic.loadLastCheckpoint(loadMessage);
 	}
 
 	/// <summary>
@@ -291,7 +309,7 @@ public class GUIManager : Singleton<GUIManager> {
 				args[5] = true;
 				args[6] = useThis.SoundPath;
 				if(useThis.SoundPosition != null){
-					args[7] = useThis.SoundPosition.position;
+					args[7] = useThis.SoundPosition;
 				}
 			}
 			else{ 
