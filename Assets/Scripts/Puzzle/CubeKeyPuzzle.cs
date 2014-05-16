@@ -200,14 +200,14 @@ public class CubeKeyPuzzle : MonoBehaviour {
 					Debug.Log ("Activating object: " + r_ObjectInFocus.name);
 					Vector3 newPos = r_ObjectInFocus.transform.localPosition;
 					newPos.z -= 0.3f;
-					tweenPos = TweenPosition.Begin(r_ObjectInFocus, 1.0f, newPos);
+					tweenPos = TweenPosition.Begin(r_ObjectInFocus, 0.1f, newPos);
 					//tweenPos.PlayForward();
 					objectSelected = true;
 				}
 				else if( objectSelected ){
 					Vector3 newPos = r_ObjectInFocus.transform.localPosition;
 					newPos.z = m_PlacedCubePositions[0].z;
-					tweenPos = TweenPosition.Begin(r_ObjectInFocus, 1.0f, newPos);
+					tweenPos = TweenPosition.Begin(r_ObjectInFocus, 0.1f, newPos);
 					//tweenPos.PlayReverse();
 					objectSelected = false;
 				}
@@ -272,7 +272,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 				//m_StopInputLogic = true;
 				Vector3 newPos = r_ObjectInFocus.transform.localPosition;
 				newPos.z = m_PlacedCubePositions[0].z;
-				tweenPos = TweenPosition.Begin(r_ObjectInFocus, 1.0f, newPos);
+				tweenPos = TweenPosition.Begin(r_ObjectInFocus, 0.1f, newPos);
 				zoomOut(gameObject, true);
 			}
 			
@@ -287,7 +287,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 				if(r_SecondObjectInFocus == r_ObjectInFocus){
 					Vector3 newPos = r_ObjectInFocus.transform.localPosition;
 					newPos.z = m_PlacedCubePositions[0].z;
-					tweenPos = TweenPosition.Begin(r_ObjectInFocus, 1.0f, newPos);
+					tweenPos = TweenPosition.Begin(r_ObjectInFocus, 0.1f, newPos);
 					//tweenPos.PlayReverse();
 					objectSelected = false;
 					break;
@@ -296,7 +296,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 					Debug.Log ("Activating object: " + r_SecondObjectInFocus.name);
 					Vector3 newPos = r_SecondObjectInFocus.transform.localPosition;
 					newPos.z -= 0.3f;
-					tweenPos = TweenPosition.Begin(r_SecondObjectInFocus, 1.0f, newPos);
+					tweenPos = TweenPosition.Begin(r_SecondObjectInFocus, 0.1f, newPos);
 					//tweenPos.PlayForward();
 					objectSelected = true;
 					tweenPos.AddOnFinished(onMovedOut);
@@ -333,7 +333,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 		r_SecondObjectInFocus.GetComponent<TweenPosition>().RemoveOnFinished(new EventDelegate(onMovedOut));
 		Vector3 newPos = r_SecondObjectInFocus.transform.localPosition;
 		newPos.z -= 0.5f;
-		TweenPosition tweenPos = TweenPosition.Begin(r_SecondObjectInFocus, 1.0f, newPos);
+		TweenPosition tweenPos = TweenPosition.Begin(r_SecondObjectInFocus, 0.2f, newPos);
 		tweenPos.AddOnFinished(onMovedOutFurther);
 	}
 	
@@ -351,8 +351,8 @@ public class CubeKeyPuzzle : MonoBehaviour {
 		pos.x = tempX;
 		pos.y = tempY;
 		
-		TweenPosition.Begin(r_ObjectInFocus, 1.0f, pos);
-		TweenPosition tweenPos = TweenPosition.Begin(r_SecondObjectInFocus, 1.0f, pos2);
+		TweenPosition.Begin(r_ObjectInFocus, 0.3f, pos);
+		TweenPosition tweenPos = TweenPosition.Begin(r_SecondObjectInFocus, 0.3f, pos2);
 		tweenPos.AddOnFinished(onCubesSwitchedPos);
 	}
 	
@@ -365,8 +365,8 @@ public class CubeKeyPuzzle : MonoBehaviour {
 		
 		pos.z += 0.3f;
 		pos2.z = pos.z;
-		TweenPosition.Begin(r_ObjectInFocus, 1.0f, pos);
-		TweenPosition tweenPos = TweenPosition.Begin(r_SecondObjectInFocus, 1.0f, pos2);
+		TweenPosition.Begin(r_ObjectInFocus, 0.3f, pos);
+		TweenPosition tweenPos = TweenPosition.Begin(r_SecondObjectInFocus, 0.3f, pos2);
 		tweenPos.AddOnFinished(onCubesFinishedSwitchingPos);
 	}
 	
