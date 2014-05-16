@@ -3,7 +3,6 @@ using System.Collections;
 //anton
 public class TipsCreator : MonoBehaviour { 
 
-	[HideInInspector]
 	public GameObject r_Prefab;
 
 	void Start(){
