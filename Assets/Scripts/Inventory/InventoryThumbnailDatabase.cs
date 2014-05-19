@@ -42,9 +42,11 @@ public class InventoryThumbnailDatabase : MonoBehaviour {
 	}
 	
 	public static UISprite getThumbnail(string name){
-		foreach(InventoryThumbnailData inventoryThumbnailData in Instance.m_ThumbnailData){
-			if(inventoryThumbnailData.getName() == name){
-				return inventoryThumbnailData.getSprite();
+		if(Instance != null) {
+			foreach(InventoryThumbnailData inventoryThumbnailData in Instance.m_ThumbnailData){
+				if(inventoryThumbnailData.getName() == name){
+					return inventoryThumbnailData.getSprite();
+				}
 			}
 		}
 		return null;
