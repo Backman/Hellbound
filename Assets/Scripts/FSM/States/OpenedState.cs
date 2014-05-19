@@ -12,6 +12,6 @@ public class OpenedState : State<LockedInteractable> {
 
 	public override void activate (LockedInteractable entity)
 	{
-
+		base.activate (entity);
 	}
 }

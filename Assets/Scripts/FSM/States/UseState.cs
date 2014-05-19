@@ -11,6 +11,7 @@ public class UseState : State<Behaviour_OnlyUse> {
 
 	public override void activate (Behaviour_OnlyUse entity)
 	{
+		base.activate (entity);
 		foreach(Interactable obj in m_InteractablesToAffect) {
 			obj.useWith (entity.gameObject);
 		}

@@ -113,11 +113,12 @@ public class GUIManager : Singleton<GUIManager> {
 			m_InventoryIsUp = !m_InventoryIsUp;
 			inventory();
 		}
-		if (Input.GetButtonDown("Journal") && !m_GamePaused) {
+/*	Depricated behaviour. We no longer have a journal in the game.	
+ 	if (Input.GetButtonDown("Journal") && !m_GamePaused) {
 			m_GamePaused = !m_GamePaused;
 			Messenger.Broadcast<bool>("lock player input", m_GamePaused);
 			journal();
-		}
+		}	*/
 	}
 
 	public void togglePause(){
@@ -139,6 +140,16 @@ public class GUIManager : Singleton<GUIManager> {
 			r_MainCamera.GetComponent<PauseGameEffect>().StartCoroutine("pauseGame", false);
 			Messenger.Broadcast("reset pause window");
 		}
+	}
+
+	public void pauseExit(){
+		loadLevel (0, "");
+		togglePause ();
+		//DestroyThis ();
+	}
+
+	public void DestroyThis(){
+		Destroy (gameObject);
 	}
 	
 	public void doneTweening(){
