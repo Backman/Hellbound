@@ -112,6 +112,7 @@ public class Behaviour_DoorSimple : Interactable {
 		Messenger.Broadcast("update focus");
 	}
 
+	#region Behaviours
 	public bool close(){
 		if( m_CurrentState == CurrentState.Open ){
 			m_FSM.CurrentState.activate(this);
@@ -159,4 +160,5 @@ public class Behaviour_DoorSimple : Interactable {
 		unlockDoor();
 		open();
 	}
+	#endregion
 }
