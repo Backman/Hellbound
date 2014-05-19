@@ -11,10 +11,15 @@ public class SmashWalls : MonoBehaviour {
 	private int m_CurrentIndex = 0;
 	void Start() {
 		Messenger.AddListener<GameObject, bool>("onStartSmashWallsTimer", onStartSmashWallsTimer);
+		Messenger.AddListener<GameObject, bool>("stopWalls", stopWalls);
 	}
 
 	public void onStartSmashWallsTimer(GameObject obj, bool tr) {
 		StartCoroutine("startSmashing");
+	}
+
+	public void stopWalls(GameObject go, bool tr) {
+		StartCoroutine("stopSmashing");
 	}
 
 	IEnumerator startSmashing() {
@@ -39,6 +44,15 @@ public class SmashWalls : MonoBehaviour {
 			m_Walls[m_CurrentIndex++].GetComponent<TweenPosition>().PlayForward();
 
 			StartCoroutine("startSmashing");
+		}
+	}
+
+	IEnumerator stopSmashing() {
+		int idx = 0;
+		while(idx < m_Walls.Count) {
+			m_Walls[idx++].GetComponent<TweenPosition>().enabled = false;
+
+			yield return null;
 		}
 	}
 }

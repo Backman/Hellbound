@@ -206,7 +206,6 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	private IEnumerator activateBenjamin(){
 		Transform benjamin = m_Target.FindChild("Benjamin");
 		if(!benjamin.gameObject.activeSelf) {
-			Debug.Log ("Enabling");
 			yield return new WaitForSeconds( 0.1f);
 			benjamin.gameObject.SetActive(true);
 			
