@@ -22,8 +22,10 @@ public class Behaviour_PickUp : Interactable {
 	private StateMachine<Behaviour_PickUp> m_FSM;
 
 	void Start () {
-		m_Callback = new HbClips.animationCallback (activateCallback);
+		base.Start ();
 		m_FSM = new StateMachine<Behaviour_PickUp>(this, m_State);
+		
+		m_Callback = new HbClips.animationCallback (activateCallback);	//Assign the correct callback func
 	}
 
 	/// <summary>

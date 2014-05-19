@@ -6,7 +6,7 @@ public abstract class State <T> {
 
 	[Tooltip("The hover text for the 'Use' button")]
 	public string m_UseText;
-	[Multiline][Tooltip("What text that sould be printed in case the player activates 'Examine' on this object")]
+	[Multiline]
 	public string m_ExamineText;
 
 	[Tooltip("Decides which animation should be played when Activate is called on this object")]

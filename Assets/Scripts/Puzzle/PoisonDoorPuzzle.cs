@@ -20,11 +20,13 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 	}
 	
 	public void onDoorPoisonDrunk(GameObject thisObject, bool triggerOnlyForThis){
-		gameObject.GetComponent<Behaviour_DoorSimple>().unlockAndOpen();
-		StartCoroutine("startSickness");
+		StartCoroutine("startSickness", gameObject );
 	}
 
-	IEnumerator startSickness() {
+	IEnumerator startSickness(GameObject doorToOpen) {
+		yield return new WaitForSeconds (1.0f);
+		gameObject.GetComponent<Behaviour_DoorSimple>().unlockAndOpen();
+
 		float t = 0.0f;
 		MotionBlur motionBlur = Camera.main.GetComponent<MotionBlur>();
 		motionBlur.enabled = true;
