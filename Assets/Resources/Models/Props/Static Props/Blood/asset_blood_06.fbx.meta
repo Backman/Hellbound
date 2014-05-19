@@ -1,5 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: d1103a09500f8c444a6ce679decb1876
+=======
+<<<<<<< HEAD
+guid: 6b907db7412660948ae6b522b29f2fd2
+=======
+guid: 6e10b5c786b4a3a4cbb39593b615dcbe
+>>>>>>> design-anton
+>>>>>>> 3d4a9e7ae399b60fa584b3c6e7f587773eb176f5
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
