@@ -15,8 +15,11 @@ public class Behaviour_PickUp : Interactable {
 			 "that means that if two items have the same name they will be treated as copies of one another.\n" +
 			 "The name only mattes for the inventory logic.")]
 	public string   m_ItemName;
-	[Tooltip("The item sprite which will be displayed in the inventory after the item's been picked up")]
-	public UISprite m_ItemThumbnail;
+	//[Tooltip("The item sprite which will be displayed in the inventory after the item's been picked up")]
+	public UISprite m_ItemThumbnail
+	{
+		get{ return InventoryThumbnailDatabase.getThumbnail(m_ItemName); }
+	}
 	
 	public KeyState m_State;	
 	private StateMachine<Behaviour_PickUp> m_FSM;

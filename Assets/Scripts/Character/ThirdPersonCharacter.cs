@@ -195,7 +195,8 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			foreach(var hit in hits){
 				if(!hit.collider.isTrigger){
 					if(m_Velocity.y <= 0.0f){
-//						rigidbody.position = Vector3.MoveTowards(rigidbody.position, hit.point, Time.deltaTime * m_AdvancedSettings.m_GroundStickyEffect);
+						//rigidbody.position = Vector3.MoveTowards(rigidbody.position, hit.point, Time.deltaTime * m_AdvancedSettings.m_GroundStickyEffect);
+
 					}
 
 					m_OnGround = true;
