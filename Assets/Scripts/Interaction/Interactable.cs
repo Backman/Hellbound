@@ -46,7 +46,6 @@ public abstract class Interactable : MonoBehaviour{
 		if (m_EventSound.m_PickUp) { 
 				FMOD_StudioSystem.instance.PlayOneShot (m_EventSound.m_PathPickUp, gameObject.transform.position);
 		}
-	
 	}
 	
 	public virtual void examine() {
