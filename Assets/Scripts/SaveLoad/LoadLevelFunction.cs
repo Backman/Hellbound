@@ -12,6 +12,7 @@ public class LoadLevelFunction : MonoBehaviour {
 		}
 	}
 	public void LoadLevel(){
+		Game.createSavegame();
 		LoadLevel(SceneName);
 	}
 }

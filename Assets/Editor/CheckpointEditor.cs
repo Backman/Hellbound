@@ -7,8 +7,6 @@ using System.Collections.Generic;
 /// </summary>
 [CustomEditor(typeof(Checkpoint))]
 public class CheckpointEditor : Editor {
-	private int mIndex = 0;
-	
 	public void OnEnable(){
 		hideFlags = HideFlags.HideAndDontSave;
 	}
@@ -43,16 +41,8 @@ public class CheckpointEditor : Editor {
 		
 		GUILayout.BeginHorizontal();
 		{
-			GUILayout.Label("Spawn position", GUILayout.Width(100f));
-			Vector3 spawnPosition = EditorGUILayout.Vector3Field("", checkpoint.getSpawnPosition());
-			checkpoint.setSpawnPosition(spawnPosition);
-		}
-		GUILayout.EndHorizontal();
-		
-		GUILayout.BeginHorizontal();
-		{
 			GUILayout.Label("Spawn rotation", GUILayout.Width(100f));
-			Vector3 spawnRotation = EditorGUILayout.Vector3Field("", checkpoint.getSpawnRotation());
+			float spawnRotation = EditorGUILayout.FloatField(checkpoint.getSpawnRotation());
 			checkpoint.setSpawnRotation(spawnRotation);
 		}
 		GUILayout.EndHorizontal();
@@ -105,7 +95,7 @@ public class CheckpointEditor : Editor {
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Label("Pickup item", GUILayout.Width(80f));
-				Behaviour_PickUp pickupItem = (Behaviour_PickUp)EditorGUILayout.ObjectField(inventoryItem.getPickupItem(), typeof(Behaviour_PickUp));
+				string pickupItem = EditorGUILayout.TextField("", inventoryItem.getPickupItem());
 				GUILayout.Label("amount", GUILayout.Width(60f));
 				int amount = EditorGUILayout.IntField(inventoryItem.getAmount(), GUILayout.Width(50f));
 				

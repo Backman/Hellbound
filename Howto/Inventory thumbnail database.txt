@@ -1,0 +1,13 @@
+Motivation:
+	Previously a string for name and a UISprite was set for each Behaviour_PickUp invidually, 
+	and as a result, it made it harder to add inventory items to add on checkpoint load.
+	
+Add inventory item:
+	1. Locate "InventoryThumbnailDatabase" located in the hierarchy in the scene called "MainMenu3D_v3" and press "Add thumbnail" to add a new thumbnail.
+	
+	2. When "Add thumbnail" is pressed, a new field is added and the "Name" and "Sprite" fields are what name should be connected to what sprite.
+	- This design allows you to retrieve thumbnail sprite for inventory items using a string, like this: InventoryThumbnailDatabase.getThumbnail(itemName); 
+	where itemName is the name that has been declared with a sprite.
+	
+	3. Behaviour_PickUp only needs a inventory thumbnail name now for thumbnails.
+	

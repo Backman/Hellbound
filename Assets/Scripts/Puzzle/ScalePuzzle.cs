@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 // Copied example from: http://stackoverflow.com/questions/166089/what-is-c-sharp-analog-of-c-stdpair
 public class Pair<T, U> {
-	public Pair() {
-	}
+	public Pair() {}
 	
 	public Pair(T first, U second) {
 		this.first = first;
