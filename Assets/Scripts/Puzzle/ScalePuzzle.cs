@@ -42,6 +42,7 @@ public class ScalePuzzle : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Messenger.AddListener<GameObject, bool>("onRequestStartScalePuzzle", onRequestStartScalePuzzle);
+		Messenger.AddListener<GameObject, bool>("openLockedDoor", openLockedDoor);
 		foreach(GameObject cube in m_Cubes){
 			m_PlacedCubePositions.Add(cube.transform.localPosition);
 			m_CubePlaceUsed.Add(true);
@@ -69,6 +70,13 @@ public class ScalePuzzle : MonoBehaviour {
 		r_FreeLookCamera.setFreeCameraPosition(inspectCubesDummy.transform.position, inspectCubesDummy.transform.localRotation.eulerAngles);
 		r_FreeLookCamera.setFreeCameraEnabled(true);
 		StartCoroutine("inputLogic");
+	}
+
+	public void openLockedDoor(GameObject go, bool tr) {
+		Behaviour_DoorSimple door = go.GetComponent<Behaviour_DoorSimple>();
+		if(door != null) {
+			door.unlockAndOpen();
+		}
 	}
 	
 	public GameObject getPreviousCube(ref int index){
@@ -204,6 +212,8 @@ public class ScalePuzzle : MonoBehaviour {
 		r_ObjectInFocus.renderer.material.color = Color.black;
 		
 		bool puzzleActive = true;
+		bool keyDown = false;
+		float timer = 0.0f;
 		while(puzzleActive){
 			if(m_ExaminatingCube){
 				yield return StartCoroutine("examineCube");
@@ -236,7 +246,11 @@ public class ScalePuzzle : MonoBehaviour {
 					}
 					if(clearedPuzzle){
 						PuzzleEvent.trigger("onScalePuzzleCleared", gameObject, false);
-						Debug.Log("Cleared puzzle!");
+						Messenger.Broadcast<bool>("lock player input", false);
+
+						r_FreeLookCamera.resetCameraTransform();
+						r_FreeLookCamera.setFreeCameraEnabled(false);
+
 						puzzleActive = false;
 						break;
 					}
@@ -249,7 +263,10 @@ public class ScalePuzzle : MonoBehaviour {
 				}
 			}
 			else {
-				if(Input.GetKeyDown(KeyCode.LeftArrow)){
+				float hAxis = Input.GetAxis("Horizontal");
+				float vAxis = Input.GetAxis("Vertical");
+				if(hAxis < 0.0f && !keyDown){
+					keyDown = true;
 					--m_CurrentIndex;
 					GameObject previousObject = getPreviousCube(ref m_CurrentIndex);
 					if(previousObject != r_ObjectInFocus){
@@ -258,7 +275,8 @@ public class ScalePuzzle : MonoBehaviour {
 						r_ObjectInFocus = previousObject;
 					}
 				}
-				else if(Input.GetKeyDown(KeyCode.RightArrow)){
+				else if(hAxis > 0.0f && !keyDown){
+					keyDown = true;
 					++m_CurrentIndex;
 					GameObject nextObject = getNextCube(ref m_CurrentIndex);
 					if(nextObject != r_ObjectInFocus){
@@ -274,11 +292,21 @@ public class ScalePuzzle : MonoBehaviour {
 					r_ObjectInFocus.renderer.material.color = Color.white;
 					m_ExaminatingCube = true;
 				}
-				else if(Input.GetKeyDown(KeyCode.UpArrow) && (m_GoodCubes.Count > 0 || m_EvilCubes.Count > 0)){
+				else if(vAxis > 0.0f && (m_GoodCubes.Count > 0 || m_EvilCubes.Count > 0)){
 					r_ObjectInFocus.renderer.material.color = Color.white;
 					yield return StartCoroutine("removeFromScale");
 					r_ObjectInFocus = getFirstCube(ref m_CurrentIndex);
 					r_ObjectInFocus.renderer.material.color = Color.black;
+				}
+				if(hAxis == 0.0f) {
+					keyDown = false;
+				}
+				if(keyDown) {
+					timer += Time.deltaTime;
+					if(timer > 0.5f) {
+						timer = 0.0f;
+						keyDown = false;
+					}
 				}
 			}
 			yield return null;
@@ -291,6 +319,7 @@ public class ScalePuzzle : MonoBehaviour {
 		GameObject r_ScaleInFocus = m_LeftScale;
 		r_ScaleInFocus.renderer.material.color = Color.black;
 		while(m_ExaminatingCube) {
+			float hAxis = Input.GetAxis("Horizontal");
 			if(Input.GetButton("Fire1")) {
 				float x = Input.GetAxis("Mouse X") * m_RotationSpeed;
 				float y = Input.GetAxis("Mouse Y") * m_RotationSpeed;
@@ -310,12 +339,12 @@ public class ScalePuzzle : MonoBehaviour {
 				r_ScaleInFocus.renderer.material.color = Color.white;
 				break;
 			}
-			if(Input.GetKeyDown(KeyCode.LeftArrow)) {
+			if(hAxis < 0.0f) {
 				r_ScaleInFocus.renderer.material.color = Color.white;
 				r_ScaleInFocus = m_LeftScale;
 				r_ScaleInFocus.renderer.material.color = Color.black;
 			}
-			else if(Input.GetKeyDown(KeyCode.RightArrow)) {
+			else if(hAxis > 0.0f) {
 				r_ScaleInFocus.renderer.material.color = Color.white;
 				r_ScaleInFocus = m_RightScale;
 				r_ScaleInFocus.renderer.material.color = Color.black;
@@ -328,13 +357,19 @@ public class ScalePuzzle : MonoBehaviour {
 		bool jump = Input.GetButtonDown("Jump");
 		GameObject r_ScaleInFocus = m_LeftScale;
 		r_ScaleInFocus.renderer.material.color = Color.black;
+		bool keyDown = false;
+		float timer = 0.0f;
 		while(true){
-			if(Input.GetKeyDown(KeyCode.LeftArrow)){
+			float hAxis = Input.GetAxis("Horizontal");
+			float vAxis = Input.GetAxis("Vertical");
+			if(hAxis < 0.0f && !keyDown){
+				keyDown = true;
 				r_ScaleInFocus.renderer.material.color = Color.white;
 				r_ScaleInFocus = m_LeftScale;
 				r_ScaleInFocus.renderer.material.color = Color.black;
 			}
-			else if(Input.GetKeyDown(KeyCode.RightArrow)){
+			else if(hAxis > 0.0f && !keyDown){
+				keyDown = true;
 				r_ScaleInFocus.renderer.material.color = Color.white;
 				r_ScaleInFocus = m_RightScale;
 				r_ScaleInFocus.renderer.material.color = Color.black;
@@ -355,7 +390,7 @@ public class ScalePuzzle : MonoBehaviour {
 			else if(Input.GetButtonUp("Jump")){
 				jump = false;
 			}
-			else if(Input.GetKeyDown(KeyCode.DownArrow)){
+			else if(vAxis < 0.0f){
 				bool cubes = false;
 				int idx = 0;
 				foreach(bool v in m_CubePlaceUsed){
@@ -369,6 +404,12 @@ public class ScalePuzzle : MonoBehaviour {
 				if(cubes) {
 					r_ScaleInFocus.renderer.material.color = Color.white;
 					break;
+				}
+			}
+			if(keyDown) {
+				timer += Time.deltaTime;
+				if(timer > 0.5f) {
+					keyDown = false;
 				}
 			}
 			yield return null;
