@@ -11,8 +11,6 @@ public class GetDominantTexture : MonoBehaviour {
 	private TerrainData r_TerrainData;
 	private Vector3 r_TerrainPos;
 	
-	private bool m_TerrainExist = true;
-	
 	void Start(){
 		getTerrain ();
 	}
