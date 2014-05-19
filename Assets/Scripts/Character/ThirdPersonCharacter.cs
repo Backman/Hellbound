@@ -52,7 +52,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	// Use this for initialization
 
 	void Start () {
-		Messenger.AddListener<HbClips.Animation> ("activate animation", playAnimationClip);
+		Messenger.AddListener<HbClips.Animation, HbClips.animationCallback> ("activate animation", playAnimationClip);
 
 		r_Animator = GetComponentInChildren<Animator>();
 		r_Collider = collider as CapsuleCollider;
@@ -195,7 +195,8 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			foreach(var hit in hits){
 				if(!hit.collider.isTrigger){
 					if(m_Velocity.y <= 0.0f){
-//						rigidbody.position = Vector3.MoveTowards(rigidbody.position, hit.point, Time.deltaTime * m_AdvancedSettings.m_GroundStickyEffect);
+						//rigidbody.position = Vector3.MoveTowards(rigidbody.position, hit.point, Time.deltaTime * m_AdvancedSettings.m_GroundStickyEffect);
+
 					}
 
 					m_OnGround = true;
@@ -315,10 +316,23 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	}
 	#region Interact animations	
 	/// <summary>
-	/// Plays an animation clip depending on passed argument.
+	/// Plays an animation clip depending on passed argument. 
+	/// The HbClips.Animation argumet decides which clip to play.
+	/// The HbClips.animationCallback will be called at the keyframe which specifies tha the keyframe should be called.
 	/// </summary>
-	public void playAnimationClip( HbClips.Animation clip ){
+	private HbClips.animationCallback r_Callback;
+	private void playAnimationClip( HbClips.Animation clip, HbClips.animationCallback callback ){
 
+		//Store the callback for future use, if the callback is valid
+		if (callback != null && callback.Method != null) {
+			try{
+				r_Callback = callback;
+			} catch {
+				Debug.LogError("Invalid method exception. Unable to use callback function");
+			}
+		}
+
+		//Play the appropriate animation
 		string animation = "";
 		switch (clip) {
 			case HbClips.Animation.ActivateLow:
@@ -332,9 +346,19 @@ public class ThirdPersonCharacter : MonoBehaviour {
 				break;
 			case HbClips.Animation.None:
 			default:
+				doCallback();
 				return;
 			}
+
 		r_Animator.SetTrigger(animation);
+	}
+
+	public void doCallback(){
+		if (r_Callback != null && r_Callback.Method != null) {
+			r_Callback ();
+		} else {
+			Debug.LogError("Error! Invalid callback stored in r_Callback");
+		}
 	}
 
 	/// <summary>
