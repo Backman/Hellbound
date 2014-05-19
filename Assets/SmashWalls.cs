@@ -50,7 +50,12 @@ public class SmashWalls : MonoBehaviour {
 	IEnumerator stopSmashing() {
 		int idx = 0;
 		while(idx < m_Walls.Count) {
+			LoadLevelTrigger trigger = m_Walls[idx].GetComponent<LoadLevelTrigger>();
 			m_Walls[idx++].GetComponent<TweenPosition>().enabled = false;
+
+			if(trigger != null) {
+				trigger.enabled = false;
+			}
 
 			yield return null;
 		}
