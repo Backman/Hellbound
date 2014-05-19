@@ -15,9 +15,12 @@ public class Game {
 		//m_CurrentGameData = GameData.load(m_CurrentSavegame);
 	//}
 	
+	/// <summary>
+	/// Checks if savegame file exists, and that at least one checkpoint has been used in the savegame
+	/// </summary>
 	public static bool doesSavegameExist(){
 		GameData gameData = GameData.load(m_CurrentSavegame);
-		if(gameData != null){
+		if(gameData != null && gameData.usedCheckpoints.Count > 0){
 			return true;
 		}
 		return false;
