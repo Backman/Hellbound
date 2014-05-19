@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class VolumeControl : MonoBehaviour {
+public class SoundControl : MonoBehaviour {
 	/// <summary>
 	/// Volumecontrol handles the masterVolume and also the groupVolume (ie "Music", "Voice" and "SFX")
 	/// Volumecontrol is a singleton, meaning that only one can exist in the scene at any one time
@@ -11,24 +11,24 @@ public class VolumeControl : MonoBehaviour {
 	/// </summary>
 
 	//The current instance is saved in the variable below
-	private static VolumeControl m_instance;
+	private static SoundControl m_instance;
 
 	//we make the constructor private so only Volumecontrol can create a Volumecontrol
-	private VolumeControl()
+	private SoundControl()
 	{
 
 	}
 
 	//This is the only way to create volumecontrol outside the Volumecontrol script
 	//if one have already been created we return that one.
-	public static VolumeControl getInstance()
+	public static SoundControl getInstance()
 	{
 		if (!m_instance) 
 		{
 			GameObject container;
 			container = new GameObject();
-			container.name = "VolumeControl";
-			m_instance = container.AddComponent(typeof(VolumeControl)) as VolumeControl;
+			container.name = "SoundControl";
+			m_instance = container.AddComponent(typeof(SoundControl)) as SoundControl;
 			DontDestroyOnLoad(m_instance);
 		}
 		return m_instance;
@@ -91,5 +91,10 @@ public class VolumeControl : MonoBehaviour {
 		ChangeVolume (PlayerPrefs.GetFloat ("SFX", 1f), "SFX");
 		ChangeVolume (PlayerPrefs.GetFloat ("Voice", 1f), "Voice");
 		ChangeVolume (PlayerPrefs.GetFloat ("Music", 1f), "Music");
+	}
+
+	public void SetNewAudio(string toThis)
+	{
+		//AudioSettings.speakerMode = AudioSettings.driverCaps;
 	}
 }
