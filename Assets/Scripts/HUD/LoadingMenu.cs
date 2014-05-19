@@ -11,10 +11,18 @@ public class LoadingMenu : MonoBehaviour {
 	}
 	
 	public void load(){
-		Game.load();
+		// This check should also be used in StartMenu initialization to change UI 
+		// depending on if a valid savegame exists
+		if(Game.doesSavegameExist()){
+			Game.load();
+		}
 	}
 	
 	void Awake(){
 		GameObject.DontDestroyOnLoad(gameObject);
+	}
+	
+	void OnLevelWasLoaded(int level){
+		Messenger.Broadcast<int>("OnLevelWasLoaded", level);
 	}
 }
