@@ -35,7 +35,7 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 	IEnumerator stopSickness() {
 		float t = 1.0f;
 		MotionBlur motionBlur = Camera.main.GetComponent<MotionBlur>();
-		BlurEffect blur = Camera.main.GetComponent<BlurEffect> ();
+		CameraBlur blur = Camera.main.GetComponent<CameraBlur> ();
 		while(t > 0.0f) {
 			motionBlur.blurAmount = t * 0.8f;
 			blur.setBlurPercentage(t);
