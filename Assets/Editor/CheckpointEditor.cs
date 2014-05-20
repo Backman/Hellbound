@@ -14,12 +14,12 @@ public class CheckpointEditor : Editor {
 	
 	public override void OnInspectorGUI(){
 		Checkpoint checkpoint = target as Checkpoint;
-		List<ObjectState> objectStates = checkpoint.getObjectStates();
-		List<InventoryItemSaver> inventoryItems = checkpoint.getInventoryItems();
+		//List<ObjectState> objectStates = checkpoint.getObjectStates();
+		//List<InventoryItemSaver> inventoryItems = checkpoint.getInventoryItems();
 		
 		NGUIEditorTools.SetLabelWidth(80f);
-		NGUIEditorTools.DrawSeparator();
-		
+		//NGUIEditorTools.DrawSeparator();
+		/*
 		GUILayout.BeginHorizontal();
 		{
 			GUILayout.Label("Unique ID", GUILayout.Width(100f));
@@ -27,7 +27,8 @@ public class CheckpointEditor : Editor {
 			checkpoint.setUniqueID(uniqueID);
 		}
 		GUILayout.EndHorizontal();
-		
+		*/
+		/*
 		GUILayout.BeginHorizontal();
 		{
 			GUILayout.Label("Scene to load", GUILayout.Width(100f));
@@ -35,7 +36,7 @@ public class CheckpointEditor : Editor {
 			checkpoint.setSceneToLoad(sceneToLoad);
 		}
 		GUILayout.EndHorizontal();
-		
+		*/
 		GUILayout.Label("Loading message", GUILayout.Width(150f));
 		string loadingMessage = EditorGUILayout.TextArea(checkpoint.getLoadingMessage());
 		checkpoint.setLoadingMessage(loadingMessage);
@@ -48,6 +49,7 @@ public class CheckpointEditor : Editor {
 		}
 		GUILayout.EndHorizontal();
 		
+		/*
 		GUI.backgroundColor = Color.green;
 		if(GUILayout.Button("Add object")){
 			objectStates.Add(new ObjectState());
@@ -115,6 +117,7 @@ public class CheckpointEditor : Editor {
 			GUILayout.EndHorizontal();
 			++index;
 		}
+		*/
 		
 		// I think this is used to force unity to save(serialize)... or something?
 		EditorUtility.SetDirty(target);
