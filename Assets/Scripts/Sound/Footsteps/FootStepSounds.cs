@@ -38,21 +38,23 @@ public class FootStepSounds : MonoBehaviour {
 		try{
 		m_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
 		} catch {
-			Debug.LogWarning("No Emitter attached to this object");
+			Debug.LogWarning("No Emitter attached to this object, i guess i have to do EVERYTHING myself");
+			AttachFmodEmitter();
 		}
-		
 		
 		FBack = FootBack.GetComponent<FootStepsHitBoxes> ();
 		OtherFBack = OtherFootBack.GetComponent<FootStepsHitBoxes> ();
-		
+
 		surfaceTexture = gameObject.GetComponent<GetDominantTexture> ();
-		try{
-			m_Parameter = m_Emitter.getParameter("Surface");
-		} catch  {
-			Debug.LogWarning("FMOD parameter failed");
+		if(m_Parameter == null){
+			try{
+				m_Parameter = m_Emitter.getParameter("Surface");
+			} catch  {
+				Debug.LogWarning("FMOD parameter failed, will try again");
+				TryGetParameterAgain();
+			}
 		}
 	}
-	
 	
 	void OnTriggerStay(Collider other){
 		
@@ -85,7 +87,7 @@ public class FootStepSounds : MonoBehaviour {
 				m_Once = false;
 				m_Emitter.Play();
 				m_StandingOn = null;
-				Debug.Log("playing");
+				Debug.Log("playing: " + gameObject.name);
 			}
 			
 			//if both backcolliders are hitting something we know we have stopped moving
@@ -106,5 +108,37 @@ public class FootStepSounds : MonoBehaviour {
 			}
 		}
 	}
-	
+
+
+	private void TryGetParameterAgain()
+	{
+		Debug.Log ("TryGetParameterAgain");
+		AttachFmodEmitter ();
+		try{
+			m_Parameter = m_Emitter.getParameter("Surface");
+		}catch{
+			Debug.Log("Get parameter failed Again");
+		}
+	}
+
+	private void AttachFmodEmitter()
+	{
+		Debug.Log ("attachFMODEmitter");
+		if(GetComponents<FMOD_StudioEventEmitter>().Length != 0)
+		{
+			foreach(FMOD_StudioEventEmitter see in GetComponents<FMOD_StudioEventEmitter>())
+			{
+				Destroy(see);
+			}
+		}
+		if(GetComponent<FMOD_StudioEventEmitter>() == null)
+		{
+			gameObject.AddComponent<FMOD_StudioEventEmitter>();
+
+			FMOD_StudioEventEmitter emitter = gameObject.GetComponent<FMOD_StudioEventEmitter>();
+			emitter.startEventOnAwake = false;
+
+			m_Emitter = emitter;
+		}
+	}
 }
