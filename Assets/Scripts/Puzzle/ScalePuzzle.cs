@@ -212,6 +212,7 @@ public class ScalePuzzle : MonoBehaviour {
 		bool puzzleActive = true;
 		bool keyDown = false;
 		float timer = 0.0f;
+		bool firstLoop = true;
 		while(puzzleActive){
 			if(m_ExaminatingCube){
 				yield return StartCoroutine("examineCube");
@@ -286,7 +287,7 @@ public class ScalePuzzle : MonoBehaviour {
 						//originColor = r_ObjectInFocus.renderer.material.color;
 					}
 				}
-				else if(Input.GetButtonDown("Jump")){
+				else if(Input.GetButtonDown("Use") && !firstLoop){
 					// Cube is no longer placed on the table, jump over object when navigating
 					m_CubePlaceUsed[m_CurrentIndex] = false;
 					r_ObjectInFocus.transform.position = inspectCubesDummy.transform.position +  inspectCubesDummy.transform.forward * 0.5f;
@@ -311,6 +312,7 @@ public class ScalePuzzle : MonoBehaviour {
 					}
 				}
 			}
+			firstLoop = false;
 			yield return null;
 		}
 	}
@@ -332,7 +334,7 @@ public class ScalePuzzle : MonoBehaviour {
 				transform.RotateAround(pivot, Vector3.up, -x);
 				transform.RotateAround(pivot, Vector3.right, -y);
 			}
-			if(Input.GetButtonDown("Jump")) {
+			if(Input.GetButtonDown("Use")) {
 				if(r_ScaleInFocus == m_LeftScale) {
 					placeOnEvilScale(r_ObjectInFocus, m_CurrentIndex);
 				}
@@ -359,7 +361,7 @@ public class ScalePuzzle : MonoBehaviour {
 	}
 
 	IEnumerator removeFromScale(){
-		bool jump = Input.GetButtonDown("Jump");
+		bool use = Input.GetButtonDown("Use");
 		GameObject r_ScaleInFocus = m_LeftScale;
 		Color originColor = r_ScaleInFocus.renderer.material.color;
 		r_ScaleInFocus.renderer.material.color = m_HighlightColor;
@@ -382,7 +384,7 @@ public class ScalePuzzle : MonoBehaviour {
 				originColor = r_ScaleInFocus.renderer.material.color;
 				r_ScaleInFocus.renderer.material.color = m_HighlightColor;
 			}
-			else if(Input.GetButtonDown("Jump") && !jump){
+			else if(Input.GetButtonDown("Use") && !use){
 				if(r_ScaleInFocus == m_LeftScale) {
 					removeFromEvilScale();
 				}
@@ -395,8 +397,8 @@ public class ScalePuzzle : MonoBehaviour {
 					break;
 				}
 			}
-			else if(Input.GetButtonUp("Jump")){
-				jump = false;
+			else if(Input.GetButtonUp("use")){
+				use = false;
 			}
 			else if(vAxis < 0.0f){
 				bool cubes = false;
