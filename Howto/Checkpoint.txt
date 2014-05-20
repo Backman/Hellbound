@@ -4,31 +4,22 @@ and die in the scene.
 Add new checkpoint:
 	1. Create a duplicate of one of the CP_XXX_YYY prefabs located in Asserts/Scripts/SaveLoad and change the name of the duplicate to:
 	CP_LevelName_CheckpointNumber, like for example CP_Death_1 which is the first checkpoint in "death".
+	THE NAME HAS TO BE UNIQUE OR IT WONT WORK!
 	
-	2. Set "unique ID" to the unique name that you renamed the newly created duplicate to.
+	3. Loading message is currently not used, but it should be the message displayed when level is being loaded.
 	
-	3. Change scene to load to the name of the scene you want to load.
-	
-	4. Loading message is currently not used, but it should be the message displayed when level is being loaded.
-	Spawn rotation is the rotation set on the player when loading using this checkpoint.
+	4. Spawn rotation is the rotation set on the player when loading using this checkpoint.
 
-	5. Add object:
-	Drag an interactable and write a state and the interactables puzzle state will be set to this when loading using this checkpoint.
-	- After each interactable puzzle state has been set, puzzle event "onCheckpointLoaded" is called.
-	
-	6. Add inventory item:
-	Write a string that is the name of the inventory thumbnail to add, and amount of this inventory type to add.
-	- Inventory thumbnail names are located in a GameObject in the "MainMenu3D_v3" scene.
+	5. All interactables in the scene will be saved with their puzzle state.
+	- When loading from a checkpoint, all interactables will have their puzzle state changed to what they had when checkpoint was used
+	and puzzle event "onCheckpointLoaded" is triggered after states are set.
 
-	7. Drag the newly created prefab into "LoadingManager" game objects component "Loading Menu" in the list called "Checkpoints Available". "LoadingManager" is located in "MainMenu3D_v3" scene.
+	6. Drag the newly created prefab into "LoadingManager" game objects component "Loading Menu" in the list called "Checkpoints Available". "LoadingManager" is located in "MainMenu3D_v3" scene.
 	- The order in which elements are placed doesn't matter, but all checkpoints have to exist in the list to be able to load from them.
 	
 Using checkpoint in level:
-	1. Locate CheckpointTrigger located in Asserts/Scripts/SaveLoad and drag it into the level (into hierarchy to create a game object using the prefab).
+	1. Locate the prefab that you created previously and drag it into hierarchy for a scene where it should be used.
+	- A collider is attached to the game object, and it will trigger and save using the checkpoint when it is hit with the player.
+	- You are free to edit the colliders size or attach another collider.
 	
-	2. Move the newly created CheckpointTrigger where you want it to trigger when entering it (You may change the size of the collider, or attach another collider).
-	
-	3. Drag the previously created Checkpoint (Which is also located in Assets/Scripts/SaveLoad) into CheckpointTriggers component called "CheckpointTrigger"
-	into the field called "R_Checkpoint To Trigger".
-	
-	4. Enjoy your auto saved checkpoints!
+	2. Enjoy your auto saved checkpoints!
