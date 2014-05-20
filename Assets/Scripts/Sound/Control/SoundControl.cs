@@ -13,6 +13,8 @@ public class SoundControl : MonoBehaviour {
 	//The current instance is saved in the variable below
 	private static SoundControl m_instance;
 
+	public AudioSpeakerMode m_CurrentSpeakerMode;
+
 	//we make the constructor private so only Volumecontrol can create a Volumecontrol
 	private SoundControl()
 	{
@@ -38,8 +40,11 @@ public class SoundControl : MonoBehaviour {
 	Dictionary<string, FMOD.Studio.MixerStrip> m_Volume = new Dictionary<string, FMOD.Studio.MixerStrip>();
 
 	// Start will create volume controllers and connect it with its id or "key"
-	void Start () 
+	void Start () 	
 	{
+
+		//we will exchange the bus to vca
+
 		FMOD.GUID guid;
 		FMOD.Studio.System system = FMOD_StudioSystem.instance.System;
 
@@ -73,6 +78,14 @@ public class SoundControl : MonoBehaviour {
 		m_Volume[tagToBeChanged].setFaderLevel (newVolume);
 	}
 
+
+	public void Update(){
+		if(m_CurrentSpeakerMode != AudioSettings.speakerMode){
+			AudioSettings.speakerMode = m_CurrentSpeakerMode;
+		}
+	}
+
+
 	private void LoadVolume(){
 		float setThis = 0f;
 		
@@ -86,6 +99,7 @@ public class SoundControl : MonoBehaviour {
 		PlayerPrefs.SetFloat ("Music", setThis);
 	}
 
+
 	private void SaveVolume(){
 		ChangeVolume (PlayerPrefs.GetFloat ("Master", 1f), "Master");
 		ChangeVolume (PlayerPrefs.GetFloat ("SFX", 1f), "SFX");
@@ -93,8 +107,15 @@ public class SoundControl : MonoBehaviour {
 		ChangeVolume (PlayerPrefs.GetFloat ("Music", 1f), "Music");
 	}
 
-	public void SetNewAudio(string toThis)
+
+	public void SetNewAduioSpeakerMode(AudioSpeakerMode toThis)
 	{
-		//AudioSettings.speakerMode = AudioSettings.driverCaps;
+		m_CurrentSpeakerMode = toThis;
+	}
+
+
+	public void UpdateAudioSpeakerMode()
+	{
+		AudioSettings.speakerMode = m_CurrentSpeakerMode;
 	}
 }
