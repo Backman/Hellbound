@@ -8,7 +8,7 @@ using System.Collections;
 /// Created by Simon
 /// </summary>
 [ExecuteInEditMode]
-public class BlurEffect : MonoBehaviour {
+public class CameraBlur : MonoBehaviour {
 	public Shader m_Shader = null;
 	[Range(0.0f, 1.0f)]
 	public float  m_BlurAmount = 0.3f;

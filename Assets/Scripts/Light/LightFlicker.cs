@@ -4,8 +4,12 @@ using System.Collections;
 public class LightFlicker : MonoBehaviour {
 
 	private Light r_Light;
+	private float m_pi = 0f;
 
-	private float pi = 0f;
+	public float m_AverageLight = 1f;
+	public float m_Speed = 1f;
+	public float m_difference = 1f;
+
 
 	void Start()
 	{
@@ -19,16 +23,16 @@ public class LightFlicker : MonoBehaviour {
 	void Update () {
 		UpdatePIValues ();
 
-		r_Light.intensity = (Mathf.Sin(pi)/2f) + 1f;
+		r_Light.intensity = (Mathf.Sin(m_pi)*m_difference) + m_AverageLight;
 	}
 
 	private void UpdatePIValues(){
 
-		pi += Random.Range (0.01f, 0.1f);
+		m_pi += 0.01f*m_Speed;
 
-		if(pi > Mathf.PI*2f)
+		if(m_pi > Mathf.PI*2f)
 		{
-			pi = 0f;
+			m_pi = 0f;
 		}
 	}
 }
