@@ -8,10 +8,8 @@ public class HintsWindow : MonoBehaviour {
 	public UITable m_Table;
 	public HintObject r_Hint;
 
-	void Awake()
-	{
+	void Awake() {
 		r_Hint = m_Table.GetComponentInChildren<HintObject>();
-		
 	}
 
 	void Start() {
