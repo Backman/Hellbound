@@ -51,6 +51,7 @@ public class Behaviour_DoorSimple : Interactable {
 	}	
 	[HideInInspector]
 	public bool m_Moving = false;
+	HbClips.animationCallback m_Callback;	//Delegate for passing the correct callback function to the animator
 	/**********************************************************************/
 	#endregion
 	protected override void Awake(){
@@ -78,16 +79,12 @@ public class Behaviour_DoorSimple : Interactable {
 			m_FSM.changeState<SimpleDoorOpenedState>();
 			break;
 		}
-
+		
+		m_Callback = new HbClips.animationCallback (activateCallback);	//Assign the callback func
 	}
 	
 	public override void activate(){
-		PuzzleEvent.trigger("onUseDoor", gameObject, true);
-		if( !(m_Used & m_OneShot) && m_UsableByPlayer && !m_Moving  ){
-			base.activate();
-			m_FSM.CurrentState.activate(this);
-			//PuzzleEvent.trigger("onUseDoor", gameObject, true);
-		}
+		Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callback);
 	}
 	
 	public override void examine ()	{
@@ -112,6 +109,16 @@ public class Behaviour_DoorSimple : Interactable {
 		Messenger.Broadcast("update focus");
 	}
 
+	void activateCallback(){
+		PuzzleEvent.trigger("onUseDoor", gameObject, true);
+		if( !(m_Used & m_OneShot) && m_UsableByPlayer && !m_Moving  ){
+			base.activate();
+			m_FSM.CurrentState.activate(this);
+			//PuzzleEvent.trigger("onUseDoor", gameObject, true);
+		}
+	}
+
+	#region Behaviours
 	public bool close(){
 		if( m_CurrentState == CurrentState.Open ){
 			m_FSM.CurrentState.activate(this);
@@ -159,4 +166,5 @@ public class Behaviour_DoorSimple : Interactable {
 		unlockDoor();
 		open();
 	}
+	#endregion
 }
