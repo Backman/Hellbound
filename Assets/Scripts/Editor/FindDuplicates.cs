@@ -34,21 +34,25 @@ public class DuplicateWindow : EditorWindow {
 		m_Strings.Clear ();
 		for (int i = 0; i < assetList.Length; i++) 
 		{  
-			string s =  assetList[i].Substring( assetList[i].LastIndexOf("/") +1 );	//Get the filename without path
+			string s =  assetList[i].Substring( assetList[i].LastIndexOf("/") +1 ).ToLower();	//Get the filename without path
 
 			int idx = s.IndexOf("."); //find index of the file-type specifier
 
 			if( idx > 0 ){
-				s = s.Substring(0, idx);	//get filename without file type
+				string type = s.Substring(idx);
 
-				m_Strings.Add(s);
+				if( idx > 0 && (type == ".cs" || type == ".boo" || type == ".js")){
+					s = s.Substring(0, idx);	//get filename without file type
+
+					m_Strings.Add(s);
+				}
 			}
 		} 
 
 		for( int i = 1; i < m_Strings.Count; i++ ){
 
 			if( m_Strings[i] == m_Strings[i-1] )
-				Debug.Log("Name conflict: " + m_Strings[i] );
+				Debug.Log("Script name conflict: " + m_Strings[i] );
 		}
 	} 
 }
