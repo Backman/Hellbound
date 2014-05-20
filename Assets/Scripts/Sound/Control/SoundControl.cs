@@ -15,8 +15,6 @@ public class SoundControl : MonoBehaviour {
 
 	public AudioSpeakerMode m_CurrentSpeakerMode;
 
-	public bool boolthis = true;
-
 	[Range(0f,1f)]
 	public float Master;
 
