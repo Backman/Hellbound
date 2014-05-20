@@ -25,6 +25,7 @@ public class Behaviour_OnlyUse : Interactable {
 
 	public override void activate ()
 	{
+		PuzzleEvent.trigger ("onUseInstant", gameObject, true);
 		Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callback);
 	}
 

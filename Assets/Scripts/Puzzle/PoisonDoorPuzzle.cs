@@ -5,6 +5,7 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Messenger.AddListener<GameObject, bool>("onMoveBottleToHand", onMoveBottleToHand);
 		Messenger.AddListener<GameObject, bool>("onDoorPoisonDrunk", onDoorPoisonDrunk);
 		Messenger.AddListener<GameObject, bool>("onDrinkDoorPoison", onDrinkDoorPoison);
 	}
@@ -13,10 +14,24 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 	void Update () {
 	
 	}
+	public void onMoveBottleToHand(GameObject obj, bool tr) {
+		Interactable inter = obj.GetComponent<Interactable> ();
+
+		inter.setPuzzleState("inUse");
+
+		//Move the bottle to the players hand
+		obj.collider.enabled = false;
+		obj.transform.parent = GameObject.FindGameObjectWithTag("RightMiddleFinger").transform;
+		obj.transform.rotation = new Quaternion(0,0,0,0);
+		obj.transform.localPosition = Vector3.zero;
+
+	}
 
 	public void onDrinkDoorPoison(GameObject obj, bool tr) {
-		obj.SetActive (false);
+
 		Messenger.Broadcast("clear focus");
+		GameObject.Destroy (obj);
+
 	}
 	
 	public void onDoorPoisonDrunk(GameObject thisObject, bool triggerOnlyForThis){
