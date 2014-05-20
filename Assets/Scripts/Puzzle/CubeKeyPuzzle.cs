@@ -195,7 +195,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 				init = true;
 			}
 
-			if( Input.GetKeyDown (KeyCode.Space) ){
+			if( Input.GetButtonDown("Use") ){
 				if( !objectSelected ) {
 					Debug.Log ("Activating object: " + r_ObjectInFocus.name);
 					Vector3 newPos = r_ObjectInFocus.transform.localPosition;
@@ -212,7 +212,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 					objectSelected = false;
 				}
 			}
-			else if(Input.GetKeyUp(KeyCode.Space)){
+			else if(Input.GetButtonUp("Use")){
 				if( objectSelected ) {
 					//r_ObjectInFocus.renderer.sharedMaterial.color = col;
 					r_ObjectInFocus.renderer.material.SetFloat("_EmissionLM", 0.0f);
@@ -288,7 +288,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 				init = true;
 			}
 			
-			if( Input.GetKeyDown (KeyCode.Space) ){
+			if( Input.GetButtonDown("Use") ){
 				if(r_SecondObjectInFocus == r_ObjectInFocus){
 					Vector3 newPos = r_ObjectInFocus.transform.localPosition;
 					newPos.z = m_PlacedCubePositions[0].z;
