@@ -9,8 +9,6 @@ using System.Collections;
 /// Created by Simon
 /// </summary>
 public class Behaviour_PickUp : Interactable {
-	HbClips.animationCallback m_Callback;
-
 	[Tooltip("This field decides what name this item will be identified with.\nSince items are added to- and removed from- the inventory via name identifying," +
 			 "that means that if two items have the same name they will be treated as copies of one another.\n" +
 			 "The name only mattes for the inventory logic.")]
@@ -23,12 +21,13 @@ public class Behaviour_PickUp : Interactable {
 	
 	public KeyState m_State;	
 	private StateMachine<Behaviour_PickUp> m_FSM;
+	HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[1];
 
 	void Start () {
 		base.Start ();
 		m_FSM = new StateMachine<Behaviour_PickUp>(this, m_State);
 		
-		m_Callback = new HbClips.animationCallback (activateCallback);	//Assign the correct callback func
+		m_Callbacks[0] = new HbClips.animationCallback (activateCallback);	//Assign the correct callback func
 	}
 
 	/// <summary>
@@ -37,7 +36,7 @@ public class Behaviour_PickUp : Interactable {
 	/// the supplied callback function at the correct keyframe (or emidietly, of no animation is played).
 	/// </summary>
 	public override void activate () {	
-		Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callback);
+		Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callbacks);
 	}
 	
 	public override void examine () {
