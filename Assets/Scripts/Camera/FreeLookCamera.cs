@@ -20,6 +20,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	[SerializeField] private float m_TurnSmoothing = 0.1f;
 	[SerializeField] private float m_TiltMax = 75.0f;
 	[SerializeField] private float m_TiltMin = 45.0f;
+	[SerializeField] private bool m_LockCamera = false;
 	[SerializeField] private float m_LookAngleMax = 90.0f;
 	[SerializeField] private float m_ZoomedMaxRotation = 45.0f;
 	[SerializeField] private float m_ZoomSpeed = 0.3f;
@@ -65,7 +66,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	protected void Start(){
 		base.Start ();
 
-		m_LookAngle = m_Target.rotation.eulerAngles.y;
+		m_LookAngle = m_Target.localRotation.eulerAngles.y;
 		r_ThirdPersonCharacter = m_Target.GetComponent<ThirdPersonCharacter>();
 	}
 
@@ -113,12 +114,13 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	
 			// Adjust the look angle by an amount proportional to the turn speed and horizontal input
 			m_LookAngle += m_SmoothX * m_TurnSpeed;
-			//m_LookAngle = Mathf.Clamp(m_LookAngle, -m_LookAngleMax, m_LookAngleMax);
-			// Rotate the rig (the root object) around Y axis only
-			transform.rotation = Quaternion.Euler(0.0f, m_LookAngle, 0.0f);
-			
-			//rotationOverflow();
 
+			// Rotate the rig (the root object) around Y axis only
+			transform.localRotation = Quaternion.Euler(0.0f, m_LookAngle, 0.0f);
+
+			if(m_LockCamera) {
+				rotationOverflow();
+			}
 
 			// We adjust the current angle based on Y mouse input and turn speed
 			m_TiltAngle -= m_SmoothY * m_TurnSpeed;
@@ -133,23 +135,24 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	bool rotationOverflow() {
 		Transform playerTransform = r_ThirdPersonCharacter.transform;
 
-		Vector3 playerAngle = new Vector3(playerTransform.position.x, 0.0f, playerTransform.position.z);
-		Vector3 cameraAngle = new Vector3(m_Camera.position.x, 0.0f, m_Camera.position.z);
-		Vector3 lookDelta = transform.InverseTransformDirection(playerTransform.forward - transform.position);
+		/*
+		Vector3 camRotation = new Vector3(0.0f, transform.rotation.eulerAngles.y, 0.0f);
+		Vector3 playerRotation = new Vector3(0.0f, playerTransform.rotation.eulerAngles.y, 0.0f);
 
+		Vector3 lookDelta = transform.InverseTransformDirection(playerTransform.forward - transform.localPosition);
 		float lookAngle = Mathf.Atan2(lookDelta.x, lookDelta.z) * Mathf.Rad2Deg;
-
-		float horizDiffAngle = Vector3.Angle(playerAngle, cameraAngle);
-		Debug.Log ("Look angle: " + lookAngle);
+		*/
+		float camRot = transform.localRotation.eulerAngles.y;
+		float playerRot = playerTransform.localRotation.eulerAngles.y;
+		//Debug.Log("camRot: "+camRot+", playerRot: "+playerRot);
+		float rot = (camRot - playerRot) % 360.0f;
+		//Debug.Log ("Look angle: " + (((m_LookAngle % 360.0f)+360)%360) + ", Rotation: " + camRot);
+		//Debug.Log("Rotation: "+rot);
 		// Rotate the character to face the camera direction
-		if (Mathf.Abs(lookAngle) > 80.0f) {
-			//Quaternion playerDestAngle = Quaternion.Euler(transform.eulerAngles.x, playerTransform.eulerAngles.y, transform.eulerAngles.z);
-			//transform.rotation = Quaternion.Euler(0.0f, playerDestAngle.eulerAngles.y, 0.0f);
-			//m_LookAngle = horizDiffAngle - 5.0f;
-			//transform.rotation = Quaternion.Lerp(transform.rotation, playerDestAngle, Time.deltaTime * 3);
+		if (Mathf.Abs(rot) > m_LookAngleMax && Mathf.Abs(rot) < 360.0f - m_LookAngleMax) {
+			m_LookAngle = playerRot-rot + (180.0f);
 			return true;
 		}
-
 		return false;
 	}
 
