@@ -1,7 +1,6 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
-
+//anton
 public class TipsButton : MonoBehaviour {
 	
 	private UILabel r_Label;
