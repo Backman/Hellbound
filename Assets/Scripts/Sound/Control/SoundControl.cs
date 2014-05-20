@@ -15,6 +15,20 @@ public class SoundControl : MonoBehaviour {
 
 	public AudioSpeakerMode m_CurrentSpeakerMode;
 
+	public bool boolthis = true;
+
+	[Range(0f,1f)]
+	public float Master;
+
+	[Range(0f,1f)]
+	public float VO;
+
+	[Range(0f,1f)]
+	public float SFX;
+	
+	[Range(0f,1f)]
+	public float Music;
+
 	//we make the constructor private so only Volumecontrol can create a Volumecontrol
 	private SoundControl()
 	{
@@ -42,31 +56,44 @@ public class SoundControl : MonoBehaviour {
 	// Start will create volume controllers and connect it with its id or "key"
 	void Start () 	
 	{
+		//VCA_SFX seems to work
 
-		//we will exchange the bus to vca
-
-		FMOD.GUID guid;
 		FMOD.Studio.System system = FMOD_StudioSystem.instance.System;
 
-		FMOD.Studio.MixerStrip bus;
+		FMOD.GUID guid1;
+		FMOD.Studio.MixerStrip bus1;
 
-		system.lookupID("bus:/", out guid);
-		system.getMixerStrip (guid, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus);
-		m_Volume.Add ("Master", bus);
+		system.lookupID("bus:/", out guid1);
+		system.getMixerStrip (guid1, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus1);
+		m_Volume.Add ("Master", bus1);
+		Debug.Log (m_Volume["Master"] + " : " + bus1);
+		
+		FMOD.GUID guid2;
+		FMOD.Studio.MixerStrip bus2;
 
-		system.lookupID ("bus:/SFX", out guid);
-		system.getMixerStrip (guid, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus);
-		m_Volume.Add ("SFX", bus);
+		system.lookupID ("vca:/VCA_SFX", out guid2); //this seems to work
+		system.getMixerStrip (guid2, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus2);
+		m_Volume.Add ("SFX", bus2);
+		Debug.Log (m_Volume["SFX"] + " : " + bus2);
+		
+		FMOD.GUID guid3;
+		FMOD.Studio.MixerStrip bus3;
 
-		system.lookupID ("bus:/Voice", out guid);
-		system.getMixerStrip (guid, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus);
-		m_Volume.Add ("Voice", bus);
+		system.lookupID ("vca:/VCA_VO", out guid3); //this do not work 
+		system.getMixerStrip (guid3, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus3);
+		m_Volume.Add ("Voice", bus3);
+		Debug.Log (m_Volume["Voice"] + " : " + bus3);
+		
+		FMOD.GUID guid4;
+		FMOD.Studio.MixerStrip bus4;
 
-		system.lookupID ("bus:/Music", out guid);
-		system.getMixerStrip (guid, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus);
-		m_Volume.Add ("Music", bus);
+		system.lookupID ("vca:/VCA_Music", out guid4); // this works
+		system.getMixerStrip (guid4, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus4);
+		m_Volume.Add ("Music", bus4);
+		Debug.Log (m_Volume["Music"] + " : " + bus4);
 
 		LoadVolume();
+		checkIfCorrect (false);
 	}
 
 
@@ -80,13 +107,25 @@ public class SoundControl : MonoBehaviour {
 
 
 	public void Update(){
+		SaveVolume ();
 		if(m_CurrentSpeakerMode != AudioSettings.speakerMode){
 			AudioSettings.speakerMode = m_CurrentSpeakerMode;
 		}
+		checkIfCorrect (true);
 	}
 
 
 	private void LoadVolume(){
+		Debug.Log ("Load");
+		ChangeVolume (PlayerPrefs.GetFloat ("Master", 1f), "Master");
+		ChangeVolume (PlayerPrefs.GetFloat ("SFX", 1f), "SFX");
+		ChangeVolume (PlayerPrefs.GetFloat ("Voice", 1f), "Voice");
+		ChangeVolume (PlayerPrefs.GetFloat ("Music", 1f), "Music");
+	}
+
+
+	private void SaveVolume(){
+		Debug.Log ("Save");
 		float setThis = 0f;
 		
 		m_Volume ["Master"].getFaderLevel(out setThis);
@@ -100,14 +139,6 @@ public class SoundControl : MonoBehaviour {
 	}
 
 
-	private void SaveVolume(){
-		ChangeVolume (PlayerPrefs.GetFloat ("Master", 1f), "Master");
-		ChangeVolume (PlayerPrefs.GetFloat ("SFX", 1f), "SFX");
-		ChangeVolume (PlayerPrefs.GetFloat ("Voice", 1f), "Voice");
-		ChangeVolume (PlayerPrefs.GetFloat ("Music", 1f), "Music");
-	}
-
-
 	public void SetNewAduioSpeakerMode(AudioSpeakerMode toThis)
 	{
 		m_CurrentSpeakerMode = toThis;
@@ -117,5 +148,23 @@ public class SoundControl : MonoBehaviour {
 	public void UpdateAudioSpeakerMode()
 	{
 		AudioSettings.speakerMode = m_CurrentSpeakerMode;
+	}
+
+	public void checkIfCorrect(bool ToReal)
+	{
+		if (ToReal) 
+		{
+			ChangeVolume (Master, "Master");
+			ChangeVolume (VO, "Voice");
+			ChangeVolume (SFX, "SFX");
+			ChangeVolume (Music, "Music");
+		}
+		else
+		{
+			m_Volume["Master"].getFaderLevel(out Master);
+			m_Volume["Voice"].getFaderLevel(out VO);
+			m_Volume["SFX"].getFaderLevel(out SFX);
+			m_Volume["Music"].getFaderLevel(out Music);
+		}
 	}
 }
