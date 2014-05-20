@@ -50,7 +50,10 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	Vector3 m_PreviousPosition;
 	Vector3 m_DeltaPosition;
 	// Use this for initialization
-
+	public Vector3 LookDirection {
+		get { return m_LookDirection; }
+		set { m_LookDirection = value; }
+	}
 	void Start () {
 		Messenger.AddListener<HbClips.Animation, HbClips.animationCallback> ("activate animation", playAnimationClip);
 
@@ -89,7 +92,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		if(move.magnitude > 1.0f){
 			move.Normalize();
 		}
-
+		//Debug.Log ("Move: " + move);
 		m_MoveInput = move;
 		m_CrouchInput = crouch;
 		m_LookDirection = lookDirection;
@@ -100,9 +103,9 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 		//turnTowardsCameraForward();
 
-		preventStandingInLowHeadroom();
+		//preventStandingInLowHeadroom();
 
-		scaleCapsuleForCrouching();
+		//scaleCapsuleForCrouching();
 
 		applyExtraTurnRotation();
 
@@ -118,7 +121,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 		updateAnimator();
 
-		//rigidbody.velocity = m_Velocity;
+		rigidbody.velocity = m_Velocity;
 	}
 
 	public void zoomed(bool zoomed){
@@ -130,13 +133,14 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		// turn amount and forward amount required to head in the desired
 		// direction.
 		Vector3 localMove = transform.InverseTransformDirection(m_MoveInput);
-		m_TurnAmount = Mathf.Atan2(localMove.x, localMove.z);
+		float a2 = Mathf.Atan2(localMove.x, localMove.z);
+		float diff1 = Mathf.Abs(Mathf.PI - a2);
+		if(diff1 < 0.001f) {
+			m_TurnAmount = 0.0f;
+		} else {
+			m_TurnAmount = a2;
+		}
 		m_ForwardAmount = localMove.z;
-	}
-
-	public void turnCharacter(Vector3 move) {
-		Vector3 localMove = transform.InverseTransformDirection(move);
-		m_TurnAmount = Mathf.Atan2(localMove.x, localMove.z);
 	}
 
 	void turnTowardsCameraForward(){
@@ -145,10 +149,9 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		if(Mathf.Abs(m_ForwardAmount) < 0.1f){
 			Vector3 lookDelta = transform.InverseTransformDirection(m_LookDirection - transform.position);
 			float lookAngle = Mathf.Atan2(lookDelta.x, lookDelta.z) * Mathf.Rad2Deg;
-
 			// Are we beyond the threshold so that we need to turn the face of the camera?
 			if(Mathf.Abs(lookAngle) > m_AdvancedSettings.m_AutoTurnThresholdAngle){
-				m_TurnAmount += lookAngle * m_AdvancedSettings.m_AutoTurnSpeed * 0.001f;
+				m_TurnAmount += lookAngle * m_AdvancedSettings.m_AutoTurnSpeed * Time.deltaTime;
 			}
 		}
 	}
