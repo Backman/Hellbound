@@ -20,6 +20,8 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	[SerializeField] private float m_TurnSmoothing = 0.1f;
 	[SerializeField] private float m_TiltMax = 75.0f;
 	[SerializeField] private float m_TiltMin = 45.0f;
+	[SerializeField] private bool m_LockCamera = false;
+	[SerializeField] private float m_LookAngleMax = 90.0f;
 	[SerializeField] private float m_ZoomedMaxRotation = 45.0f;
 	[SerializeField] private float m_ZoomSpeed = 0.3f;
 	[SerializeField] private bool m_LockCursor = false;
@@ -44,7 +46,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	private Vector3 m_FreeCameraRotation = new Vector3(0.0f, 0.0f, 0.0f);
 	private Vector3 m_FreeCameraPosition = new Vector3(0.0f, 0.0f, 0.0f);
 
-
+	private ThirdPersonCharacter r_ThirdPersonCharacter;
 	protected override void Awake () {
 		base.Awake ();
 
@@ -64,7 +66,8 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	protected void Start(){
 		base.Start ();
 
-		m_LookAngle = m_Target.rotation.eulerAngles.y;
+		m_LookAngle = m_Target.localRotation.eulerAngles.y;
+		r_ThirdPersonCharacter = m_Target.GetComponent<ThirdPersonCharacter>();
 	}
 
 	protected void Update() {
@@ -111,20 +114,46 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	
 			// Adjust the look angle by an amount proportional to the turn speed and horizontal input
 			m_LookAngle += m_SmoothX * m_TurnSpeed;
-	
-			if(Application.isPlaying){
-				// Rotate the rig (the root object) around Y axis only
-				transform.rotation = Quaternion.Euler(0.0f, m_LookAngle, 0.0f);
+
+			// Rotate the rig (the root object) around Y axis only
+			transform.localRotation = Quaternion.Euler(0.0f, m_LookAngle, 0.0f);
+
+			if(m_LockCamera) {
+				rotationOverflow();
 			}
+
 			// We adjust the current angle based on Y mouse input and turn speed
 			m_TiltAngle -= m_SmoothY * m_TurnSpeed;
 			// We make sure the new valuse is within the tilt range
 			m_TiltAngle = Mathf.Clamp(m_TiltAngle, -m_TiltMin, m_TiltMax);
 	
-	
 			// Tilt input around X is applied to the pivot (the child of this object)
 			m_Pivot.localRotation = Quaternion.Euler(m_TiltAngle, 0.0f, 0.0f);
 		}
+	}
+
+	bool rotationOverflow() {
+		Transform playerTransform = r_ThirdPersonCharacter.transform;
+
+		/*
+		Vector3 camRotation = new Vector3(0.0f, transform.rotation.eulerAngles.y, 0.0f);
+		Vector3 playerRotation = new Vector3(0.0f, playerTransform.rotation.eulerAngles.y, 0.0f);
+
+		Vector3 lookDelta = transform.InverseTransformDirection(playerTransform.forward - transform.localPosition);
+		float lookAngle = Mathf.Atan2(lookDelta.x, lookDelta.z) * Mathf.Rad2Deg;
+		*/
+		float camRot = transform.localRotation.eulerAngles.y;
+		float playerRot = playerTransform.localRotation.eulerAngles.y;
+		//Debug.Log("camRot: "+camRot+", playerRot: "+playerRot);
+		float rot = (camRot - playerRot) % 360.0f;
+		//Debug.Log ("Look angle: " + (((m_LookAngle % 360.0f)+360)%360) + ", Rotation: " + camRot);
+		//Debug.Log("Rotation: "+rot);
+		// Rotate the character to face the camera direction
+		if (Mathf.Abs(rot) > m_LookAngleMax && Mathf.Abs(rot) < 360.0f - m_LookAngleMax) {
+			m_LookAngle = playerRot-rot + (180.0f);
+			return true;
+		}
+		return false;
 	}
 
 	void handleZoomInput() {
