@@ -397,7 +397,7 @@ public class ScalePuzzle : MonoBehaviour {
 					break;
 				}
 			}
-			else if(Input.GetButtonUp("use")){
+			else if(Input.GetButtonUp("Use")){
 				use = false;
 			}
 			else if(vAxis < 0.0f){
