@@ -3,36 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Class to save inventory items for checkpoint
-/// By: Aleksi Lindeman
-/// </summary>
-[System.Serializable]
-public class InventoryItemSaver{
-	[SerializeField] string m_Name;
-	[SerializeField] int m_Amount;
-	public InventoryItemSaver(){
-		m_Name = "";
-		m_Amount = 0;
-	}
-	
-	public string getPickupItem(){
-		return m_Name;
-	}
-	
-	public int getAmount(){
-		return m_Amount;
-	}
-	
-	public void setPickupItem(string item){
-		m_Name = item;
-	}
-	
-	public void setAmount(int amount){
-		m_Amount = amount;
-	}
-}
-
-/// <summary>
 /// Class to have references to checkpoints, so that we can get checkpoint using its id
 /// that has been saved into savegame file
 /// By: Aleksi Lindeman
@@ -66,19 +36,20 @@ public class Checkpoints{
 /// By: Aleksi Lindeman
 /// </summary>
 public class Checkpoint : MonoBehaviour {
-	[SerializeField] List<ObjectState> m_ObjectStates = new List<ObjectState>();
-	[SerializeField] List<InventoryItemSaver> m_InventoryItems = new List<InventoryItemSaver>();
 	[SerializeField] string m_UniqueID = "";
 	[SerializeField] string m_SceneToLoad = "";
 	[SerializeField] string m_LoadingMessage = "";
 	[SerializeField] Vector3 m_SpawnPosition = new Vector3(0.0f, 0.0f, 0.0f);
 	[SerializeField] float m_SpawnRotation = 0.0f;
 	private bool m_LoadingThisCheckpoint = false;
+	private bool m_UseThis = false; // debug
 	
 	// Use this for initialization
 	void Start () {
+		setUniqueID(gameObject.name);
 		if(Checkpoints.add(this)){
-			Debug.Log("Add checkpoint: "+m_UniqueID);
+			m_UseThis = true;
+			//Debug.Log("Add checkpoint: "+m_UniqueID);
 			Messenger.AddListener<int>("OnLevelWasLoaded", onLevelWasLoaded);
 		}
 	}
@@ -97,22 +68,23 @@ public class Checkpoint : MonoBehaviour {
 				player.transform.position = m_SpawnPosition;
 				player.transform.rotation = Quaternion.Euler(0.0f, m_SpawnRotation, 0.0f);
 				
-				foreach(ObjectState objectState in m_ObjectStates){
-					if(objectState.getObject() && objectState.getObject().GetComponent<Interactable>()){
-						objectState.getObject().GetComponent<Interactable>().setPuzzleState(objectState.getState());
-					}
+				List<SerializablePair<int, string>> interactableStates = Game.getGameData().interactableStates;
+				List<string> inventoryItems = Game.getGameData().inventoryItems;
+				//Debug.Log("Num interactables: "+interactableStates.Count);
+				//Debug.Log("Num available interactables: "+GameObject.FindObjectsOfType<Interactable>().Length);
+				foreach(SerializablePair<int, string> stateSaver in interactableStates){
+					Interactable inter = Game.getGameData().getInteractableFromID(stateSaver.first);
+					//Debug.Log("inter: "+inter+" state: "+stateSaver.second);
+					inter.setPuzzleState(stateSaver.second);
 				}
-				
-				foreach(InventoryItemSaver inventoryItem in m_InventoryItems){
-					UISprite sprite = InventoryThumbnailDatabase.getThumbnail(inventoryItem.getPickupItem());
+				//Debug.Log("Inventory items: "+inventoryItems.Count);
+				foreach(string inventoryItem in inventoryItems){
+					UISprite sprite = InventoryThumbnailDatabase.getThumbnail(inventoryItem);
 					if(sprite){
-						Debug.Log("Add "+inventoryItem.getAmount()+" "+inventoryItem.getPickupItem());
-						for(int i = 0; i < inventoryItem.getAmount(); ++i){
-							InventoryLogic.Instance.addItem(inventoryItem.getPickupItem(), sprite);
-						}
+						//Debug.Log("Add "+inventoryItem);
+						InventoryLogic.Instance.addItem(inventoryItem, sprite);
 					}
 				}
-				
 				PuzzleEvent.trigger("onCheckpointLoaded", gameObject, false);
 			}
 			m_LoadingThisCheckpoint = false;
@@ -131,12 +103,43 @@ public class Checkpoint : MonoBehaviour {
 		}
 	}
 	
-	public List<ObjectState> getObjectStates(){
-		return m_ObjectStates;
+	public void saveStates(){
+		List<string> inventoryItems = Game.getGameData().inventoryItems;
+		inventoryItems.Clear();
+		foreach(string item in InventoryLogic.Instance.getItems()){
+			inventoryItems.Add(item);
+		}
+		//inventoryItems.Add("CubeKeyA");
+		//Debug.Log("Inventory items: "+inventoryItems.Count);
+		
+		List<SerializablePair<int, string>> interactableStateData = Game.getGameData().interactableStates;
+		interactableStateData.Clear();
+		int idx = 0;
+		foreach(Interactable inter in GameObject.FindObjectsOfType<Interactable>()){
+			//Debug.Log("Saving: "+inter+", state: "+inter.getPuzzleState());
+			//Debug.Log("id: "+idx);
+			interactableStateData.Add(new SerializablePair<int, string>(idx++, inter.getPuzzleState()));
+		}
 	}
 	
-	public List<InventoryItemSaver> getInventoryItems(){
-		return m_InventoryItems;
+	void OnTriggerEnter(Collider col){
+		Vector3 pos = gameObject.transform.position;
+		pos.y += 1.0f;
+		setSpawnPosition(pos);
+		setSceneToLoad(Application.loadedLevelName);
+		setUniqueID(gameObject.name);
+		// For debugging usage. Doesn't affect release version.
+		Debug.Log("Use this? "+m_UseThis.ToString());
+		if(!Game.doesSavegameExist()){
+			Game.createSavegame();
+		}
+		//
+		if(col.tag == "Player" && !Game.hasCheckpointBeenUsed(gameObject.GetComponent<Checkpoint>())){
+			Debug.Log("Save checkpoint "+getUniqueID());
+			saveStates();
+			Game.setCurrentSavegameCheckpoint(getUniqueID());
+			Game.save();
+		}
 	}
 	
 	public string getUniqueID(){

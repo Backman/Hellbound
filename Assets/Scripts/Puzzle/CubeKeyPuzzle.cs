@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class CubeKeyPuzzle : MonoBehaviour {
 	private List<Behaviour_PickUp> m_Cubes = new List<Behaviour_PickUp>();
 	private int m_CubesPlaced = 0;
-	
+
+	public Color m_HighlightColor = Color.black;
 	public List<GameObject> availableCubesToPlace = new List<GameObject>();
 	public GameObject inspectCubesDummy;
 	
@@ -112,7 +113,6 @@ public class CubeKeyPuzzle : MonoBehaviour {
 
 		r_FreeLookCamera.resetCameraTransform();
 		r_FreeLookCamera.setFreeCameraEnabled(false);
-
 		Messenger.Broadcast<bool>("lock player input", false);
 
 		m_StopInputLogic = true;
@@ -191,11 +191,11 @@ public class CubeKeyPuzzle : MonoBehaviour {
 			if( !init ){
 				//focuseObjectColor = r_ObjectInFocus.renderer.sharedMaterial.color;
 				col = r_ObjectInFocus.renderer.sharedMaterial.color;
-				r_ObjectInFocus.renderer.sharedMaterial.color = Color.black;
+				r_ObjectInFocus.renderer.material.SetFloat("_EmissionLM", 0.15f);
 				init = true;
 			}
 
-			if( Input.GetKeyDown (KeyCode.Space) ){
+			if( Input.GetButtonDown("Use") ){
 				if( !objectSelected ) {
 					Debug.Log ("Activating object: " + r_ObjectInFocus.name);
 					Vector3 newPos = r_ObjectInFocus.transform.localPosition;
@@ -212,9 +212,10 @@ public class CubeKeyPuzzle : MonoBehaviour {
 					objectSelected = false;
 				}
 			}
-			else if(Input.GetKeyUp(KeyCode.Space)){
+			else if(Input.GetButtonUp("Use")){
 				if( objectSelected ) {
-					r_ObjectInFocus.renderer.sharedMaterial.color = Color.white;
+					//r_ObjectInFocus.renderer.sharedMaterial.color = col;
+					r_ObjectInFocus.renderer.material.SetFloat("_EmissionLM", 0.0f);
 					yield return StartCoroutine("pickNextCube", index);
 					objectSelected = false;
 					index = focusOnFirstCubeObject(out r_ObjectInFocus);
@@ -224,13 +225,15 @@ public class CubeKeyPuzzle : MonoBehaviour {
 
 			if( Input.GetAxis("Horizontal") < -0.5f  && !objectSelected && timer > m_MovementCooldown){
 				timer = 0.0f;
-				r_ObjectInFocus.renderer.sharedMaterial.color = col;
+				//r_ObjectInFocus.renderer.sharedMaterial.color = col;
+				r_ObjectInFocus.renderer.material.SetFloat("_EmissionLM", 0.0f);
 				init = false;
 				index = goToPreviousCube(index, out r_ObjectInFocus);
 			} 
 			else if ( Input.GetAxis("Horizontal") > 0.5f  && !objectSelected && timer > m_MovementCooldown ) {
 				timer = 0.0f;
-				r_ObjectInFocus.renderer.sharedMaterial.color = col;
+				//r_ObjectInFocus.renderer.sharedMaterial.color = col;
+				r_ObjectInFocus.renderer.material.SetFloat("_EmissionLM", 0.0f);
 				init = false;
 				index = goToNextCube(index, out r_ObjectInFocus);
 			} else if( Mathf.Abs( Input.GetAxis("Horizontal") ) < 0.1 ) {
@@ -240,7 +243,8 @@ public class CubeKeyPuzzle : MonoBehaviour {
 			yield return null;
 		}
 		if(r_ObjectInFocus != null){
-			r_ObjectInFocus.renderer.sharedMaterial.color = col;
+			//r_ObjectInFocus.renderer.sharedMaterial.color = col;
+			r_ObjectInFocus.renderer.material.SetFloat("_EmissionLM", 0.0f);
 		}
 		else if(!init){
 			bool released = false;
@@ -279,11 +283,12 @@ public class CubeKeyPuzzle : MonoBehaviour {
 			if( !init ){
 				//focuseObjectColor = r_ObjectInFocus.renderer.sharedMaterial.color;
 				col = r_SecondObjectInFocus.renderer.sharedMaterial.color;
-				r_SecondObjectInFocus.renderer.sharedMaterial.color = Color.black;
+				//r_SecondObjectInFocus.renderer.sharedMaterial.color = m_HighlightColor;
+				r_SecondObjectInFocus.renderer.material.SetFloat("_EmissionLM", 0.15f);
 				init = true;
 			}
 			
-			if( Input.GetKeyDown (KeyCode.Space) ){
+			if( Input.GetButtonDown("Use") ){
 				if(r_SecondObjectInFocus == r_ObjectInFocus){
 					Vector3 newPos = r_ObjectInFocus.transform.localPosition;
 					newPos.z = m_PlacedCubePositions[0].z;
@@ -304,7 +309,8 @@ public class CubeKeyPuzzle : MonoBehaviour {
 					while(m_CubesSwitching){
 						yield return null;
 					}
-					r_SecondObjectInFocus.renderer.sharedMaterial.color = Color.white;
+					//r_SecondObjectInFocus.renderer.sharedMaterial.color = col;
+					r_SecondObjectInFocus.renderer.material.SetFloat("_EmissionLM", 0.0f);
 					break;
 					
 					//yield return StartCoroutine("pickNextCube", index);
@@ -312,12 +318,14 @@ public class CubeKeyPuzzle : MonoBehaviour {
 			}
 			
 			if( Input.GetKeyDown( KeyCode.LeftArrow )  && !objectSelected ){
-				r_SecondObjectInFocus.renderer.sharedMaterial.color = col;
+				//r_SecondObjectInFocus.renderer.sharedMaterial.color = col;
+				r_SecondObjectInFocus.renderer.material.SetFloat("_EmissionLM", 0.0f);
 				init = false;
 				index = goToPreviousCube(index, out r_SecondObjectInFocus);
 			} 
 			else if ( Input.GetKeyDown( KeyCode.RightArrow )  && !objectSelected ) {
-				r_SecondObjectInFocus.renderer.sharedMaterial.color = col;
+				//r_SecondObjectInFocus.renderer.sharedMaterial.color = col;
+				r_SecondObjectInFocus.renderer.material.SetFloat("_EmissionLM", 0.0f);
 				init = false;
 				index = goToNextCube(index, out r_SecondObjectInFocus);
 			}
@@ -325,7 +333,8 @@ public class CubeKeyPuzzle : MonoBehaviour {
 			yield return null;
 		}
 		
-		r_SecondObjectInFocus.renderer.sharedMaterial.color = col;
+		//r_SecondObjectInFocus.renderer.sharedMaterial.color = col;
+		r_SecondObjectInFocus.renderer.material.SetFloat("_EmissionLM", 0.0f);
 	}
 
 	void onMovedOut(){
