@@ -110,7 +110,6 @@ public class SubtitlesLogic: MonoBehaviour {
 		}
 		
 		yield return StartCoroutine( (string) args[2], args[3]);
-		#pragma warning disable CS0414
 		while( words.Count > 0 ){
 			foreach( UILabel l in r_SubtitlesLabels ){
 				if( words.Count == 0 ){
@@ -126,7 +125,6 @@ public class SubtitlesLogic: MonoBehaviour {
 			}
 			yield return StartCoroutine( (string) args[2], args[3]);
 		}
-		#pragma warning restore CS0414
 
 	}
 

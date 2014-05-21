@@ -27,7 +27,6 @@ public class CameraBlur : MonoBehaviour {
 	}
 
 	private void Start() {
-		m_AppliedBlurAmount = m_BlurAmount;
 		// Disable if we don't support image effects
 		if (!SystemInfo.supportsImageEffects) {
 			enabled = false;

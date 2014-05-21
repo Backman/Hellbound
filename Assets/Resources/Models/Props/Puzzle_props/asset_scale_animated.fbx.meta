@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 57e6669aa07a11c41a4b40044d9555ac
+guid: e1e9953d152df4b4da18f39e15dd9659
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
@@ -42,6 +42,7 @@ ModelImporter:
     4300012: polySurface56
     7400000: Take 001
     9500000: //RootNode
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -92,6 +93,6 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 1
   additionalBone: 0
   userData: 
