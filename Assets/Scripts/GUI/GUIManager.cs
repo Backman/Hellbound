@@ -128,7 +128,7 @@ public class GUIManager : Singleton<GUIManager> {
 
 	public void pauseGame(bool pause) {
 		if (pause) {
-			PauseMenu.getInstance().showPauseWindow();
+		//	PauseMenu.getInstance().showPauseWindow();
 			Time.timeScale = 0.0f;
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 			r_MainCamera.GetComponent<PauseGameEffect>().StopCoroutine("pauseGame");
@@ -169,8 +169,8 @@ public class GUIManager : Singleton<GUIManager> {
 	}
 	
 	public void journal(){
-		PauseMenu.getInstance ().showJournal();
-		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
+	//	PauseMenu.getInstance ().showJournal();
+	//	m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 	}
 
 	public void loadLevel( string levelName, string loadMessage ){
