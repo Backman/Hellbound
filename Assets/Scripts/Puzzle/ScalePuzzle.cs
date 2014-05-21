@@ -152,9 +152,11 @@ public class ScalePuzzle : MonoBehaviour {
 
 	public void placeOnEvilScale(GameObject cube, int cubeIndex){
 		m_EvilCubes.Add(new Pair<GameObject, int>(cube, cubeIndex));
+		Mesh cubeMesh = cube.GetComponent<MeshFilter>().mesh;
 		foreach(GameObject obj in m_EvilScalePlacedCubes){
 			if(!obj.activeSelf){
 				obj.SetActive(true);
+				obj.GetComponent<MeshFilter>().mesh = cubeMesh;
 				break;
 			}
 		}
@@ -179,9 +181,11 @@ public class ScalePuzzle : MonoBehaviour {
 
 	public void placeOnGoodScale(GameObject cube, int cubeIndex){
 		m_GoodCubes.Add(new Pair<GameObject, int>(cube, cubeIndex));
+		Mesh cubeMesh = cube.GetComponent<MeshFilter>().mesh;
 		foreach(GameObject obj in m_GoodScalePlacedCubes){
 			if(!obj.activeSelf){
 				obj.SetActive(true);
+				obj.GetComponent<MeshFilter>().mesh = cubeMesh;
 				break;
 			}
 		}
