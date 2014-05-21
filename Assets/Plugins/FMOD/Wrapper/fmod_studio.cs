@@ -448,7 +448,7 @@ namespace Studio
             {
                 return result;
             }
-
+			
             bank = new Bank(newPtr);
             return result;
         }

@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class GraveyardLanternLogic : MonoBehaviour {
+ public class GraveyardLanternLogic : MonoBehaviour {
 
 	void Start() {
 		Messenger.AddListener<GameObject, bool>("pickUpLantern", pickUpLantern);

@@ -51,7 +51,8 @@ public class Behaviour_DoorSimple : Interactable {
 	}	
 	[HideInInspector]
 	public bool m_Moving = false;
-	HbClips.animationCallback m_Callback;	//Delegate for passing the correct callback function to the animator
+	
+	protected HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[1];	//Delegate for passing the correct callback function to the animator
 	/**********************************************************************/
 	#endregion
 	protected override void Awake(){
@@ -80,11 +81,11 @@ public class Behaviour_DoorSimple : Interactable {
 			break;
 		}
 		
-		m_Callback = new HbClips.animationCallback (activateCallback);	//Assign the callback func
+		m_Callbacks[0] = new HbClips.animationCallback (activateCallback);	//Assign the callback func
 	}
 	
 	public override void activate(){
-		Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callback);
+		Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callbacks);
 	}
 	
 	public override void examine ()	{
