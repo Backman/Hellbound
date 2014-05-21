@@ -313,40 +313,37 @@ public class ScalePuzzle : MonoBehaviour {
 		r_ScaleInFocus.renderer.material.color = m_HighlightColor;
 		while(m_ExaminatingCube) {
 			if(InputManager.getButton(InputManager.Button.Rotate)) {
-				float x1 = Input.GetAxis("Mouse X") * m_RotationSpeed;
-				float y1 = Input.GetAxis("Mouse Y") * m_RotationSpeed;
-				
-				float x2 = Input.GetAxis("Horizontal") * m_RotationSpeed * 0.1f;
-				float y2 = Input.GetAxis("Vertical") * m_RotationSpeed * 0.1f;
-				
-				float x = x1;
-				float y = y1;
+				float x = Input.GetAxis("Mouse X") * m_RotationSpeed;
+				float y = Input.GetAxis("Mouse Y") * m_RotationSpeed;
 
 				Vector3 pivot = bound.center;
 
-				if(Mathf.Abs(x2) > Mathf.Abs(x1)){
-					x = x2;
-				}
-				if(Mathf.Abs(y2) > Mathf.Abs(y1)){
-					y = y2;
-				}
 				transform.RotateAround(pivot, Vector3.up, -x);
 				transform.RotateAround(pivot, Vector3.right, -y);
 			}
-			else{
-				if(InputManager.getButtonDown(InputManager.Button.Left)) {
-					r_ScaleInFocus.renderer.material.color = originColor;
-					r_ScaleInFocus = m_LeftScale;
-					originColor = r_ScaleInFocus.renderer.material.color;
-					r_ScaleInFocus.renderer.material.color = m_HighlightColor;
-				}
-				else if(InputManager.getButtonDown(InputManager.Button.Right)) {
-					r_ScaleInFocus.renderer.material.color = originColor;
-					r_ScaleInFocus = m_RightScale;
-					originColor = r_ScaleInFocus.renderer.material.color;
-					r_ScaleInFocus.renderer.material.color = m_HighlightColor;
-				}
+			
+			float x1 = Input.GetAxis("HorizontalAxis") * m_RotationSpeed * 2.0f;
+			float y1 = Input.GetAxis("VerticalAxis") * m_RotationSpeed * 2.0f;
+			if(Mathf.Abs(x1) > 0.1f || Mathf.Abs(y1) > 0.1f){
+				Vector3 pivot = bound.center;
+				
+				transform.RotateAround(pivot, Vector3.up, -x1);
+				transform.RotateAround(pivot, Vector3.right, -y1);
 			}
+			
+			if(InputManager.getButtonDown(InputManager.Button.Left)) {
+				r_ScaleInFocus.renderer.material.color = originColor;
+				r_ScaleInFocus = m_LeftScale;
+				originColor = r_ScaleInFocus.renderer.material.color;
+				r_ScaleInFocus.renderer.material.color = m_HighlightColor;
+			}
+			else if(InputManager.getButtonDown(InputManager.Button.Right)) {
+				r_ScaleInFocus.renderer.material.color = originColor;
+				r_ScaleInFocus = m_RightScale;
+				originColor = r_ScaleInFocus.renderer.material.color;
+				r_ScaleInFocus.renderer.material.color = m_HighlightColor;
+			}
+			
 			if(InputManager.getButtonDown(InputManager.Button.Use)) {
 				if(r_ScaleInFocus == m_LeftScale) {
 					placeOnEvilScale(r_ObjectInFocus, m_CurrentIndex);
