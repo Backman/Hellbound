@@ -21,6 +21,8 @@ public class PauseWindow {
 /// call functions further down in the hierarcy.
 ///
 /// Created by Simon
+/// 
+/// Edited by Peter
 /// </summary>
 public class GUIManager : Singleton<GUIManager> {
 	public PauseWindow m_PauseWindow;
@@ -72,7 +74,6 @@ public class GUIManager : Singleton<GUIManager> {
 
 	public void Awake(){
 		DontDestroyOnLoad( gameObject );
-		//TODO: INV_ Inventory.getInstance(); //For initialization
 		
 		if( r_ExamineWindow == null ){
 			Debug.LogError("Error! No description window present!");
@@ -113,12 +114,9 @@ public class GUIManager : Singleton<GUIManager> {
 			m_InventoryIsUp = !m_InventoryIsUp;
 			inventory();
 		}
-/*	Depricated behaviour. We no longer have a journal in the game.	
- 	if (Input.GetButtonDown("Journal") && !m_GamePaused) {
-			m_GamePaused = !m_GamePaused;
-			Messenger.Broadcast<bool>("lock player input", m_GamePaused);
-			journal();
-		}	*/
+	}
+	void OnDestroy(){
+		Debug.Log ("Sadface from GUI");
 	}
 
 	public void togglePause(){
@@ -128,7 +126,6 @@ public class GUIManager : Singleton<GUIManager> {
 
 	public void pauseGame(bool pause) {
 		if (pause) {
-		//	PauseMenu.getInstance().showPauseWindow();
 			Time.timeScale = 0.0f;
 			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 			r_MainCamera.GetComponent<PauseGameEffect>().StopCoroutine("pauseGame");
@@ -143,9 +140,9 @@ public class GUIManager : Singleton<GUIManager> {
 	}
 
 	public void pauseExit(){
-		loadLevel (0, "");
+
 		togglePause ();
-		//DestroyThis ();
+		loadLevel (0, "");
 	}
 
 	public void DestroyThis(){
@@ -166,11 +163,6 @@ public class GUIManager : Singleton<GUIManager> {
 			m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().tweenGroup = 0;
 		}
 		
-	}
-	
-	public void journal(){
-	//	PauseMenu.getInstance ().showJournal();
-	//	m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 	}
 
 	public void loadLevel( string levelName, string loadMessage ){
