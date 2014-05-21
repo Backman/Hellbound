@@ -48,6 +48,10 @@ public class InventoryLogic{
 	public bool containsItem( string itemName ){
 		return m_Items.Contains( itemName );
 	}
+	
+	public List<string> getItems(){
+		return m_Items;
+	}
 
 	#endregion
 
