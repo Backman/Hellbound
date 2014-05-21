@@ -33,13 +33,13 @@ public class SmashWalls : MonoBehaviour {
 
 			while(t >= 0.0f) {
 
-
 				t -= Time.deltaTime;
 				yield return null;
 			}
+			Debug.Log("Got out of timer");
 			m_Walls[m_CurrentIndex++].GetComponent<TweenPosition>().PlayForward();
 			if(m_CurrentIndex == m_Walls.Count - 1) {
-				//GUIManager.Instance.loadLevel( m_LevelToLoad, m_DeathText );
+				//GUIManager.Instance.loadLevel( m_LevelToLoad, m_DeathText ); //do this work?
 			}
 			m_Walls[m_CurrentIndex++].GetComponent<TweenPosition>().PlayForward();
 
