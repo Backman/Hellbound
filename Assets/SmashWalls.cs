@@ -30,18 +30,20 @@ public class SmashWalls : MonoBehaviour {
 		if(m_CurrentIndex < m_Walls.Count) {
 			float t = m_Timer;
 
-
 			while(t >= 0.0f) {
 
 				t -= Time.deltaTime;
 				yield return null;
 			}
-			Debug.Log("Got out of timer");
+
 			m_Walls[m_CurrentIndex++].GetComponent<TweenPosition>().PlayForward();
-			if(m_CurrentIndex == m_Walls.Count - 1) {
-				//GUIManager.Instance.loadLevel( m_LevelToLoad, m_DeathText ); //do this work?
+
+			m_Walls[m_CurrentIndex++].GetComponent<TweenPosition>().PlayForward();
+
+			if(m_CurrentIndex == m_Walls.Count) {
+				GUIManager.Instance.loadLastCheckPoint(m_DeathText);
+				Debug.Log("Should Die");
 			}
-			m_Walls[m_CurrentIndex++].GetComponent<TweenPosition>().PlayForward();
 
 			StartCoroutine("startSmashing");
 		}
