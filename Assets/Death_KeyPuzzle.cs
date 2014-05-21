@@ -9,7 +9,10 @@ public class Death_KeyPuzzle : MonoBehaviour {
 	}
 
 	public void onUseKeyWithDoor(GameObject go, bool tr) {
-		go.GetComponent<Behaviour_DoorSimple>().unlockAndOpen();
+		Behaviour_DoorSimple[] doors = GetComponentsInChildren<Behaviour_DoorSimple>();
+		foreach(Behaviour_DoorSimple door in doors) {
+			door.unlockAndOpen();
+		}
 		InventoryLogic.Instance.removeItem(m_KeyItemName);
 	}
 
