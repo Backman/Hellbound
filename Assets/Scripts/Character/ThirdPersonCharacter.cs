@@ -55,7 +55,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		set { m_LookDirection = value; }
 	}
 	void Start () {
-		Messenger.AddListener<HbClips.Animation, HbClips.animationCallback> ("activate animation", playAnimationClip);
+		Messenger.AddListener<HbClips.Animation, HbClips.animationCallback[]> ("activate animation", playAnimationClip);
 
 		r_Animator = GetComponentInChildren<Animator>();
 		r_Collider = collider as CapsuleCollider;
@@ -323,16 +323,12 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	/// The HbClips.Animation argumet decides which clip to play.
 	/// The HbClips.animationCallback will be called at the keyframe which specifies tha the keyframe should be called.
 	/// </summary>
-	private HbClips.animationCallback r_Callback;
-	private void playAnimationClip( HbClips.Animation clip, HbClips.animationCallback callback ){
+	private HbClips.animationCallback[] r_Callbacks;
+	
+	private void playAnimationClip( HbClips.Animation clip, HbClips.animationCallback[] callbacks ){
 
-		//Store the callback for future use, if the callback is valid
-		if (callback != null && callback.Method != null) {
-			try{
-				r_Callback = callback;
-			} catch {
-				Debug.LogError("Invalid method exception. Unable to use callback function");
-			}
+		if( !storeCallbacks (callbacks) ) {
+			return;
 		}
 
 		//Play the appropriate animation
@@ -349,18 +345,48 @@ public class ThirdPersonCharacter : MonoBehaviour {
 				break;
 			case HbClips.Animation.None:
 			default:
-				doCallback();
+				doCallbacks();
 				return;
 			}
 
 		r_Animator.SetTrigger(animation);
 	}
 
-	public void doCallback(){
-		if (r_Callback != null && r_Callback.Method != null) {
-			r_Callback ();
+	//Store the callback for the keyCallback, which will be at the key frame in the animation
+	private bool storeCallbacks( HbClips.animationCallback[] callbacks){
+
+		r_Callbacks = new HbClips.animationCallback[ callbacks.Length ];
+		bool ok = true;
+
+		//Check if all callbacks are ok
+		foreach( HbClips.animationCallback callback in callbacks ){
+			if (callback == null ) {
+				if( callback.Method == null ){
+					ok = false;
+					break;
+				}
+			}
+		}
+
+		if( ok ){
+			r_Callbacks = callbacks;
+			return true;
 		} else {
-			Debug.LogError("Error! Invalid callback stored in r_Callback");
+			Debug.LogError("Error. Invalid callback method detected in ThirdPersonCharacter");
+			return false;
+		}
+	}
+
+	private void doCallback(int index){
+		if (r_Callbacks[index] != null && r_Callbacks[index].Method != null) {
+			r_Callbacks[index]();
+		} else {
+			Debug.LogError("Error! Invalid callback stored in r_KeyCallback");
+		}
+	}
+	private void doCallbacks(){
+		for( int i = 0; i < r_Callbacks.Length; i++ ){
+			doCallback(i);
 		}
 	}
 

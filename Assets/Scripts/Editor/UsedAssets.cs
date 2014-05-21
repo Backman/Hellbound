@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
+// Created by Kristian Langelund Helle Jespersen, http://zaxisgames.blogspot.se/2012/02/automatically-locate-all-unused-assets.html
 public class UsedAssets
 {
 	public static string[] GetAllAssets()
