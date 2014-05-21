@@ -13,19 +13,22 @@ public class Behaviour_OnlyUse : Interactable {
 
 	private StateMachine<Behaviour_OnlyUse> m_FSM;
 
-	HbClips.animationCallback m_Callback;	//Delegate for passing the correct callback function to the animator
+	HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[3];	//Delegate for passing the correct callback function to the animator
 
 	protected override void Start ()
 	{
 		base.Start ();
 		m_FSM = new StateMachine<Behaviour_OnlyUse>(this, m_State);
 
-		m_Callback = new HbClips.animationCallback (activateCallback);	//Assign the callback func
+		m_Callbacks[0] = new HbClips.animationCallback (beginCallback);		
+		m_Callbacks[1] = new HbClips.animationCallback (activateCallback);
+		m_Callbacks[2] = new HbClips.animationCallback (endCallback);
 	}
 
 	public override void activate ()
 	{
-		Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callback);
+
+		Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callbacks);
 	}
 
 	public override void examine ()
@@ -34,8 +37,19 @@ public class Behaviour_OnlyUse : Interactable {
 		m_FSM.CurrentState.examine (this);
 	}
 
+	//This callback will be called at the beginning of the animation
+	void beginCallback(){
+		PuzzleEvent.trigger ("onUseInstant", gameObject, true);
+	}
+
+	//This callback will be triggered on the given key frame of the animation
 	void activateCallback(){
 		base.activate ();
 		PuzzleEvent.trigger("onUseOnly", gameObject, true);
+	}
+
+	//This callback will be triggered on the last frame of the animation
+	void endCallback(){
+		PuzzleEvent.trigger ("onUseEnd", gameObject, true);
 	}
 }
