@@ -35,9 +35,9 @@ public class ScalePuzzle : MonoBehaviour {
 	FreeLookCamera r_FreeLookCamera;
 
 	private bool m_ExaminatingCube = false;
-
 	private int m_CurrentIndex = 0;
-	
+	private int m_Balance = 0;
+	private Animator m_ScaleAnimator;
 	// Use this for initialization
 	void Start () {
 		Messenger.AddListener<GameObject, bool>("onRequestStartScalePuzzle", onRequestStartScalePuzzle);
@@ -46,7 +46,7 @@ public class ScalePuzzle : MonoBehaviour {
 			m_PlacedCubePositions.Add(cube.transform.localPosition);
 			m_CubePlaceUsed.Add(true);
 		}
-
+		m_ScaleAnimator = GetComponentInChildren<Animator>();
 		r_FreeLookCamera = Camera.main.transform.parent.transform.parent.gameObject.GetComponent<FreeLookCamera>();
 	}
 	
@@ -155,6 +155,7 @@ public class ScalePuzzle : MonoBehaviour {
 		Mesh cubeMesh = cube.GetComponent<MeshFilter>().mesh;
 		foreach(GameObject obj in m_EvilScalePlacedCubes){
 			if(!obj.activeSelf){
+				m_ScaleAnimator.SetInteger("Balance", --m_Balance);
 				obj.SetActive(true);
 				obj.GetComponent<MeshFilter>().mesh = cubeMesh;
 				break;
@@ -166,6 +167,7 @@ public class ScalePuzzle : MonoBehaviour {
 		for(int i = m_EvilScalePlacedCubes.Count - 1; i >= 0; --i){
 			GameObject obj = m_EvilScalePlacedCubes[i];
 			if(obj.activeSelf){
+				m_ScaleAnimator.SetInteger("Balance", ++m_Balance);
 				obj.SetActive(false);
 				break;
 			}
@@ -184,6 +186,7 @@ public class ScalePuzzle : MonoBehaviour {
 		Mesh cubeMesh = cube.GetComponent<MeshFilter>().mesh;
 		foreach(GameObject obj in m_GoodScalePlacedCubes){
 			if(!obj.activeSelf){
+				m_ScaleAnimator.SetInteger("Balance", ++m_Balance);
 				obj.SetActive(true);
 				obj.GetComponent<MeshFilter>().mesh = cubeMesh;
 				break;
@@ -195,6 +198,7 @@ public class ScalePuzzle : MonoBehaviour {
 		for(int i = m_GoodScalePlacedCubes.Count - 1; i >= 0; --i){
 			GameObject obj = m_GoodScalePlacedCubes[i];
 			if(obj.activeSelf){
+				m_ScaleAnimator.SetInteger("Balance", --m_Balance);
 				obj.SetActive(false);
 				break;
 			}
