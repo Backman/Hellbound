@@ -12,7 +12,7 @@ public class LanternHook : Interactable {
 	public StateMachine<LanternHook> m_FSM;
 	public bool m_IsOpen = false;
 
-	HbClips.animationCallback m_Callback;
+	HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[1];
 	// Use this for initialization
 	protected override void Start () {
 		base.Start();
@@ -20,12 +20,12 @@ public class LanternHook : Interactable {
 		m_FSM = new StateMachine<LanternHook>(this, m_LockedState);
 		m_FSM.addState(m_OpenedState);
 
-		m_Callback = new HbClips.animationCallback (activateCallback);
+		m_Callbacks[0] = new HbClips.animationCallback (activateCallback);
 	}
 	
 	public override void activate ()
 	{
-		Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callback);
+		Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callbacks);
 	}
 	
 	public void Update(){

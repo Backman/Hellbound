@@ -37,9 +37,9 @@ public class FootStepSounds : MonoBehaviour {
 	void Start(){
 		try{
 		m_Emitter = gameObject.GetComponent<FMOD_StudioEventEmitter> ();
-		} catch {
+		}catch{
 			Debug.LogWarning("No Emitter attached to this object, i guess i have to do EVERYTHING myself");
-			AttachFmodEmitter();
+			//AttachFmodEmitter();
 		}
 		
 		FBack = FootBack.GetComponent<FootStepsHitBoxes> ();
@@ -51,7 +51,7 @@ public class FootStepSounds : MonoBehaviour {
 				m_Parameter = m_Emitter.getParameter("Surface");
 			} catch  {
 				Debug.LogWarning("FMOD parameter failed, will try again");
-				TryGetParameterAgain();
+				//TryGetParameterAgain();
 			}
 		}
 	}
