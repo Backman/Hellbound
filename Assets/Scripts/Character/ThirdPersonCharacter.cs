@@ -33,6 +33,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 	public Transform lookTarget { get; set; }							// The point where the character will be looking at
 
+	bool m_InAnimation = false;
 	bool m_OnGround;
 	Vector3 m_LookDirection;
 	float m_OriginalHeight;
@@ -83,6 +84,10 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 		m_DeltaPosition = transform.position - m_PreviousPosition;
 		m_PreviousPosition = transform.position;
+	}
+
+	void LateUpdate(){
+		m_InAnimation = r_Animator.GetFloat("Used") == 0.0f ? false : true ;
 	}
 
 	// This function is designed to be called from a seperate component(script)
@@ -276,7 +281,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	}
 
 	// Only useable with Unity Pro, because it can only handle IK rigs
-	void OnAnimatorIK(int layerIndex)
+/*	void OnAnimatorIK(int layerIndex)
 	{
 		// we set the weight so most of the look-turn is done with the head, not the body.
 		r_Animator.SetLookAtWeight(1, 0.2f, 2.5f);
@@ -288,7 +293,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		
 		// Used for the head look feature.
 		r_Animator.SetLookAtPosition( m_LookDirection );
-	}
+	}*/
 
 	void setUpAnimator(){
 		// this is a ref to the animator component on the root.
@@ -323,7 +328,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	/// The HbClips.Animation argumet decides which clip to play.
 	/// The HbClips.animationCallback will be called at the keyframe which specifies tha the keyframe should be called.
 	/// </summary>
-	private HbClips.animationCallback[] r_Callbacks;
+	private HbClips.animationCallback[] r_Callbacks = new HbClips.animationCallback[0];
 	
 	private void playAnimationClip( HbClips.Animation clip, HbClips.animationCallback[] callbacks ){
 
@@ -378,10 +383,10 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	}
 
 	private void doCallback(int index){
-		if (r_Callbacks[index] != null && r_Callbacks[index].Method != null) {
+		if (r_Callbacks.Length > index &&  r_Callbacks[index] != null && r_Callbacks[index].Method != null) {
 			r_Callbacks[index]();
 		} else {
-			Debug.LogError("Error! Invalid callback stored in r_KeyCallback");
+			Debug.LogError("Error! Invalid callback stored in r_Callbacks at index " + index);
 		}
 	}
 	private void doCallbacks(){
@@ -394,7 +399,8 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	/// Returns if the avatar is able to move/run
 	/// </summary>
 	public bool isMovable(){
-		return r_Animator.GetFloat("Used") == 0.0f ? true : false ;
+		//TODO: Toggle OnAnimatorIK	
+		return !m_InAnimation ? true : false; 
 	}
 	#endregion
 	class RayHitComparer : IComparer {
