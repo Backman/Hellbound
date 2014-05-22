@@ -2,7 +2,10 @@ fileFormatVersion: 2
 guid: 5c09476b5d5230443a7aed4238fa1a85
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - FootBack: {instanceID: 0}
+  - OtherFootBack: {instanceID: 0}
+  - footstepSound: {fileID: 11400000, guid: 887018e151fee9e428e2f92b53f37a53, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Puzzle logic for the Antidote puzzle
+/// in the pestilence crypt
+/// By Aleksi Lindeman
+/// Modified by Arvid Backman
+/// </summary>
+
 public class AntidotePoisonPuzzle : MonoBehaviour {
 
 	// Use this for initialization
@@ -35,13 +42,17 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 	IEnumerator stopSickness() {
 		float t = 1.0f;
 		MotionBlur motionBlur = Camera.main.GetComponent<MotionBlur>();
+		CameraBlur blur = Camera.main.GetComponent<CameraBlur> ();
 		while(t > 0.0f) {
 			motionBlur.blurAmount = t * 0.8f;
+			blur.setBlurPercentage(t);
 			t -= Time.deltaTime;
 			
 			yield return null;
 		}
 		motionBlur.blurAmount = 0.0f;
 		motionBlur.enabled = false;
+		blur.setBlurPercentage (0.0f);
+		blur.enabled = false;
 	}
 }

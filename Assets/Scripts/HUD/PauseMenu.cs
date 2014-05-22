@@ -22,9 +22,14 @@ public class PauseMenu{
 	}
 	
 	public void hideAll(){
+		List<PauseMenuController> newList = new List<PauseMenuController> ();
 		foreach(PauseMenuController controller in r_Controllers){
-			controller.hide();
+			if( controller != null ){
+				controller.hide();
+				newList.Add(controller);
+			}
 		}
+		r_Controllers = newList;
 	}
 	
 	public void add(PauseMenuController controller){

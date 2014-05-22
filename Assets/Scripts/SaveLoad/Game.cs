@@ -15,9 +15,12 @@ public class Game {
 		//m_CurrentGameData = GameData.load(m_CurrentSavegame);
 	//}
 	
+	/// <summary>
+	/// Checks if savegame file exists, and that at least one checkpoint has been used in the savegame
+	/// </summary>
 	public static bool doesSavegameExist(){
 		GameData gameData = GameData.load(m_CurrentSavegame);
-		if(gameData != null){
+		if(gameData != null && gameData.usedCheckpoints.Count > 0){
 			return true;
 		}
 		return false;
@@ -33,13 +36,17 @@ public class Game {
 		m_CurrentGameData = gameData;
 	}
 	
+	public static GameData getGameData(){
+		return m_CurrentGameData;
+	}
+	
 	public static void setCurrentSavegameCheckpoint(string checkpointID){
 		// Only attempt to save if savegame is used
 		if(m_CurrentGameData != null){
 			m_CurrentGameData.currentCheckpointID = checkpointID;
 			// Set so we can no longer use this checkpoint
 			m_CurrentGameData.usedCheckpoints.Add(checkpointID);
-			m_CurrentGameData.save(m_CurrentSavegame);
+			//m_CurrentGameData.save(m_CurrentSavegame);
 		}
 	}
 	
@@ -67,6 +74,12 @@ public class Game {
 		}
 		else{
 			Debug.Log("Failed to load game data "+m_CurrentSavegame);
+		}
+	}
+	
+	public static void save(){
+		if(m_CurrentGameData != null){
+			m_CurrentGameData.save(m_CurrentSavegame);
 		}
 	}
 }

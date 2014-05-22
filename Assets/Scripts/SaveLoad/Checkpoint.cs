@@ -3,36 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Class to save inventory items for checkpoint
-/// By: Aleksi Lindeman
-/// </summary>
-[System.Serializable]
-public class InventoryItemSaver{
-	[SerializeField] Behaviour_PickUp r_PickupInteractable;
-	[SerializeField] int m_Amount;
-	public InventoryItemSaver(){
-		r_PickupInteractable = null;
-		m_Amount = 0;
-	}
-	
-	public Behaviour_PickUp getPickupItem(){
-		return r_PickupInteractable;
-	}
-	
-	public int getAmount(){
-		return m_Amount;
-	}
-	
-	public void setPickupItem(Behaviour_PickUp inter){
-		r_PickupInteractable = inter;
-	}
-	
-	public void setAmount(int amount){
-		m_Amount = amount;
-	}
-}
-
-/// <summary>
 /// Class to have references to checkpoints, so that we can get checkpoint using its id
 /// that has been saved into savegame file
 /// By: Aleksi Lindeman
@@ -40,10 +10,12 @@ public class InventoryItemSaver{
 public class Checkpoints{
 	private static Dictionary<string, Checkpoint> m_Checkpoints = new Dictionary<string, Checkpoint>();
 	
-	public static void add(Checkpoint checkpoint){
+	public static bool add(Checkpoint checkpoint){
 		if(!m_Checkpoints.ContainsKey(checkpoint.getUniqueID())){
 			m_Checkpoints.Add(checkpoint.getUniqueID(), checkpoint);
+			return true;
 		}
+		return false;
 	}
 	
 	public static void remove(Checkpoint checkpoint){
@@ -64,88 +36,110 @@ public class Checkpoints{
 /// By: Aleksi Lindeman
 /// </summary>
 public class Checkpoint : MonoBehaviour {
-	[SerializeField] List<ObjectState> m_ObjectStates = new List<ObjectState>();
-	[SerializeField] List<InventoryItemSaver> m_InventoryItems = new List<InventoryItemSaver>();
 	[SerializeField] string m_UniqueID = "";
 	[SerializeField] string m_SceneToLoad = "";
 	[SerializeField] string m_LoadingMessage = "";
 	[SerializeField] Vector3 m_SpawnPosition = new Vector3(0.0f, 0.0f, 0.0f);
-	[SerializeField] Vector3 m_SpawnRotation = new Vector3(0.0f, 0.0f, 0.0f);
-	private GameObject r_Player = null;
-	private GameObject r_UIRoot = null;
+	[SerializeField] float m_SpawnRotation = 0.0f;
+	private bool m_LoadingThisCheckpoint = false;
+	private bool m_UseThis = false; // debug
 	
 	// Use this for initialization
 	void Start () {
-		Checkpoints.add(this);
-		//Debug.Log("Add checkpoint: "+m_UniqueID);
-		Messenger.AddListener<GameObject>("onGameObjectInitialized", playerInitialized);
+		setUniqueID(gameObject.name);
+		if(Checkpoints.add(this)){
+			m_UseThis = true;
+			//Debug.Log("Add checkpoint: "+m_UniqueID);
+			Messenger.AddListener<int>("OnLevelWasLoaded", onLevelWasLoaded);
+		}
 	}
 	
 	public void start(){
 		Start();
 	}
 	
-	public void playerInitialized(GameObject obj){
-		if(r_Player == null && obj.tag == "Player"){
-			Debug.Log("Respawn at: "+m_SpawnPosition.ToString());
-			obj.transform.position = m_SpawnPosition;
-			obj.transform.rotation = Quaternion.Euler(m_SpawnRotation);
-			r_Player = obj;
-		}
-		
-		if(r_UIRoot == null && obj.GetComponent<SetupUILogic>() != null){
-			foreach(InventoryItemSaver inventoryItem in m_InventoryItems){
-				if(inventoryItem.getPickupItem() != null){
-					Debug.Log("Add "+inventoryItem.getAmount()+" "+inventoryItem.getPickupItem().m_ItemName);
-					for(int i = 0; i < inventoryItem.getAmount(); ++i){
-						InventoryLogic.Instance.addItem(inventoryItem.getPickupItem().m_ItemName, inventoryItem.getPickupItem().m_ItemThumbnail);
+	void onLevelWasLoaded(int level){
+		if(m_LoadingThisCheckpoint){
+			UIRoot uiRoot = FindObjectOfType<UIRoot>();
+			GameObject player = GameObject.FindGameObjectWithTag("Player");
+			if(uiRoot && player){
+				Debug.Log("Loaded level: "+level+", checkpoint: "+m_UniqueID);
+				
+				player.transform.position = m_SpawnPosition;
+				player.transform.rotation = Quaternion.Euler(0.0f, m_SpawnRotation, 0.0f);
+				
+				List<SerializablePair<int, string>> interactableStates = Game.getGameData().interactableStates;
+				List<string> inventoryItems = Game.getGameData().inventoryItems;
+				//Debug.Log("Num interactables: "+interactableStates.Count);
+				//Debug.Log("Num available interactables: "+GameObject.FindObjectsOfType<Interactable>().Length);
+				foreach(SerializablePair<int, string> stateSaver in interactableStates){
+					Interactable inter = Game.getGameData().getInteractableFromID(stateSaver.first);
+					//Debug.Log("inter: "+inter+" state: "+stateSaver.second);
+					inter.setPuzzleState(stateSaver.second);
+				}
+				//Debug.Log("Inventory items: "+inventoryItems.Count);
+				foreach(string inventoryItem in inventoryItems){
+					UISprite sprite = InventoryThumbnailDatabase.getThumbnail(inventoryItem);
+					if(sprite){
+						//Debug.Log("Add "+inventoryItem);
+						InventoryLogic.Instance.addItem(inventoryItem, sprite);
 					}
 				}
+				PuzzleEvent.trigger("onCheckpointLoaded", gameObject, false);
 			}
-			r_UIRoot = obj;
+			m_LoadingThisCheckpoint = false;
 		}
 	}
 	
 	public void load(){
 		//LoadingLogic.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
 		//GUIManager.Instance.loadLevel(m_SceneToLoad, m_LoadingMessage);
+		m_LoadingThisCheckpoint = true;
 		if(/*Application.loadedLevelName != m_SceneToLoad && */Application.CanStreamedLevelBeLoaded(m_SceneToLoad)){
 			Application.LoadLevel(m_SceneToLoad);
 		} 
 		else{
 			Debug.LogWarning ("You cant load this name or scene.");
 		}
+	}
+	
+	public void saveStates(){
+		List<string> inventoryItems = Game.getGameData().inventoryItems;
+		inventoryItems.Clear();
+		foreach(string item in InventoryLogic.Instance.getItems()){
+			inventoryItems.Add(item);
+		}
+		//inventoryItems.Add("CubeKeyA");
+		//Debug.Log("Inventory items: "+inventoryItems.Count);
 		
-		foreach(ObjectState objectState in m_ObjectStates){
-			if(objectState.getObject() && objectState.getObject().GetComponent<Interactable>()){
-				objectState.getObject().GetComponent<Interactable>().setPuzzleState(objectState.getState());
-			}
-		}
-		Debug.Log ("Player: " + r_Player);
-		if(r_Player){
-			Debug.Log("Respawn at: "+m_SpawnPosition.ToString());
-			r_Player.transform.position = m_SpawnPosition;
-			r_Player.transform.rotation = Quaternion.Euler(m_SpawnRotation);
-		}
-
-		if(r_UIRoot){
-			foreach(InventoryItemSaver inventoryItem in m_InventoryItems){
-				if(inventoryItem.getPickupItem() != null){
-					Debug.Log("Add "+inventoryItem.getAmount()+" "+inventoryItem.getPickupItem().m_ItemName);
-					for(int i = 0; i < inventoryItem.getAmount(); ++i){
-						InventoryLogic.Instance.addItem(inventoryItem.getPickupItem().m_ItemName, inventoryItem.getPickupItem().m_ItemThumbnail);
-					}
-				}
-			}
+		List<SerializablePair<int, string>> interactableStateData = Game.getGameData().interactableStates;
+		interactableStateData.Clear();
+		int idx = 0;
+		foreach(Interactable inter in GameObject.FindObjectsOfType<Interactable>()){
+			//Debug.Log("Saving: "+inter+", state: "+inter.getPuzzleState());
+			//Debug.Log("id: "+idx);
+			interactableStateData.Add(new SerializablePair<int, string>(idx++, inter.getPuzzleState()));
 		}
 	}
 	
-	public List<ObjectState> getObjectStates(){
-		return m_ObjectStates;
-	}
-	
-	public List<InventoryItemSaver> getInventoryItems(){
-		return m_InventoryItems;
+	void OnTriggerEnter(Collider col){
+		Vector3 pos = gameObject.transform.position;
+		pos.y += 1.0f;
+		setSpawnPosition(pos);
+		setSceneToLoad(Application.loadedLevelName);
+		setUniqueID(gameObject.name);
+		// For debugging usage. Doesn't affect release version.
+		Debug.Log("Use this? "+m_UseThis.ToString());
+		if(!Game.doesSavegameExist()){
+			Game.createSavegame();
+		}
+		//
+		if(col.tag == "Player" && !Game.hasCheckpointBeenUsed(gameObject.GetComponent<Checkpoint>())){
+			Debug.Log("Save checkpoint "+getUniqueID());
+			saveStates();
+			Game.setCurrentSavegameCheckpoint(getUniqueID());
+			Game.save();
+		}
 	}
 	
 	public string getUniqueID(){
@@ -165,7 +159,7 @@ public class Checkpoint : MonoBehaviour {
 		return m_SpawnPosition;
 	}
 	
-	public Vector3 getSpawnRotation(){
+	public float getSpawnRotation(){
 		return m_SpawnRotation;
 	}
 	
@@ -185,7 +179,7 @@ public class Checkpoint : MonoBehaviour {
 		m_SpawnPosition = spawnPosition;
 	}
 	
-	public void setSpawnRotation(Vector3 spawnRotation){
+	public void setSpawnRotation(float spawnRotation){
 		m_SpawnRotation = spawnRotation;
 	}
 }

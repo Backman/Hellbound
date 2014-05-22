@@ -1,6 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Spawns a specific GameObject at a position
+/// when a GameObject with a specific tag enters it's collision box
+/// By Arvid Backman
+/// </summary>
+
 public class SpawnObject : MonoBehaviour {
 	public GameObject m_SpawnObject;
 	public Transform m_Position;

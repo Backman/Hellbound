@@ -33,6 +33,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 	public Transform lookTarget { get; set; }							// The point where the character will be looking at
 
+	bool m_InAnimation = false;
 	bool m_OnGround;
 	Vector3 m_LookDirection;
 	float m_OriginalHeight;
@@ -50,7 +51,13 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	Vector3 m_PreviousPosition;
 	Vector3 m_DeltaPosition;
 	// Use this for initialization
+	public Vector3 LookDirection {
+		get { return m_LookDirection; }
+		set { m_LookDirection = value; }
+	}
 	void Start () {
+		Messenger.AddListener<HbClips.Animation, HbClips.animationCallback[]> ("activate animation", playAnimationClip);
+
 		r_Animator = GetComponentInChildren<Animator>();
 		r_Collider = collider as CapsuleCollider;
 
@@ -67,8 +74,20 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	}
 
 	void Update() {
+		if (Input.GetKeyDown (KeyCode.F4))
+				r_Animator.SetTrigger ("ActivateLow");
+		else if (Input.GetKeyDown (KeyCode.F2))
+				r_Animator.SetTrigger ("ActivateHigh");
+		else if (Input.GetKeyDown(KeyCode.F3))
+			r_Animator.SetTrigger("Drink");
+
+
 		m_DeltaPosition = transform.position - m_PreviousPosition;
 		m_PreviousPosition = transform.position;
+	}
+
+	void LateUpdate(){
+		m_InAnimation = r_Animator.GetFloat("Used") == 0.0f ? false : true ;
 	}
 
 	// This function is designed to be called from a seperate component(script)
@@ -78,7 +97,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		if(move.magnitude > 1.0f){
 			move.Normalize();
 		}
-
+		//Debug.Log ("Move: " + move);
 		m_MoveInput = move;
 		m_CrouchInput = crouch;
 		m_LookDirection = lookDirection;
@@ -89,9 +108,9 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 		//turnTowardsCameraForward();
 
-		preventStandingInLowHeadroom();
+		//preventStandingInLowHeadroom();
 
-		scaleCapsuleForCrouching();
+		//scaleCapsuleForCrouching();
 
 		applyExtraTurnRotation();
 
@@ -107,7 +126,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 		updateAnimator();
 
-		//rigidbody.velocity = m_Velocity;
+		rigidbody.velocity = m_Velocity;
 	}
 
 	public void zoomed(bool zoomed){
@@ -119,13 +138,14 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		// turn amount and forward amount required to head in the desired
 		// direction.
 		Vector3 localMove = transform.InverseTransformDirection(m_MoveInput);
-		m_TurnAmount = Mathf.Atan2(localMove.x, localMove.z);
+		float a2 = Mathf.Atan2(localMove.x, localMove.z);
+		float diff1 = Mathf.Abs(Mathf.PI - a2);
+		if(diff1 < 0.001f) {
+			m_TurnAmount = 0.0f;
+		} else {
+			m_TurnAmount = a2;
+		}
 		m_ForwardAmount = localMove.z;
-	}
-
-	public void turnCharacter(Vector3 move) {
-		Vector3 localMove = transform.InverseTransformDirection(move);
-		m_TurnAmount = Mathf.Atan2(localMove.x, localMove.z);
 	}
 
 	void turnTowardsCameraForward(){
@@ -134,10 +154,9 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		if(Mathf.Abs(m_ForwardAmount) < 0.1f){
 			Vector3 lookDelta = transform.InverseTransformDirection(m_LookDirection - transform.position);
 			float lookAngle = Mathf.Atan2(lookDelta.x, lookDelta.z) * Mathf.Rad2Deg;
-
 			// Are we beyond the threshold so that we need to turn the face of the camera?
 			if(Mathf.Abs(lookAngle) > m_AdvancedSettings.m_AutoTurnThresholdAngle){
-				m_TurnAmount += lookAngle * m_AdvancedSettings.m_AutoTurnSpeed * 0.001f;
+				m_TurnAmount += lookAngle * m_AdvancedSettings.m_AutoTurnSpeed * Time.deltaTime;
 			}
 		}
 	}
@@ -180,15 +199,16 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 		if(m_Velocity.y < 5.0f){
 			m_OnGround = false;
-			rigidbody.useGravity = true;
+//			rigidbody.useGravity = true;
 			foreach(var hit in hits){
 				if(!hit.collider.isTrigger){
 					if(m_Velocity.y <= 0.0f){
-						rigidbody.position = Vector3.MoveTowards(rigidbody.position, hit.point, Time.deltaTime * m_AdvancedSettings.m_GroundStickyEffect);
+						//rigidbody.position = Vector3.MoveTowards(rigidbody.position, hit.point, Time.deltaTime * m_AdvancedSettings.m_GroundStickyEffect);
+
 					}
 
 					m_OnGround = true;
-					rigidbody.useGravity = false;
+//					rigidbody.useGravity = false;
 					break;
 				}
 			}
@@ -261,7 +281,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	}
 
 	// Only useable with Unity Pro, because it can only handle IK rigs
-	void OnAnimatorIK(int layerIndex)
+/*	void OnAnimatorIK(int layerIndex)
 	{
 		// we set the weight so most of the look-turn is done with the head, not the body.
 		r_Animator.SetLookAtWeight(1, 0.2f, 2.5f);
@@ -273,7 +293,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		
 		// Used for the head look feature.
 		r_Animator.SetLookAtPosition( m_LookDirection );
-	}
+	}*/
 
 	void setUpAnimator(){
 		// this is a ref to the animator component on the root.
@@ -302,7 +322,87 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			rigidbody.velocity = v;
 		}
 	}
+	#region Interact animations	
+	/// <summary>
+	/// Plays an animation clip depending on passed argument. 
+	/// The HbClips.Animation argumet decides which clip to play.
+	/// The HbClips.animationCallback will be called at the keyframe which specifies tha the keyframe should be called.
+	/// </summary>
+	private HbClips.animationCallback[] r_Callbacks = new HbClips.animationCallback[0];
+	
+	private void playAnimationClip( HbClips.Animation clip, HbClips.animationCallback[] callbacks ){
 
+		if( !storeCallbacks (callbacks) ) {
+			return;
+		}
+
+		//Play the appropriate animation
+		string animation = "";
+		switch (clip) {
+			case HbClips.Animation.ActivateLow:
+				animation = "ActivateLow";
+				break;
+			case HbClips.Animation.ActivateHigh:
+				animation = "ActivateHigh";
+				break;
+			case HbClips.Animation.Drink:
+				animation = "Drink";
+				break;
+			case HbClips.Animation.None:
+			default:
+				doCallbacks();
+				return;
+			}
+
+		r_Animator.SetTrigger(animation);
+	}
+
+	//Store the callback for the keyCallback, which will be at the key frame in the animation
+	private bool storeCallbacks( HbClips.animationCallback[] callbacks){
+
+		r_Callbacks = new HbClips.animationCallback[ callbacks.Length ];
+		bool ok = true;
+
+		//Check if all callbacks are ok
+		foreach( HbClips.animationCallback callback in callbacks ){
+			if (callback == null ) {
+				if( callback.Method == null ){
+					ok = false;
+					break;
+				}
+			}
+		}
+
+		if( ok ){
+			r_Callbacks = callbacks;
+			return true;
+		} else {
+			Debug.LogError("Error. Invalid callback method detected in ThirdPersonCharacter");
+			return false;
+		}
+	}
+
+	private void doCallback(int index){
+		if (r_Callbacks.Length > index &&  r_Callbacks[index] != null && r_Callbacks[index].Method != null) {
+			r_Callbacks[index]();
+		} else {
+			Debug.LogError("Error! Invalid callback stored in r_Callbacks at index " + index);
+		}
+	}
+	private void doCallbacks(){
+		for( int i = 0; i < r_Callbacks.Length; i++ ){
+			doCallback(i);
+		}
+	}
+
+	/// <summary>
+	/// Returns if the avatar is able to move/run
+	/// </summary>
+	public bool isMovable(){
+		//TODO: Toggle OnAnimatorIK	
+		return !m_InAnimation ? true : false; 
+	}
+	#endregion
 	class RayHitComparer : IComparer {
 		public int Compare(object x, object y){
 			return ((RaycastHit)x).distance.CompareTo(((RaycastHit)y).distance);

@@ -2,6 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// A Finite State Machine. A design pattern
+/// http://en.wikipedia.org/wiki/Finite-state_machine
+/// 
+/// By Arvid Backman and Simon Jonasson
+/// </summary>
+
 public sealed class StateMachine <T> {
 	protected T m_Owner;
 

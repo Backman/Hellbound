@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 // Copied example from: http://stackoverflow.com/questions/166089/what-is-c-sharp-analog-of-c-stdpair
 public class Pair<T, U> {
-	public Pair() {
-	}
+	public Pair() {}
 	
 	public Pair(T first, U second) {
 		this.first = first;
@@ -16,6 +15,13 @@ public class Pair<T, U> {
 	public U second { get; set; }
 };
 
+/// <summary>
+/// The logic behind the scale puzzle in the famine crypt.
+/// The puzzle will be completed when correct cubes are on the
+/// correct scales
+/// By Arvid Backman and Aleksi Lindeman
+/// </summary>
+
 public class ScalePuzzle : MonoBehaviour {
 	public List<GameObject> m_Cubes = new List<GameObject>();
 	public List<GameObject> m_EvilScalePlacedCubes = new List<GameObject>();
@@ -23,7 +29,7 @@ public class ScalePuzzle : MonoBehaviour {
 	private List<Pair<GameObject, int>> m_EvilCubes = new List<Pair<GameObject, int>>();
 	private List<Pair<GameObject, int>> m_GoodCubes = new List<Pair<GameObject, int>>();
 
-
+	public Color m_HighlightColor = Color.black;
 	public GameObject m_LeftScale;
 	public GameObject m_RightScale;
 	public GameObject inspectCubesDummy;
@@ -36,17 +42,23 @@ public class ScalePuzzle : MonoBehaviour {
 	FreeLookCamera r_FreeLookCamera;
 
 	private bool m_ExaminatingCube = false;
-
 	private int m_CurrentIndex = 0;
-	
+	private int m_Balance = 0;
+	private Animator m_ScaleAnimator;
+	private float m_CurrentBlend = 0.0f;
+
+	private bool m_LeftScaleIsFull = false;
+	private bool m_RightScaleIsFull = false;
+
 	// Use this for initialization
 	void Start () {
 		Messenger.AddListener<GameObject, bool>("onRequestStartScalePuzzle", onRequestStartScalePuzzle);
+		Messenger.AddListener<GameObject, bool>("openLockedDoor", openLockedDoor);
 		foreach(GameObject cube in m_Cubes){
 			m_PlacedCubePositions.Add(cube.transform.localPosition);
 			m_CubePlaceUsed.Add(true);
 		}
-
+		m_ScaleAnimator = GetComponentInChildren<Animator>();
 		r_FreeLookCamera = Camera.main.transform.parent.transform.parent.gameObject.GetComponent<FreeLookCamera>();
 	}
 	
@@ -63,12 +75,19 @@ public class ScalePuzzle : MonoBehaviour {
 			//InventoryLogic.Instance.removeItem("cube key");
 		}
 
-		Messenger.Broadcast<bool>("lock player input", true);
 		Messenger.Broadcast("clear focus");
 
 		r_FreeLookCamera.setFreeCameraPosition(inspectCubesDummy.transform.position, inspectCubesDummy.transform.localRotation.eulerAngles);
 		r_FreeLookCamera.setFreeCameraEnabled(true);
 		StartCoroutine("inputLogic");
+		StartCoroutine("updateAnimator");
+	}
+
+	public void openLockedDoor(GameObject go, bool tr) {
+		Behaviour_DoorSimple door = go.GetComponent<Behaviour_DoorSimple>();
+		if(door != null) {
+			door.unlockAndOpen();
+		}
 	}
 	
 	public GameObject getPreviousCube(ref int index){
@@ -144,13 +163,32 @@ public class ScalePuzzle : MonoBehaviour {
 		return null;
 	}
 
+	IEnumerator updateAnimator() {
+		while(true) {
+			Debug.Log ("Updating Animator: " + m_CurrentBlend);
+			m_ScaleAnimator.SetFloat("Balance", m_CurrentBlend, 0.3f, Time.deltaTime);
+
+			yield return null;
+		}
+	}
+
 	public void placeOnEvilScale(GameObject cube, int cubeIndex){
 		m_EvilCubes.Add(new Pair<GameObject, int>(cube, cubeIndex));
+		Mesh cubeMesh = cube.GetComponent<MeshFilter>().mesh;
+		int idx = 0;
 		foreach(GameObject obj in m_EvilScalePlacedCubes){
 			if(!obj.activeSelf){
+				m_CurrentBlend -= 1.0f / 3.0f;
 				obj.SetActive(true);
+				obj.GetComponent<MeshFilter>().mesh = cubeMesh;
 				break;
 			}
+			idx++;
+		}
+		if(idx > 1) {
+			m_LeftScaleIsFull = true;
+		} else {
+			m_LeftScaleIsFull = false;
 		}
 	}
 
@@ -158,6 +196,7 @@ public class ScalePuzzle : MonoBehaviour {
 		for(int i = m_EvilScalePlacedCubes.Count - 1; i >= 0; --i){
 			GameObject obj = m_EvilScalePlacedCubes[i];
 			if(obj.activeSelf){
+				m_CurrentBlend += 1.0f / 3.0f;
 				obj.SetActive(false);
 				break;
 			}
@@ -169,15 +208,27 @@ public class ScalePuzzle : MonoBehaviour {
 			m_EvilCubes.RemoveAt(m_EvilCubes.Count - 1);
 			cube.SetActive(true);
 		}
+		m_LeftScaleIsFull = false;
 	}
 
 	public void placeOnGoodScale(GameObject cube, int cubeIndex){
 		m_GoodCubes.Add(new Pair<GameObject, int>(cube, cubeIndex));
+		Mesh cubeMesh = cube.GetComponent<MeshFilter>().mesh;
+		int idx = 0;
 		foreach(GameObject obj in m_GoodScalePlacedCubes){
 			if(!obj.activeSelf){
+				m_CurrentBlend += 1.0f / 3.0f;
+				
 				obj.SetActive(true);
+				obj.GetComponent<MeshFilter>().mesh = cubeMesh;
 				break;
 			}
+			idx++;
+		}
+		if(idx > 1) {
+			m_RightScaleIsFull = true;
+		} else {
+			m_RightScaleIsFull = false;
 		}
 	}
 
@@ -185,6 +236,7 @@ public class ScalePuzzle : MonoBehaviour {
 		for(int i = m_GoodScalePlacedCubes.Count - 1; i >= 0; --i){
 			GameObject obj = m_GoodScalePlacedCubes[i];
 			if(obj.activeSelf){
+				m_CurrentBlend -= 1.0f / 3.0f;
 				obj.SetActive(false);
 				break;
 			}
@@ -196,14 +248,16 @@ public class ScalePuzzle : MonoBehaviour {
 			m_GoodCubes.RemoveAt(m_GoodCubes.Count - 1);
 			cube.SetActive(true);
 		}
+		m_RightScaleIsFull = false;
 	}
 
 	IEnumerator inputLogic(){
 		m_CurrentIndex = 0;
 		r_ObjectInFocus = getFirstCube(ref m_CurrentIndex);
-		r_ObjectInFocus.renderer.material.color = Color.black;
-		
+		Color originColor = r_ObjectInFocus.renderer.material.color;
+		r_ObjectInFocus.renderer.material.color = m_HighlightColor;
 		bool puzzleActive = true;
+		bool firstLoop = true;
 		while(puzzleActive){
 			if(m_ExaminatingCube){
 				yield return StartCoroutine("examineCube");
@@ -213,7 +267,7 @@ public class ScalePuzzle : MonoBehaviour {
 				r_ObjectInFocus.SetActive(false);
 				r_ObjectInFocus = getFirstCube(ref m_CurrentIndex);
 				if(r_ObjectInFocus != null){
-					r_ObjectInFocus.renderer.material.color = Color.black;
+					r_ObjectInFocus.renderer.material.color = m_HighlightColor;
 				}
 				else{
 					// All cubes placed, now check if they were placed correctly
@@ -236,51 +290,61 @@ public class ScalePuzzle : MonoBehaviour {
 					}
 					if(clearedPuzzle){
 						PuzzleEvent.trigger("onScalePuzzleCleared", gameObject, false);
-						Debug.Log("Cleared puzzle!");
+						Messenger.Broadcast<bool>("lock player input", false);
+						StopCoroutine("updateAnimator");
+
+						r_FreeLookCamera.resetCameraTransform();
+						r_FreeLookCamera.setFreeCameraEnabled(false);
+
 						puzzleActive = false;
+						GetComponent<Interactable>().enabled = false;
 						break;
 					}
 					else{
 						Debug.Log("You failed noob!");
 						yield return StartCoroutine("removeFromScale");
 						r_ObjectInFocus = getFirstCube(ref m_CurrentIndex);
-						r_ObjectInFocus.renderer.material.color = Color.black;
+						r_ObjectInFocus.renderer.material.color = m_HighlightColor;
 					}
 				}
 			}
 			else {
-				if(Input.GetKeyDown(KeyCode.LeftArrow)){
+				if(InputManager.getButtonDown(InputManager.Button.Left, true)){
 					--m_CurrentIndex;
 					GameObject previousObject = getPreviousCube(ref m_CurrentIndex);
 					if(previousObject != r_ObjectInFocus){
-						r_ObjectInFocus.renderer.material.color = Color.white;
-						previousObject.renderer.material.color = Color.black;
+						r_ObjectInFocus.renderer.material.color = originColor;
+						previousObject.renderer.material.color = m_HighlightColor;
 						r_ObjectInFocus = previousObject;
+						//originColor = r_ObjectInFocus.renderer.material.color;
 					}
 				}
-				else if(Input.GetKeyDown(KeyCode.RightArrow)){
+				else if(InputManager.getButtonDown(InputManager.Button.Right, true)){
 					++m_CurrentIndex;
 					GameObject nextObject = getNextCube(ref m_CurrentIndex);
 					if(nextObject != r_ObjectInFocus){
-						r_ObjectInFocus.renderer.material.color = Color.white;
-						nextObject.renderer.material.color = Color.black;
+						r_ObjectInFocus.renderer.material.color = originColor;
+						nextObject.renderer.material.color = m_HighlightColor;
 						r_ObjectInFocus = nextObject;
+						//originColor = r_ObjectInFocus.renderer.material.color;
 					}
 				}
-				else if(Input.GetButtonDown("Jump")){
+				else if(InputManager.getButtonDown(InputManager.Button.Use) && !firstLoop){
 					// Cube is no longer placed on the table, jump over object when navigating
 					m_CubePlaceUsed[m_CurrentIndex] = false;
 					r_ObjectInFocus.transform.position = inspectCubesDummy.transform.position +  inspectCubesDummy.transform.forward * 0.5f;
-					r_ObjectInFocus.renderer.material.color = Color.white;
+					r_ObjectInFocus.renderer.material.color = originColor;
 					m_ExaminatingCube = true;
 				}
-				else if(Input.GetKeyDown(KeyCode.UpArrow) && (m_GoodCubes.Count > 0 || m_EvilCubes.Count > 0)){
-					r_ObjectInFocus.renderer.material.color = Color.white;
+				else if(InputManager.getButtonDown(InputManager.Button.Forward) && (m_GoodCubes.Count > 0 || m_EvilCubes.Count > 0)){
+					r_ObjectInFocus.renderer.material.color = originColor;
 					yield return StartCoroutine("removeFromScale");
 					r_ObjectInFocus = getFirstCube(ref m_CurrentIndex);
-					r_ObjectInFocus.renderer.material.color = Color.black;
+					originColor = r_ObjectInFocus.renderer.material.color;
+					r_ObjectInFocus.renderer.material.color = m_HighlightColor;
 				}
 			}
+			firstLoop = false;
 			yield return null;
 		}
 	}
@@ -289,9 +353,13 @@ public class ScalePuzzle : MonoBehaviour {
 		Bounds bound = r_ObjectInFocus.transform.collider.bounds;
 		Transform transform = r_ObjectInFocus.transform;
 		GameObject r_ScaleInFocus = m_LeftScale;
-		r_ScaleInFocus.renderer.material.color = Color.black;
+		if(m_LeftScaleIsFull) {
+			r_ScaleInFocus = m_RightScale;
+		}
+		Color originColor = r_ScaleInFocus.renderer.material.color;
+		r_ScaleInFocus.renderer.material.color = m_HighlightColor;
 		while(m_ExaminatingCube) {
-			if(Input.GetButton("Fire1")) {
+			if(InputManager.getButton(InputManager.Button.Rotate)) {
 				float x = Input.GetAxis("Mouse X") * m_RotationSpeed;
 				float y = Input.GetAxis("Mouse Y") * m_RotationSpeed;
 
@@ -300,46 +368,62 @@ public class ScalePuzzle : MonoBehaviour {
 				transform.RotateAround(pivot, Vector3.up, -x);
 				transform.RotateAround(pivot, Vector3.right, -y);
 			}
-			if(Input.GetButtonDown("Jump")) {
+			
+			float x1 = Input.GetAxis("HorizontalAxis") * m_RotationSpeed * 2.0f;
+			float y1 = Input.GetAxis("VerticalAxis") * m_RotationSpeed * 2.0f;
+			if(Mathf.Abs(x1) > 0.1f || Mathf.Abs(y1) > 0.1f){
+				Vector3 pivot = bound.center;
+				
+				transform.RotateAround(pivot, Vector3.up, -x1);
+				transform.RotateAround(pivot, Vector3.right, -y1);
+			}
+			
+			if(InputManager.getButtonDown(InputManager.Button.Left) && !m_LeftScaleIsFull) {
+				r_ScaleInFocus.renderer.material.color = originColor;
+				r_ScaleInFocus = m_LeftScale;
+				originColor = r_ScaleInFocus.renderer.material.color;
+				r_ScaleInFocus.renderer.material.color = m_HighlightColor;
+			}
+			else if(InputManager.getButtonDown(InputManager.Button.Right) && !m_RightScaleIsFull) {
+				r_ScaleInFocus.renderer.material.color = originColor;
+				r_ScaleInFocus = m_RightScale;
+				originColor = r_ScaleInFocus.renderer.material.color;
+				r_ScaleInFocus.renderer.material.color = m_HighlightColor;
+			}
+			
+			if(InputManager.getButtonDown(InputManager.Button.Use)) {
 				if(r_ScaleInFocus == m_LeftScale) {
 					placeOnEvilScale(r_ObjectInFocus, m_CurrentIndex);
 				}
 				else if(r_ScaleInFocus == m_RightScale) {
 					placeOnGoodScale(r_ObjectInFocus, m_CurrentIndex);
 				}
-				r_ScaleInFocus.renderer.material.color = Color.white;
+				r_ScaleInFocus.renderer.material.color = originColor;
 				break;
-			}
-			if(Input.GetKeyDown(KeyCode.LeftArrow)) {
-				r_ScaleInFocus.renderer.material.color = Color.white;
-				r_ScaleInFocus = m_LeftScale;
-				r_ScaleInFocus.renderer.material.color = Color.black;
-			}
-			else if(Input.GetKeyDown(KeyCode.RightArrow)) {
-				r_ScaleInFocus.renderer.material.color = Color.white;
-				r_ScaleInFocus = m_RightScale;
-				r_ScaleInFocus.renderer.material.color = Color.black;
 			}
 			yield return null;
 		}
 	}
 
 	IEnumerator removeFromScale(){
-		bool jump = Input.GetButtonDown("Jump");
+		bool use = InputManager.getButtonDown(InputManager.Button.Use);
 		GameObject r_ScaleInFocus = m_LeftScale;
-		r_ScaleInFocus.renderer.material.color = Color.black;
+		Color originColor = r_ScaleInFocus.renderer.material.color;
+		r_ScaleInFocus.renderer.material.color = m_HighlightColor;
 		while(true){
-			if(Input.GetKeyDown(KeyCode.LeftArrow)){
-				r_ScaleInFocus.renderer.material.color = Color.white;
+			if(InputManager.getButtonDown(InputManager.Button.Left, true)){
+				r_ScaleInFocus.renderer.material.color = originColor;
 				r_ScaleInFocus = m_LeftScale;
-				r_ScaleInFocus.renderer.material.color = Color.black;
+				originColor = r_ScaleInFocus.renderer.material.color;
+				r_ScaleInFocus.renderer.material.color = m_HighlightColor;
 			}
-			else if(Input.GetKeyDown(KeyCode.RightArrow)){
-				r_ScaleInFocus.renderer.material.color = Color.white;
+			else if(InputManager.getButtonDown(InputManager.Button.Right, true)){
+				r_ScaleInFocus.renderer.material.color = originColor;
 				r_ScaleInFocus = m_RightScale;
-				r_ScaleInFocus.renderer.material.color = Color.black;
+				originColor = r_ScaleInFocus.renderer.material.color;
+				r_ScaleInFocus.renderer.material.color = m_HighlightColor;
 			}
-			else if(Input.GetButtonDown("Jump") && !jump){
+			else if(InputManager.getButtonDown(InputManager.Button.Use) && !use){
 				if(r_ScaleInFocus == m_LeftScale) {
 					removeFromEvilScale();
 				}
@@ -348,14 +432,14 @@ public class ScalePuzzle : MonoBehaviour {
 				}
 
 				if(m_GoodCubes.Count == 0 && m_EvilCubes.Count == 0){
-					r_ScaleInFocus.renderer.material.color = Color.white;
+					r_ScaleInFocus.renderer.material.color = originColor;
 					break;
 				}
 			}
-			else if(Input.GetButtonUp("Jump")){
-				jump = false;
+			else if(InputManager.getButtonDown(InputManager.Button.Use)){
+				use = false;
 			}
-			else if(Input.GetKeyDown(KeyCode.DownArrow)){
+			else if(InputManager.getButtonDown(InputManager.Button.Backward)){
 				bool cubes = false;
 				int idx = 0;
 				foreach(bool v in m_CubePlaceUsed){
@@ -367,7 +451,7 @@ public class ScalePuzzle : MonoBehaviour {
 				}
 				Debug.Log ("available cubes: " + idx);
 				if(cubes) {
-					r_ScaleInFocus.renderer.material.color = Color.white;
+					r_ScaleInFocus.renderer.material.color = originColor;
 					break;
 				}
 			}

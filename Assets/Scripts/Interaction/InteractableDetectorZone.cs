@@ -32,9 +32,10 @@ public class InteractableDetectorZone : MonoBehaviour {
 				r_InFocus.examine();
 			}
 			
-			if( Input.GetButtonDown( "Pickup" ) ){
+/*			Depricated behaviour. Everything is done through the "Use" function nowadays
+ 			if( Input.GetButtonDown( "Pickup" ) ){
 				r_InFocus.pickUp();
-			}
+			}	*/
 		}
 	}
 
@@ -87,10 +88,11 @@ public class InteractableDetectorZone : MonoBehaviour {
 	}
 
 	public void clearFocus(){
-		r_InFocus.loseFocus();
-		r_InFocus = null;		
-		r_GUIManager.interactTextActive( false );
-	//	r_GUIManager.m_InteractText.gameObject.SetActive(false);
+		if (r_InFocus != null) {	
+			r_InFocus.loseFocus ();
+			r_InFocus = null;		
+			r_GUIManager.interactTextActive (false);	
+		}
 	}
 	
 	public void addFocus(Interactable inter) {

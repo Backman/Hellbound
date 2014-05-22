@@ -13,11 +13,11 @@ public class SoundTesting : MonoBehaviour {
 
 	public string Tag = "Master";
 
-	private VolumeControl m_VC;
+	private SoundControl m_VC;
 
 	void Start()
 	{
-		m_VC = VolumeControl.getInstance ();
+		m_VC = SoundControl.Instance;
 	}
 
 	void Update () 

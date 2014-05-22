@@ -21,6 +21,8 @@ public class PauseWindow {
 /// call functions further down in the hierarcy.
 ///
 /// Created by Simon
+/// 
+/// Modified by Peter, Arvid Backman
 /// </summary>
 public class GUIManager : Singleton<GUIManager> {
 	public PauseWindow m_PauseWindow;
@@ -72,7 +74,6 @@ public class GUIManager : Singleton<GUIManager> {
 
 	public void Awake(){
 		DontDestroyOnLoad( gameObject );
-		//TODO: INV_ Inventory.getInstance(); //For initialization
 		
 		if( r_ExamineWindow == null ){
 			Debug.LogError("Error! No description window present!");
@@ -113,11 +114,9 @@ public class GUIManager : Singleton<GUIManager> {
 			m_InventoryIsUp = !m_InventoryIsUp;
 			inventory();
 		}
-		if (Input.GetButtonDown("Journal") && !m_GamePaused) {
-			m_GamePaused = !m_GamePaused;
-			Messenger.Broadcast<bool>("lock player input", m_GamePaused);
-			journal();
-		}
+	}
+	void OnDestroy(){
+		Debug.Log ("Sadface from GUI");
 	}
 
 	public void togglePause(){
@@ -127,24 +126,36 @@ public class GUIManager : Singleton<GUIManager> {
 
 	public void pauseGame(bool pause) {
 		if (pause) {
-			PauseMenu.getInstance().showPauseWindow();
-			Time.timeScale = 0.0f;
-			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
-			r_MainCamera.GetComponent<PauseGameEffect>().StopCoroutine("pauseGame");
-			r_MainCamera.GetComponent<PauseGameEffect>().StartCoroutine("pauseGame", true);
+			Time.timeScale = 0.0000001f;
+			fadePauseWindow(true);
+
 		} else {
-			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(false);
 			Time.timeScale = 1.0f;
-			r_MainCamera.GetComponent<PauseGameEffect>().StopCoroutine("pauseGame");
-			r_MainCamera.GetComponent<PauseGameEffect>().StartCoroutine("pauseGame", false);
+			fadePauseWindow(false);
+
 			Messenger.Broadcast("reset pause window");
+		}
+
+	}
+
+	// Adds/Removes blur on the game view and shows/hides the PauseMenu UI widgets
+	private void fadePauseWindow(bool show){
+		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(show);
+
+		PauseGameEffect pge = r_MainCamera.GetComponent(typeof( PauseGameEffect ) ) as PauseGameEffect;
+		if( pge != null ){
+			pge.StopCoroutine("pauseGame");
+			pge.StartCoroutine("pauseGame", show);
+			PauseMenu.getInstance().hideAll();	//If this row is removed, we will display hints when we open the pause menu the first time
+		} else {
+			Debug.LogError("Error! No PauseGameEffect present. Are you using the correct PlayerController?\nIf you are, the PlayerController prefab is blue while you are in edit mode, otherwize it is red");
 		}
 	}
 
 	public void pauseExit(){
-		loadLevel (0, "");
+
 		togglePause ();
-		//DestroyThis ();
+		loadLevel (0, "");
 	}
 
 	public void DestroyThis(){
@@ -165,11 +176,6 @@ public class GUIManager : Singleton<GUIManager> {
 			m_PauseWindow.r_InventoryWindow.GetComponent<UIPlayTween>().tweenGroup = 0;
 		}
 		
-	}
-	
-	public void journal(){
-		PauseMenu.getInstance ().showJournal();
-		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
 	}
 
 	public void loadLevel( string levelName, string loadMessage ){

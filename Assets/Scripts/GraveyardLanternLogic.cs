@@ -1,7 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class GraveyardLanternLogic : MonoBehaviour {
+/// <summary>
+/// Logic to pick up and use the player lantern
+/// By Arvid Backman
+/// </summary>
+
+ public class GraveyardLanternLogic : MonoBehaviour {
 
 	void Start() {
 		Messenger.AddListener<GameObject, bool>("pickUpLantern", pickUpLantern);

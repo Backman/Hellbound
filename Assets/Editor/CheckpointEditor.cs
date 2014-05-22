@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
@@ -7,20 +8,18 @@ using System.Collections.Generic;
 /// </summary>
 [CustomEditor(typeof(Checkpoint))]
 public class CheckpointEditor : Editor {
-	private int mIndex = 0;
-	
 	public void OnEnable(){
 		hideFlags = HideFlags.HideAndDontSave;
 	}
 	
 	public override void OnInspectorGUI(){
 		Checkpoint checkpoint = target as Checkpoint;
-		List<ObjectState> objectStates = checkpoint.getObjectStates();
-		List<InventoryItemSaver> inventoryItems = checkpoint.getInventoryItems();
+		//List<ObjectState> objectStates = checkpoint.getObjectStates();
+		//List<InventoryItemSaver> inventoryItems = checkpoint.getInventoryItems();
 		
 		NGUIEditorTools.SetLabelWidth(80f);
-		NGUIEditorTools.DrawSeparator();
-		
+		//NGUIEditorTools.DrawSeparator();
+		/*
 		GUILayout.BeginHorizontal();
 		{
 			GUILayout.Label("Unique ID", GUILayout.Width(100f));
@@ -28,7 +27,8 @@ public class CheckpointEditor : Editor {
 			checkpoint.setUniqueID(uniqueID);
 		}
 		GUILayout.EndHorizontal();
-		
+		*/
+		/*
 		GUILayout.BeginHorizontal();
 		{
 			GUILayout.Label("Scene to load", GUILayout.Width(100f));
@@ -36,27 +36,20 @@ public class CheckpointEditor : Editor {
 			checkpoint.setSceneToLoad(sceneToLoad);
 		}
 		GUILayout.EndHorizontal();
-		
+		*/
 		GUILayout.Label("Loading message", GUILayout.Width(150f));
 		string loadingMessage = EditorGUILayout.TextArea(checkpoint.getLoadingMessage());
 		checkpoint.setLoadingMessage(loadingMessage);
 		
 		GUILayout.BeginHorizontal();
 		{
-			GUILayout.Label("Spawn position", GUILayout.Width(100f));
-			Vector3 spawnPosition = EditorGUILayout.Vector3Field("", checkpoint.getSpawnPosition());
-			checkpoint.setSpawnPosition(spawnPosition);
-		}
-		GUILayout.EndHorizontal();
-		
-		GUILayout.BeginHorizontal();
-		{
 			GUILayout.Label("Spawn rotation", GUILayout.Width(100f));
-			Vector3 spawnRotation = EditorGUILayout.Vector3Field("", checkpoint.getSpawnRotation());
+			float spawnRotation = EditorGUILayout.FloatField(checkpoint.getSpawnRotation());
 			checkpoint.setSpawnRotation(spawnRotation);
 		}
 		GUILayout.EndHorizontal();
 		
+		/*
 		GUI.backgroundColor = Color.green;
 		if(GUILayout.Button("Add object")){
 			objectStates.Add(new ObjectState());
@@ -105,7 +98,7 @@ public class CheckpointEditor : Editor {
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Label("Pickup item", GUILayout.Width(80f));
-				Behaviour_PickUp pickupItem = (Behaviour_PickUp)EditorGUILayout.ObjectField(inventoryItem.getPickupItem(), typeof(Behaviour_PickUp));
+				string pickupItem = EditorGUILayout.TextField("", inventoryItem.getPickupItem());
 				GUILayout.Label("amount", GUILayout.Width(60f));
 				int amount = EditorGUILayout.IntField(inventoryItem.getAmount(), GUILayout.Width(50f));
 				
@@ -124,8 +117,10 @@ public class CheckpointEditor : Editor {
 			GUILayout.EndHorizontal();
 			++index;
 		}
+		*/
 		
 		// I think this is used to force unity to save(serialize)... or something?
 		EditorUtility.SetDirty(target);
 	}
 }
+#endif
