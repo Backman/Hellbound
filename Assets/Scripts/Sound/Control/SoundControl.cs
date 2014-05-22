@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 public class SoundControl {
 	/// <summary>
-	/// Volumecontrol handles the masterVolume and also the groupVolume (ie "Music", "Voice" and "SFX")
-	/// Volumecontrol is a singleton, meaning that only one can exist in the scene at any one time
+	/// SoundControl handles the masterVolume and also the groupVolume (ie "Music", "Voice" and "SFX")
+	/// SoundControl is a singleton, meaning that only one can exist in the scene at any one time
+	/// although only if this script is used responsibly (you can make serveral of theese)
 	/// 
 	/// Anton Thorsell
 	/// </summary>

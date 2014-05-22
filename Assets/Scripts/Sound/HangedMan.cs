@@ -2,8 +2,15 @@
 using System.Collections;
 
 public class HangedMan : MonoBehaviour {
+
 	/// <summary>
-	/// Thorsell
+	/// HangedMan was written by Anton Thorsell
+	/// 
+	/// This script was created to make a gameobject that resembles a body
+	/// "swing" and start a sound that resembles a rope at the apex of the "swings"
+	/// 
+	/// This is a super simple script
+	/// 
 	/// </summary>
 
 	private FMOD_StudioEventEmitter r_Emitter;
@@ -17,7 +24,7 @@ public class HangedMan : MonoBehaviour {
 
 	void Start()
 	{
-		//r_Emitter = GetComponent<FMOD_StudioEventEmitter> ();
+		r_Emitter = GetComponent<FMOD_StudioEventEmitter> ();
 	}
 
 	void Update()
@@ -27,13 +34,13 @@ public class HangedMan : MonoBehaviour {
 		if (m_pi >= Mathf.PI-0.005f && !m_ROnce) {
 			m_ROnce = true;
 			m_LOnce = false;
-			//r_Emitter.Play();
+			r_Emitter.Play();
 		}
 
 		if (m_pi >= (Mathf.PI*2f)-0.005f && !m_LOnce) {
 			m_LOnce = true;
 			m_ROnce = false;
-			//r_Emitter.Play();
+			r_Emitter.Play();
 			m_pi = 0f;
 		}
 
