@@ -18,6 +18,7 @@ public class HangedMan : MonoBehaviour {
 	private float m_pi = 0f;
 
 	public float m_SwingAmount = 2;
+	public float m_Speed = 1f;
 
 	private bool m_LOnce = false;
 	private bool m_ROnce = false;
@@ -29,7 +30,7 @@ public class HangedMan : MonoBehaviour {
 
 	void Update()
 	{
-		m_pi += 0.0045f;
+		m_pi += 0.0045f * m_Speed;
 
 		if (m_pi >= Mathf.PI-0.005f && !m_ROnce) {
 			m_ROnce = true;

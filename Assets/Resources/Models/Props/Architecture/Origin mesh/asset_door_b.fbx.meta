@@ -1,13 +1,22 @@
 fileFormatVersion: 2
-guid: 0b4f33db5355c454eaa47430afb82d4f
+guid: 50223583fcb5e7f47a565bc4fc94c174
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
+    100002: door_b2
+    100004: polySurface1
+    100006: polySurface2
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: door_b2
+    400002: door_b2
+    400004: polySurface1
+    400006: polySurface2
+    2300000: polySurface1
+    2300002: polySurface2
+    3300000: polySurface1
+    3300002: polySurface2
+    4300000: polySurface1
+    4300002: polySurface2
     9500000: //RootNode
   materials:
     importMaterials: 1
