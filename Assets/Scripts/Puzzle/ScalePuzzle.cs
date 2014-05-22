@@ -15,6 +15,13 @@ public class Pair<T, U> {
 	public U second { get; set; }
 };
 
+/// <summary>
+/// The logic behind the scale puzzle in the famine crypt.
+/// The puzzle will be completed when correct cubes are on the
+/// correct scales
+/// By Arvid Backman and Aleksi Lindeman
+/// </summary>
+
 public class ScalePuzzle : MonoBehaviour {
 	public List<GameObject> m_Cubes = new List<GameObject>();
 	public List<GameObject> m_EvilScalePlacedCubes = new List<GameObject>();

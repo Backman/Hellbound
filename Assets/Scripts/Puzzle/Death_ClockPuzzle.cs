@@ -2,6 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Script that handles the logic in the
+/// "clock" puzzle in the death crypt
+/// 
+/// By Arvid Backman
+/// </summary>
+
 public class Death_ClockPuzzle : MonoBehaviour {
 
 	public List<BoxCollider> m_Triggers = new List<BoxCollider>();

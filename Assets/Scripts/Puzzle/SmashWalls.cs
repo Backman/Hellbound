@@ -2,6 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Script that handles the moving walls while
+/// doing the scale puzzle in the famine crypt
+/// 
+/// By Arvid Backman and Aleksi Lindeman
+/// </summary>
+
 public class SmashWalls : MonoBehaviour {
 	public string m_LevelToLoad;
 	public string m_DeathText;
