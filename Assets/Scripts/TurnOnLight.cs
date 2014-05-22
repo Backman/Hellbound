@@ -2,6 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Turns on lights when a specific GameObject
+/// enters it's collider
+/// By Arvid Backman
+/// </summary>
+
 public class TurnOnLight : MonoBehaviour {
 	public List<Light> m_Lights = new List<Light>();
 	private float[] m_OrignalIntensity;

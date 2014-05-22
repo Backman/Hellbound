@@ -17,7 +17,7 @@ public class SoundTesting : MonoBehaviour {
 
 	void Start()
 	{
-		m_VC = SoundControl.getInstance ();
+		m_VC = SoundControl.Instance;
 	}
 
 	void Update () 
