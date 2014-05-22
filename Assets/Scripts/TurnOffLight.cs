@@ -2,6 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Turns off lights when a specific GameObject
+/// enters it's collider
+/// By Arvid Backman
+/// </summary>
+
 public class TurnOffLight : MonoBehaviour {
 	public List<Light> m_Lights = new List<Light>();
 	public string m_ColliderTag = "Player";

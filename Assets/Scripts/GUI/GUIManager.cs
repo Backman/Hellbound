@@ -22,7 +22,7 @@ public class PauseWindow {
 ///
 /// Created by Simon
 /// 
-/// Edited by Peter
+/// Modified by Peter, Arvid Backman
 /// </summary>
 public class GUIManager : Singleton<GUIManager> {
 	public PauseWindow m_PauseWindow;
