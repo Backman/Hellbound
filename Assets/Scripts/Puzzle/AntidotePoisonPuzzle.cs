@@ -10,6 +10,8 @@ using System.Collections;
 
 public class AntidotePoisonPuzzle : MonoBehaviour {
 
+	public string m_DeathText = "You suck";
+
 	// Use this for initialization
 	void Start () {
 		Messenger.AddListener<GameObject, bool>("onDrinkAntidote", onDrinkAntidote);
@@ -30,6 +32,7 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 		Interactable inter = poison.GetComponent<Interactable>();
 		inter.setPuzzleState("unavailable");
 		poison.SetActive (false);
+		GUIManager.Instance.loadLastCheckPoint(m_DeathText);
 		Debug.Log("You drank poison!");
 		Messenger.Broadcast ("clear focus");
 	}
