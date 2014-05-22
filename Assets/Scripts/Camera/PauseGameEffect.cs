@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Script that adds a image blur effect
+/// to the camera
+/// 
+/// By Arvid Backman
+/// </summary>
+
 [ExecuteInEditMode]
 public class PauseGameEffect : MonoBehaviour {	
 	public float m_BlurSize = 1.0f;	

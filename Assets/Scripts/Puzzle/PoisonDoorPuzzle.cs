@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Logic to open a door and start
+/// "sickness" when the poison has been used
+/// By Aleksi Lindeman
+/// Modified by Arvid Backman, Simon Jonasson
+/// </summary>
+
 public class PoisonDoorPuzzle : MonoBehaviour {
 
 	// Use this for initialization

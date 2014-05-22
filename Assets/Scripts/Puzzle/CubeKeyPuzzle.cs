@@ -2,6 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Logic for the cube combination puzzle
+/// to open the door in the famine crypt
+/// By Arvid Backman and Aleksi Lindeman
+/// </summary>
+
 public class CubeKeyPuzzle : MonoBehaviour {
 	private List<Behaviour_PickUp> m_Cubes = new List<Behaviour_PickUp>();
 	private int m_CubesPlaced = 0;
