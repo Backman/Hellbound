@@ -4,6 +4,20 @@ using System.Collections.Generic;
 
 public class GetDominantTexture : MonoBehaviour {
 
+	/// <summary>
+	/// GetDominantTexture was writted by Anton Thorsell
+	/// 
+	/// This script will need to be added to the footstepHitboxes (front)
+	/// 
+	/// What GetDominantTexture does in essence is taking the position
+	/// of the object this script is on and checks that position on a terrain.
+	/// After that we check which texture that is most dominant and returns
+	/// that textures index
+	/// 
+	/// This script is only used for FootStepSounds to figure out what texture it stands on
+	/// (this only works with terrains)
+	/// </summary>
+
 	[HideInInspector]
 	public float m_SurfaceType = 0;
 	

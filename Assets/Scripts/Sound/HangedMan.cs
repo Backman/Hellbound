@@ -2,49 +2,50 @@
 using System.Collections;
 
 public class HangedMan : MonoBehaviour {
+
 	/// <summary>
-	/// Thorsell
+	/// HangedMan was written by Anton Thorsell
+	/// 
+	/// This script was created to make a gameobject that resembles a body
+	/// "swing" and start a sound that resembles a rope at the apex of the "swings"
+	/// 
+	/// This is a super simple script
+	/// 
 	/// </summary>
 
-	private FMOD.Studio.ParameterInstance r_parameter;
+	private FMOD_StudioEventEmitter r_Emitter;
 
 	private float m_pi = 0f;
 
-	public bool m_Once = false;
+	public float m_SwingAmount = 2;
+
+	private bool m_LOnce = false;
+	private bool m_ROnce = false;
 
 	void Start()
 	{
-		r_parameter = GetComponent<FMOD_StudioEventEmitter> ().getParameter("Speed");
+		r_Emitter = GetComponent<FMOD_StudioEventEmitter> ();
 	}
 
 	void Update()
 	{
 		m_pi += 0.0045f;
 
-		if (m_pi > Mathf.PI * 2f) {
+		if (m_pi >= Mathf.PI-0.005f && !m_ROnce) {
+			m_ROnce = true;
+			m_LOnce = false;
+			r_Emitter.Play();
+		}
+
+		if (m_pi >= (Mathf.PI*2f)-0.005f && !m_LOnce) {
+			m_LOnce = true;
+			m_ROnce = false;
+			r_Emitter.Play();
 			m_pi = 0f;
 		}
 
-		if (m_pi >= Mathf.PI-0.005f && m_pi <= Mathf.PI+0.005f && !m_Once) {
-			m_Once = true;
-			r_parameter.setValue(0.7f);
-		}
-		if (m_pi >= (Mathf.PI*0.8f)-0.005f && m_pi <= (Mathf.PI*0.8f)+0.005f && m_Once) {
-			m_Once = false;
-			r_parameter.setValue(0.0f);
-		}
-
-		if (m_pi >= (Mathf.PI*2f)-0.005f && m_pi <= (Mathf.PI*2f)+0.005f && !m_Once) {
-			m_Once = true;
-			r_parameter.setValue(0.7f);
-		}
-		if (m_pi >= (Mathf.PI*1.8f)-0.005f && m_pi <= (Mathf.PI*1.8f)+0.005f && m_Once) {
-			m_Once = false;
-			r_parameter.setValue(0.0f);
-		}
-
 		Quaternion newValues = gameObject.transform.localRotation;
-		newValues.x = (Mathf.Cos(m_pi)*(0.015f));
+		newValues.x = (Mathf.Cos(m_pi)*(m_SwingAmount/100f));
 		gameObject.transform.localRotation = newValues;
 	}
 }
