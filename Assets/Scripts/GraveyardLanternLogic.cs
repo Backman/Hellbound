@@ -1,6 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Logic to pick up and use the player lantern
+/// By Arvid Backman
+/// </summary>
+
  public class GraveyardLanternLogic : MonoBehaviour {
 
 	void Start() {

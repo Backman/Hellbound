@@ -3,6 +3,8 @@ using System.Collections;
 
 /// <summary>
 /// Abstract class that is meant to follow a target
+/// 
+/// By Arvid Backman
 /// </summary>
 
 public abstract class TargetFollower : MonoBehaviour {

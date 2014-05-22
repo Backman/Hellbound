@@ -1,5 +1,11 @@
 using UnityEngine;
 
+/// <summary>
+/// Base class for all image effects
+/// 
+/// By Arvid Backman
+/// </summary>
+
 [RequireComponent(typeof(Camera))]
 [AddComponentMenu("")]
 public class PostProcessEffectBase : MonoBehaviour {
