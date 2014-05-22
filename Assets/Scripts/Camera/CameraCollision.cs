@@ -4,6 +4,8 @@ using System.Collections;
 
 /// <summary>
 /// Checks if the camera is colliding with something and handles it.
+/// 
+/// By Arvid Backman
 /// </summary>
 
 public class CameraCollision : MonoBehaviour {

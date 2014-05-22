@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Interactable that only can be "used"
+/// by the player
+/// 
+/// Will trigger events when activated
 /// 
 /// Created by Arvid
 /// </summary>

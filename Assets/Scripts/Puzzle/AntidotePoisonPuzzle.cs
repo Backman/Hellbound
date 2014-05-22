@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Puzzle logic for the Antidote puzzle
+/// in the pestilence crypt
+/// By Aleksi Lindeman
+/// Modified by Arvid Backman
+/// </summary>
+
 public class AntidotePoisonPuzzle : MonoBehaviour {
 
 	// Use this for initialization

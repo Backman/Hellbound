@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Logic to open the door in the war crypt
+/// by hanging lanterns on correct hooks
+/// By Aleksi Lindeman
+/// Modified by Arvid Backman
+/// </summary>
+
 public class LanternPuzzle : MonoBehaviour {
 	
 	private int lanternsPlaced = 0;
