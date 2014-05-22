@@ -12,6 +12,7 @@ public class LoadLevelFunction : MonoBehaviour {
 	public void LoadLevel(string name){
 		if (Application.CanStreamedLevelBeLoaded (name)) {
 			Application.LoadLevel (name);
+			Messenger.Cleanup();
 		} 
 		else {
 			Debug.LogWarning ("You cant load this name or scene.");
@@ -21,6 +22,7 @@ public class LoadLevelFunction : MonoBehaviour {
 	public void LoadLevel(int index){
 		if (Application.CanStreamedLevelBeLoaded (index)) {
 			Application.LoadLevel(index);
+			Messenger.Cleanup();
 		} 
 		else {
 			Debug.LogWarning ("You cant load this name or scene.");
