@@ -68,7 +68,7 @@ ModelImporter:
       name: Bad_3
       takeName: Take 001
       firstFrame: 1
-      lastFrame: 30
+      lastFrame: 2
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -109,8 +109,8 @@ ModelImporter:
     - serializedVersion: 16
       name: Bad_2
       takeName: Take 001
-      firstFrame: 30
-      lastFrame: 50
+      firstFrame: 20
+      lastFrame: 21
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -151,8 +151,8 @@ ModelImporter:
     - serializedVersion: 16
       name: Bad_1
       takeName: Take 001
-      firstFrame: 50
-      lastFrame: 70
+      firstFrame: 40
+      lastFrame: 41
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -193,8 +193,8 @@ ModelImporter:
     - serializedVersion: 16
       name: Good_1
       takeName: Take 001
-      firstFrame: 70
-      lastFrame: 90
+      firstFrame: 99
+      lastFrame: 100
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -235,7 +235,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Good_2
       takeName: Take 001
-      firstFrame: 90
+      firstFrame: 119
       lastFrame: 120
       wrapMode: 0
       orientationOffsetY: 0
@@ -277,7 +277,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Good_3
       takeName: Take 001
-      firstFrame: 1
+      firstFrame: 139
       lastFrame: 140
       wrapMode: 0
       orientationOffsetY: 0
