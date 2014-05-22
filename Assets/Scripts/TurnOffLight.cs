@@ -23,13 +23,17 @@ public class TurnOffLight : MonoBehaviour {
 		float t = m_TurnOffSpeed;
 		while(t >= 0.0f){
 			foreach(Light light in m_Lights){
-				light.intensity *= (t / m_TurnOffSpeed);
+				if( light != null ){
+					light.intensity *= (t / m_TurnOffSpeed);
+				}
 			}
 			t -= Time.deltaTime;
 			yield return null;
 		}
 		foreach(Light light in m_Lights){
-			light.intensity = 0.0f;
+			if( light != null ){
+				light.intensity = 0.0f;
+			}
 		}
 	}
 }
