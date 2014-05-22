@@ -26,6 +26,7 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 		Debug.Log("You drank antidote!");
 		StartCoroutine("stopSickness");
 		Messenger.Broadcast ("clear focus");
+		Messenger.Broadcast<bool>("set is poisoned", false);
 	}
 	
 	public void onDrinkPoison(GameObject poison, bool tr){
@@ -35,6 +36,7 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 		GUIManager.Instance.loadLastCheckPoint(m_DeathText);
 		Debug.Log("You drank poison!");
 		Messenger.Broadcast ("clear focus");
+		Messenger.Broadcast<bool>("set is poisoned", false);
 	}
 
 	public void openDoor(GameObject door, bool tr) {
