@@ -56,9 +56,10 @@ public class InputManager : MonoBehaviour {
 		m_ButtonState[Button.Pause] = ButtonState.None;
 		
 		
-		foreach(Button key in m_StickyButtonState.Keys){
-			m_StickyButtonState[key] = ButtonState.None;
-			m_StickyKeyTiming[key] = 0.0f;
+		foreach(Button key in m_ButtonState.Keys){
+				m_StickyButtonState[key] = ButtonState.None;
+				m_StickyKeyTiming[key] = 0.0f;
+
 		}
 	}
 	

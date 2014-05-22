@@ -127,18 +127,29 @@ public class GUIManager : Singleton<GUIManager> {
 	public void pauseGame(bool pause) {
 		if (pause) {
 			Time.timeScale = 0.0000001f;
-			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(true);
-			r_MainCamera.GetComponent<PauseGameEffect>().StopCoroutine("pauseGame");
-			r_MainCamera.GetComponent<PauseGameEffect>().StartCoroutine("pauseGame", true);
+			fadePauseWindow(true);
+
 		} else {
-			m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(false);
 			Time.timeScale = 1.0f;
-			r_MainCamera.GetComponent<PauseGameEffect>().StopCoroutine("pauseGame");
-			r_MainCamera.GetComponent<PauseGameEffect>().StartCoroutine("pauseGame", false);
-			PauseMenu.getInstance().hideAll();
+			fadePauseWindow(false);
+
 			Messenger.Broadcast("reset pause window");
 		}
 
+	}
+
+	// Adds/Removes blur on the game view and shows/hides the PauseMenu UI widgets
+	private void fadePauseWindow(bool show){
+		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(show);
+
+		PauseGameEffect pge = r_MainCamera.GetComponent(typeof( PauseGameEffect ) ) as PauseGameEffect;
+		if( pge != null ){
+			pge.StopCoroutine("pauseGame");
+			pge.StartCoroutine("pauseGame", show);
+			PauseMenu.getInstance().hideAll();	//If this row is removed, we will display hints when we open the pause menu the first time
+		} else {
+			Debug.LogError("Error! No PauseGameEffect present. Are you using the correct PlayerController?\nIf you are, the PlayerController prefab is blue while you are in edit mode, otherwize it is red");
+		}
 	}
 
 	public void pauseExit(){
