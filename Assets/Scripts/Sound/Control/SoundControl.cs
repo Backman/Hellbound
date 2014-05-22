@@ -8,6 +8,8 @@ public class SoundControl {
 	/// SoundControl is a singleton, meaning that only one can exist in the scene at any one time
 	/// although only if this script is used responsibly (you can make serveral of theese)
 	/// 
+	/// SoundControl can also alter the AudioSpeakerMode (mono, stereo, 5.1, etc).
+	/// 
 	/// Anton Thorsell
 	/// </summary>
 
