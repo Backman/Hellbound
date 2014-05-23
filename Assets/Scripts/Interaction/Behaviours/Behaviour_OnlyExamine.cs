@@ -5,7 +5,8 @@ using System.Collections;
 /// Behaviour_ only examine.
 /// 
 /// This script is attached to objects which can only be
-/// interacted with via the examine-action. 
+/// interacted with via the examine-action.
+/// By Simon Jonasson and Arvid Backman
 /// </summary>
 public class Behaviour_OnlyExamine : Interactable {
 

@@ -37,7 +37,7 @@ public class InputManager : MonoBehaviour {
 	static Dictionary<Button, ButtonState> m_ButtonState = new Dictionary<Button, ButtonState>();
 	static Dictionary<Button, ButtonState> m_StickyButtonState = new Dictionary<Button, ButtonState>();
 	static Dictionary<Button, float> m_StickyKeyTiming = new Dictionary<Button, float>();
-	public static float m_AxisDeadlock = 0.1f;
+	public static float m_AxisDeadlock = 0.5f;
 	public static float m_StickyKeyUpdateDuration = 0.5f; // 0.1 is 100 ms
 	
 	void Start(){
@@ -56,7 +56,7 @@ public class InputManager : MonoBehaviour {
 		m_ButtonState[Button.Pause] = ButtonState.None;
 		
 		
-		foreach(Button key in m_StickyButtonState.Keys){
+		foreach(Button key in m_ButtonState.Keys){
 			m_StickyButtonState[key] = ButtonState.None;
 			m_StickyKeyTiming[key] = 0.0f;
 		}
@@ -301,5 +301,9 @@ public class InputManager : MonoBehaviour {
 	
 	public static bool getButtonUp(Button button){
 		return m_ButtonState[button] == ButtonState.Released;
+	}
+	
+	public static bool getButton(Button button){
+		return m_ButtonState[button] == ButtonState.Pressed || m_ButtonState[button] == ButtonState.Pressing;
 	}
 }

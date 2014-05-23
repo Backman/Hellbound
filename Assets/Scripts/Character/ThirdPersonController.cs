@@ -65,6 +65,15 @@ public class ThirdPersonController : MonoBehaviour {
 		// Read inputs
 		float h = r_Character.isMovable() ? Input.GetAxis ("Horizontal") : 0;
 		float v = r_Character.isMovable() ? Input.GetAxis("Vertical") : 0;
+		if(h > 0.1f)
+			h = 1.0f;
+		if(h < -0.1f)
+			h = -1.0f;
+			
+		if(v > 0.1f)
+			v = 1.0f;
+		if(v < -0.1f)
+			v = -1.0f;
 
 		// Calculate move direction to pass to third person character
 		if(r_Camera){
@@ -81,6 +90,9 @@ public class ThirdPersonController : MonoBehaviour {
 
 		// Walk/Run speed is modified by a key press.
 		bool walkToggle = Input.GetButton("Run");
+		float runAxis = Input.GetAxis("RunTrigger");
+		if(runAxis < -0.5f)
+			walkToggle = true;
 		// We select appropriate speed based on whether we're walking by default, and whether the walk/run toggle button is pressed:
 		float walkMultiplier = (m_WalkByDefault ? walkToggle ? 1.0f : 0.5f : walkToggle ? 0.5f : 1.0f);
 		m_Move *= walkMultiplier;

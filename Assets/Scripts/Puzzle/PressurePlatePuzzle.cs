@@ -1,6 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Puzzle logic to set the correct
+/// plate formations.
+/// By Aleksi Lindeman
+/// </summary>
+
 public class PressurePlatePuzzle : MonoBehaviour {
 
 	// Use this for initialization

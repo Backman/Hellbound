@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Logic to open a door and start
+/// "sickness" when the poison has been used
+/// By Aleksi Lindeman
+/// Modified by Arvid Backman, Simon Jonasson
+/// </summary>
+
 public class PoisonDoorPuzzle : MonoBehaviour {
 
 	// Use this for initialization
@@ -18,6 +25,7 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 
 	//Called at the beginning of the "drink" animation
 	public void onMoveBottleToHand(GameObject obj, bool tr) {
+
 		Messenger.Broadcast ("clear focus");
 
 		Interactable inter = obj.GetComponent<Interactable> ();
@@ -32,12 +40,14 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 	}
 	//Called at the peak of the "drink" animation
 	public void onDrinkDoorPoison(GameObject obj, bool tr) {
+
 		Interactable inter = obj.GetComponent<Interactable> ();
 		inter.setPuzzleState ("used");
 	}
 
 	//Called at the end of the "drink" animation
 	public void onBottleRemove(GameObject obj, bool tr){
+
 		GameObject.Destroy (obj);
 	}
 

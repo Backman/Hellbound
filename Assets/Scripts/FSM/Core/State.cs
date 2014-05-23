@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Abstract base class for all the behaivour states
+/// By Arvid Backman and Simon Jonasson
+/// </summary>
+
 [System.Serializable]
 public abstract class State <T> {
 
