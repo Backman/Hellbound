@@ -15,6 +15,13 @@ public class Pair<T, U> {
 	public U second { get; set; }
 };
 
+/// <summary>
+/// The logic behind the scale puzzle in the famine crypt.
+/// The puzzle will be completed when correct cubes are on the
+/// correct scales
+/// By Arvid Backman and Aleksi Lindeman
+/// </summary>
+
 public class ScalePuzzle : MonoBehaviour {
 	public List<GameObject> m_Cubes = new List<GameObject>();
 	public List<GameObject> m_EvilScalePlacedCubes = new List<GameObject>();
@@ -35,9 +42,14 @@ public class ScalePuzzle : MonoBehaviour {
 	FreeLookCamera r_FreeLookCamera;
 
 	private bool m_ExaminatingCube = false;
-
 	private int m_CurrentIndex = 0;
-	
+	private int m_Balance = 0;
+	private Animator m_ScaleAnimator;
+	private float m_CurrentBlend = 0.0f;
+
+	private bool m_LeftScaleIsFull = false;
+	private bool m_RightScaleIsFull = false;
+
 	// Use this for initialization
 	void Start () {
 		Messenger.AddListener<GameObject, bool>("onRequestStartScalePuzzle", onRequestStartScalePuzzle);
@@ -46,7 +58,7 @@ public class ScalePuzzle : MonoBehaviour {
 			m_PlacedCubePositions.Add(cube.transform.localPosition);
 			m_CubePlaceUsed.Add(true);
 		}
-
+		m_ScaleAnimator = GetComponentInChildren<Animator>();
 		r_FreeLookCamera = Camera.main.transform.parent.transform.parent.gameObject.GetComponent<FreeLookCamera>();
 	}
 	
@@ -68,6 +80,7 @@ public class ScalePuzzle : MonoBehaviour {
 		r_FreeLookCamera.setFreeCameraPosition(inspectCubesDummy.transform.position, inspectCubesDummy.transform.localRotation.eulerAngles);
 		r_FreeLookCamera.setFreeCameraEnabled(true);
 		StartCoroutine("inputLogic");
+		StartCoroutine("updateAnimator");
 	}
 
 	public void openLockedDoor(GameObject go, bool tr) {
@@ -150,15 +163,32 @@ public class ScalePuzzle : MonoBehaviour {
 		return null;
 	}
 
+	IEnumerator updateAnimator() {
+		while(true) {
+			Debug.Log ("Updating Animator: " + m_CurrentBlend);
+			m_ScaleAnimator.SetFloat("Balance", m_CurrentBlend, 0.3f, Time.deltaTime);
+
+			yield return null;
+		}
+	}
+
 	public void placeOnEvilScale(GameObject cube, int cubeIndex){
 		m_EvilCubes.Add(new Pair<GameObject, int>(cube, cubeIndex));
 		Mesh cubeMesh = cube.GetComponent<MeshFilter>().mesh;
+		int idx = 0;
 		foreach(GameObject obj in m_EvilScalePlacedCubes){
 			if(!obj.activeSelf){
+				m_CurrentBlend -= 1.0f / 3.0f;
 				obj.SetActive(true);
 				obj.GetComponent<MeshFilter>().mesh = cubeMesh;
 				break;
 			}
+			idx++;
+		}
+		if(idx > 1) {
+			m_LeftScaleIsFull = true;
+		} else {
+			m_LeftScaleIsFull = false;
 		}
 	}
 
@@ -166,6 +196,7 @@ public class ScalePuzzle : MonoBehaviour {
 		for(int i = m_EvilScalePlacedCubes.Count - 1; i >= 0; --i){
 			GameObject obj = m_EvilScalePlacedCubes[i];
 			if(obj.activeSelf){
+				m_CurrentBlend += 1.0f / 3.0f;
 				obj.SetActive(false);
 				break;
 			}
@@ -177,17 +208,27 @@ public class ScalePuzzle : MonoBehaviour {
 			m_EvilCubes.RemoveAt(m_EvilCubes.Count - 1);
 			cube.SetActive(true);
 		}
+		m_LeftScaleIsFull = false;
 	}
 
 	public void placeOnGoodScale(GameObject cube, int cubeIndex){
 		m_GoodCubes.Add(new Pair<GameObject, int>(cube, cubeIndex));
 		Mesh cubeMesh = cube.GetComponent<MeshFilter>().mesh;
+		int idx = 0;
 		foreach(GameObject obj in m_GoodScalePlacedCubes){
 			if(!obj.activeSelf){
+				m_CurrentBlend += 1.0f / 3.0f;
+				
 				obj.SetActive(true);
 				obj.GetComponent<MeshFilter>().mesh = cubeMesh;
 				break;
 			}
+			idx++;
+		}
+		if(idx > 1) {
+			m_RightScaleIsFull = true;
+		} else {
+			m_RightScaleIsFull = false;
 		}
 	}
 
@@ -195,6 +236,7 @@ public class ScalePuzzle : MonoBehaviour {
 		for(int i = m_GoodScalePlacedCubes.Count - 1; i >= 0; --i){
 			GameObject obj = m_GoodScalePlacedCubes[i];
 			if(obj.activeSelf){
+				m_CurrentBlend -= 1.0f / 3.0f;
 				obj.SetActive(false);
 				break;
 			}
@@ -206,6 +248,7 @@ public class ScalePuzzle : MonoBehaviour {
 			m_GoodCubes.RemoveAt(m_GoodCubes.Count - 1);
 			cube.SetActive(true);
 		}
+		m_RightScaleIsFull = false;
 	}
 
 	IEnumerator inputLogic(){
@@ -248,6 +291,7 @@ public class ScalePuzzle : MonoBehaviour {
 					if(clearedPuzzle){
 						PuzzleEvent.trigger("onScalePuzzleCleared", gameObject, false);
 						Messenger.Broadcast<bool>("lock player input", false);
+						StopCoroutine("updateAnimator");
 
 						r_FreeLookCamera.resetCameraTransform();
 						r_FreeLookCamera.setFreeCameraEnabled(false);
@@ -309,6 +353,9 @@ public class ScalePuzzle : MonoBehaviour {
 		Bounds bound = r_ObjectInFocus.transform.collider.bounds;
 		Transform transform = r_ObjectInFocus.transform;
 		GameObject r_ScaleInFocus = m_LeftScale;
+		if(m_LeftScaleIsFull) {
+			r_ScaleInFocus = m_RightScale;
+		}
 		Color originColor = r_ScaleInFocus.renderer.material.color;
 		r_ScaleInFocus.renderer.material.color = m_HighlightColor;
 		while(m_ExaminatingCube) {
@@ -331,13 +378,13 @@ public class ScalePuzzle : MonoBehaviour {
 				transform.RotateAround(pivot, Vector3.right, -y1);
 			}
 			
-			if(InputManager.getButtonDown(InputManager.Button.Left)) {
+			if(InputManager.getButtonDown(InputManager.Button.Left) && !m_LeftScaleIsFull) {
 				r_ScaleInFocus.renderer.material.color = originColor;
 				r_ScaleInFocus = m_LeftScale;
 				originColor = r_ScaleInFocus.renderer.material.color;
 				r_ScaleInFocus.renderer.material.color = m_HighlightColor;
 			}
-			else if(InputManager.getButtonDown(InputManager.Button.Right)) {
+			else if(InputManager.getButtonDown(InputManager.Button.Right) && !m_RightScaleIsFull) {
 				r_ScaleInFocus.renderer.material.color = originColor;
 				r_ScaleInFocus = m_RightScale;
 				originColor = r_ScaleInFocus.renderer.material.color;

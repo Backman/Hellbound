@@ -7,6 +7,8 @@ using System.Collections;
 /// <summary>
 /// Script gives the camera a "Free look"
 /// This script is designed to be placed on the root object of a camera rig
+/// 
+/// By Arvid Backman
 /// </summary>
 
 // Camera Rig

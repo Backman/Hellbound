@@ -2,16 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class SoundControl : MonoBehaviour {
+public class SoundControl {
 	/// <summary>
-	/// Volumecontrol handles the masterVolume and also the groupVolume (ie "Music", "Voice" and "SFX")
-	/// Volumecontrol is a singleton, meaning that only one can exist in the scene at any one time
+	/// SoundControl handles the masterVolume and also the groupVolume (ie "Music", "Voice" and "SFX")
+	/// SoundControl is a singleton, meaning that only one can exist in the scene at any one time
+	/// although only if this script is used responsibly (you can make serveral of theese)
 	/// 
 	/// Anton Thorsell
 	/// </summary>
 
 	//The current instance is saved in the variable below
-	private static SoundControl m_instance;
+	private static readonly SoundControl m_instance = new SoundControl();
+	public static SoundControl Instance { get { return m_instance; } }
 
 	public AudioSpeakerMode m_CurrentSpeakerMode;
 
@@ -33,29 +35,12 @@ public class SoundControl : MonoBehaviour {
 
 	}
 
-	//This is the only way to create volumecontrol outside the Volumecontrol script
-	//if one have already been created we return that one.
-	public static SoundControl getInstance()
-	{
-		if (!m_instance) 
-		{
-			GameObject container;
-			container = new GameObject();
-			container.name = "SoundControl";
-			m_instance = container.AddComponent(typeof(SoundControl)) as SoundControl;
-			DontDestroyOnLoad(m_instance);
-		}
-		return m_instance;
-	}
-
 	// this variable will contain the volume controllers for the various groups of soundobjects
 	Dictionary<string, FMOD.Studio.MixerStrip> m_Volume = new Dictionary<string, FMOD.Studio.MixerStrip>();
 
 	// Start will create volume controllers and connect it with its id or "key"
-	void Start () 	
+	void Start ()
 	{
-		//VCA_SFX seems to work
-
 		FMOD.Studio.System system = FMOD_StudioSystem.instance.System;
 
 		FMOD.GUID guid1;
@@ -64,31 +49,27 @@ public class SoundControl : MonoBehaviour {
 		system.lookupID("bus:/", out guid1);
 		system.getMixerStrip (guid1, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus1);
 		m_Volume.Add ("Master", bus1);
-		Debug.Log (m_Volume["Master"] + " : " + bus1);
 		
 		FMOD.GUID guid2;
 		FMOD.Studio.MixerStrip bus2;
 
-		system.lookupID ("vca:/VCA_SFX", out guid2); //this seems to work
+		system.lookupID ("vca:/VCA_SFX", out guid2);
 		system.getMixerStrip (guid2, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus2);
 		m_Volume.Add ("SFX", bus2);
-		Debug.Log (m_Volume["SFX"] + " : " + bus2);
 		
 		FMOD.GUID guid3;
 		FMOD.Studio.MixerStrip bus3;
 
-		system.lookupID ("vca:/VCA_VO", out guid3); //this do not work 
+		system.lookupID ("vca:/VCA_VO", out guid3);
 		system.getMixerStrip (guid3, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus3);
 		m_Volume.Add ("Voice", bus3);
-		Debug.Log (m_Volume["Voice"] + " : " + bus3);
 		
 		FMOD.GUID guid4;
 		FMOD.Studio.MixerStrip bus4;
 
-		system.lookupID ("vca:/VCA_Music", out guid4); // this works
+		system.lookupID ("vca:/VCA_Music", out guid4);
 		system.getMixerStrip (guid4, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus4);
 		m_Volume.Add ("Music", bus4);
-		Debug.Log (m_Volume["Music"] + " : " + bus4);
 
 		LoadVolume();
 		checkIfCorrect (false);
@@ -101,20 +82,19 @@ public class SoundControl : MonoBehaviour {
 	public void ChangeVolume(float newVolume, string tagToBeChanged)
 	{
 		m_Volume[tagToBeChanged].setFaderLevel (newVolume);
-	}
-
-
-	public void Update(){
 		SaveVolume ();
-		if(m_CurrentSpeakerMode != AudioSettings.speakerMode){
-			AudioSettings.speakerMode = m_CurrentSpeakerMode;
-		}
-		checkIfCorrect (true);
 	}
+
+
+	//public void Update(){
+	//	if(m_CurrentSpeakerMode != AudioSettings.speakerMode){
+	//		SetNewAduioSpeakerMode(m_CurrentSpeakerMode);
+	//	}
+	//	checkIfCorrect (true);
+	//}
 
 
 	private void LoadVolume(){
-		Debug.Log ("Load");
 		ChangeVolume (PlayerPrefs.GetFloat ("Master", 1f), "Master");
 		ChangeVolume (PlayerPrefs.GetFloat ("SFX", 1f), "SFX");
 		ChangeVolume (PlayerPrefs.GetFloat ("Voice", 1f), "Voice");
@@ -123,7 +103,6 @@ public class SoundControl : MonoBehaviour {
 
 
 	private void SaveVolume(){
-		Debug.Log ("Save");
 		float setThis = 0f;
 		
 		m_Volume ["Master"].getFaderLevel(out setThis);
@@ -134,12 +113,14 @@ public class SoundControl : MonoBehaviour {
 		PlayerPrefs.SetFloat ("Voice", setThis);
 		m_Volume ["Music"].getFaderLevel(out setThis);
 		PlayerPrefs.SetFloat ("Music", setThis);
+
 	}
 
 
 	public void SetNewAduioSpeakerMode(AudioSpeakerMode toThis)
 	{
-		m_CurrentSpeakerMode = toThis;
+		AudioSettings.speakerMode = toThis;
+		m_CurrentSpeakerMode = AudioSettings.speakerMode;
 	}
 
 
@@ -148,9 +129,10 @@ public class SoundControl : MonoBehaviour {
 		AudioSettings.speakerMode = m_CurrentSpeakerMode;
 	}
 
-	public void checkIfCorrect(bool ToReal)
+
+	public void checkIfCorrect(bool publicToVolume)
 	{
-		if (ToReal) 
+		if (publicToVolume) 
 		{
 			ChangeVolume (Master, "Master");
 			ChangeVolume (VO, "Voice");

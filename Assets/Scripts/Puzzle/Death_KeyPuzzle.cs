@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Script that will handle events and open
+/// a door when a key is used
+/// 
+/// By Arvid Backman
+/// </summary>
+
 public class Death_KeyPuzzle : MonoBehaviour {
 	private string m_KeyItemName;
 	void Awake() {
