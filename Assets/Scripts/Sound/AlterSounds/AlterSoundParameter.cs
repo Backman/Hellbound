@@ -5,9 +5,19 @@ using System.Collections.Generic;
 public class AlterSoundParameter : MonoBehaviour {
 
 	/// <summary>
-	/// This script will allow hitboxes to alter other objects emitters parameters
-	/// (the number of objects can be decided by the editor)
-	/// Anton Thorsell
+	/// AlterSoundParameter was writted by Anton
+	/// 
+	/// This needs some kind of collider that triggers the functions "OnTrigger, OnTriggerEnter, OnTriggerExit"
+	/// 
+	/// What AlterSoundParameter does is altering sounds through FMOD_Parameters, when something with a rigidbody
+	/// passes through the collider.
+	/// 
+	/// What things that get altered depends on the variables that the editor enters
+	/// This script was specifically made as a tool for designers
+	/// 
+	/// Think of fmod_parameters as parameters that alters for example the "speed", the "pitch" and so on.
+	/// what they alters and what their names are is specified in FMOD studio by sound and music guys and gals
+	/// 
 	/// </summary>
 	public GameObject[] g_GameObjects;
 	public string s_Parameter = "";
@@ -32,6 +42,11 @@ public class AlterSoundParameter : MonoBehaviour {
 		}
 	}
 
+
+	//since we cant be sure at what order gameobjects get initializes 
+	//this IEnumerator will try to get as many FMOD_Parameters as there is 
+	//gameobjects in g_GameObjects
+	//(one fmod_parameter per gameobject)
 	private IEnumerator waitForParameters()
 	{
 		for (int n = 0; n != g_GameObjects.Length;) {
