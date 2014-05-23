@@ -325,6 +325,7 @@ public class UICamera : MonoBehaviour
 	static public GameObject fallThrough;
 
 	// Selected widget (for input)
+	[SerializeField]
 	static GameObject mCurrentSelection = null;
 	static GameObject mNextSelection = null;
 	static ControlScheme mNextScheme = ControlScheme.Controller;
