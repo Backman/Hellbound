@@ -90,6 +90,9 @@ public class ThirdPersonController : MonoBehaviour {
 
 		// Walk/Run speed is modified by a key press.
 		bool walkToggle = Input.GetButton("Run");
+		float runAxis = Input.GetAxis("RunTrigger");
+		if(runAxis < -0.5f)
+			walkToggle = true;
 		// We select appropriate speed based on whether we're walking by default, and whether the walk/run toggle button is pressed:
 		float walkMultiplier = (m_WalkByDefault ? walkToggle ? 1.0f : 0.5f : walkToggle ? 0.5f : 1.0f);
 		m_Move *= walkMultiplier;

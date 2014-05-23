@@ -16,7 +16,7 @@ public class PauseGameEffect : MonoBehaviour {
 	static Material m_Material = null;
 	protected Material material {
 		get {
-			if (m_Material == null) {
+			if (m_Material == null && m_Shader != null) {
 				m_Material = new Material(m_Shader);
 				m_Material.hideFlags = HideFlags.DontSave;
 			}

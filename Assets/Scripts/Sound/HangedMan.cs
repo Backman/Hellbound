@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 
 public class HangedMan : MonoBehaviour {
@@ -16,6 +17,7 @@ public class HangedMan : MonoBehaviour {
 	private FMOD_StudioEventEmitter r_Emitter;
 
 	private float m_pi = 0f;
+	public float m_Speed = 1f;
 
 	public float m_SwingAmount = 2;
 	public float m_Speed = 1f;
@@ -30,7 +32,11 @@ public class HangedMan : MonoBehaviour {
 
 	void Update()
 	{
+<<<<<<< HEAD
 		m_pi += 0.0045f * m_Speed;
+=======
+		m_pi += 0.0045f*m_Speed;
+>>>>>>> d01ffeb9e9e8f5dbed252e1541a3f0fdc9c52461
 
 		if (m_pi >= Mathf.PI-0.005f && !m_ROnce) {
 			m_ROnce = true;
