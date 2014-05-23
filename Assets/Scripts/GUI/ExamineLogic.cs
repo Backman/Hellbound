@@ -8,7 +8,7 @@ using System.Linq;
 /// Examine behaviour.
 /// All logic for the Examine functions
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class ExamineLogic : MonoBehaviour {
 

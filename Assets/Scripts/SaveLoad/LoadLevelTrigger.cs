@@ -5,7 +5,7 @@ using System.Collections;
 /// This scirpt is attached to a trigger object and when the player
 /// enters the trigger zone, this script will trigger a level load.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class LoadLevelTrigger : MonoBehaviour {
 	[SerializeField][Tooltip("Which level to load when this zone is triggered.\nIf this field is left blank, this zone will reload the current level.")]
