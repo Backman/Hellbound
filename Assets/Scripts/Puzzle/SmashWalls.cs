@@ -13,7 +13,7 @@ public class SmashWalls : MonoBehaviour {
 	public string m_LevelToLoad;
 	public string m_DeathText = "You suck";
 	public List<GameObject> m_Walls = new List<GameObject>();
-	public float m_Timer = 3.0f;
+	public float m_Timer = 0.0f;
 	public float m_DeadIn = 16f;
 
 	private int m_CurrentIndex = 0;
