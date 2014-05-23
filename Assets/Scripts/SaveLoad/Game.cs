@@ -9,6 +9,7 @@ using System.Collections.Generic;
 public class Game {
 	private static string m_CurrentSavegame = "data.hbsg";
 	private static GameData m_CurrentGameData = null;
+	private static bool m_LoadingLevel = false;
 	
 	//public static void setCurrentSavegame(string savegame){
 		//m_CurrentSavegame = savegame;
@@ -58,18 +59,23 @@ public class Game {
 		return true;
 	}
 	
+	public static void loadUsingCheckpointData(){
+		if(Application.CanStreamedLevelBeLoaded(m_CurrentGameData.levelToLoad)){
+			m_LoadingLevel = true;
+			Application.LoadLevel(m_CurrentGameData.levelToLoad);
+		} 
+		else{
+			Debug.LogWarning ("Unable to load level: "+m_CurrentGameData.levelToLoad);
+		}
+	}
+	
 	// Load using checkpoint. Checkpoint is loaded using m_CurrentSavegame file
-	public static void load(){
+	public static void load(bool loadCheckpointData = true){
 		m_CurrentGameData = GameData.load(m_CurrentSavegame);
 		if(m_CurrentGameData != null){
 			Debug.Log("Attempting to load from checkpoint: "+m_CurrentGameData.currentCheckpointID);
-			Checkpoint checkpoint = Checkpoints.getCheckpointFromID(m_CurrentGameData.currentCheckpointID);
-			if(checkpoint != null){
-				checkpoint.load();
-				Debug.Log("Loaded savegame: "+m_CurrentSavegame);
-			}
-			else{
-				Debug.Log("Failed to load save game "+m_CurrentSavegame);
+			if(loadCheckpointData){
+				loadUsingCheckpointData();
 			}
 		}
 		else{
@@ -81,5 +87,13 @@ public class Game {
 		if(m_CurrentGameData != null){
 			m_CurrentGameData.save(m_CurrentSavegame);
 		}
+	}
+	
+	public static bool isLoadingLevel(){
+		return m_LoadingLevel;
+	}
+	
+	public static void setLoadingLevel(bool loading){
+		m_LoadingLevel = false;
 	}
 }
