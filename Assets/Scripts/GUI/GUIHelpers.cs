@@ -9,6 +9,9 @@ using System.Collections.Generic;
 /// for GUI helpers for the project Hellbound.
 /// 
 /// Created by Simon
+/// 
+/// _minor_ editing by Anton Thorsell
+/// (basically anything that have to do with sounds)
 /// </summary>
 namespace MyGUI{
 

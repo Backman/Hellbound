@@ -23,7 +23,12 @@ public class PauseWindow {
 /// Created by Simon
 /// 
 /// Modified by Peter, Arvid Backman
+/// 
+///  _minor_ editing by Anton Thorsell
+/// (basically anything that have to do with sounds)
+/// 
 /// </summary>
+
 public class GUIManager : Singleton<GUIManager> {
 	public PauseWindow m_PauseWindow;
 	[SerializeField]
