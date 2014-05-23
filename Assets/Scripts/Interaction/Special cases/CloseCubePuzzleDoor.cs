@@ -8,7 +8,7 @@ using System.Collections;
 /// The standard door scripts cannot be used since this door is very 
 /// different.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class CloseCubePuzzleDoor : MonoBehaviour {
 	private bool m_Enabled = false;

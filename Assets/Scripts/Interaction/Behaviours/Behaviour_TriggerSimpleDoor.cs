@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// 
 /// A trigger for manipulating simple doors
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class Behaviour_TriggerSimpleDoor : MonoBehaviour
 {
