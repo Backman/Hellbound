@@ -16,7 +16,7 @@ using System.Collections;
 public class FreeLookCamera : PivotBasedCameraRig {
 
 	[SerializeField] private float m_FollowSpeed = 1.0f;
-	[SerializeField] [Range(0.0f, 10.0f)] private float m_TurnSpeed = 1.5f;
+	[SerializeField] [Range(0.0f, 1000.0f)] private float m_TurnSpeed = 1.5f;
 	[SerializeField] private float m_TurnSmoothing = 0.1f;
 	[SerializeField] private float m_TiltMax = 75.0f;
 	[SerializeField] private float m_TiltMin = 45.0f;
@@ -113,7 +113,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 			}
 	
 			// Adjust the look angle by an amount proportional to the turn speed and horizontal input
-			m_LookAngle += m_SmoothX * m_TurnSpeed;
+			m_LookAngle += m_SmoothX * m_TurnSpeed * Time.deltaTime;
 
 			// Rotate the rig (the root object) around Y axis only
 			transform.localRotation = Quaternion.Euler(0.0f, m_LookAngle, 0.0f);
@@ -123,7 +123,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 			}
 
 			// We adjust the current angle based on Y mouse input and turn speed
-			m_TiltAngle -= m_SmoothY * m_TurnSpeed;
+			m_TiltAngle -= m_SmoothY * m_TurnSpeed * Time.deltaTime;
 			// We make sure the new valuse is within the tilt range
 			m_TiltAngle = Mathf.Clamp(m_TiltAngle, -m_TiltMin, m_TiltMax);
 	

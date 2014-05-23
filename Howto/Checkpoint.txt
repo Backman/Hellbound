@@ -6,16 +6,13 @@ Add new checkpoint:
 	CP_LevelName_CheckpointNumber, like for example CP_Death_1 which is the first checkpoint in "death".
 	THE NAME HAS TO BE UNIQUE OR IT WONT WORK!
 	
-	3. Loading message is currently not used, but it should be the message displayed when level is being loaded.
+	2. Loading message is currently not used, but it should be the message displayed when level is being loaded.
 	
-	4. Spawn rotation is the rotation set on the player when loading using this checkpoint.
+	3. Spawn rotation is the rotation set on the player when loading using this checkpoint.
 
-	5. All interactables in the scene will be saved with their puzzle state.
+	4. All interactables in the scene will be saved with their puzzle state.
 	- When loading from a checkpoint, all interactables will have their puzzle state changed to what they had when checkpoint was used
 	and puzzle event "onCheckpointLoaded" is triggered after states are set.
-
-	6. Drag the newly created prefab into "LoadingManager" game objects component "Loading Menu" in the list called "Checkpoints Available". "LoadingManager" is located in "MainMenu3D_v3" scene.
-	- The order in which elements are placed doesn't matter, but all checkpoints have to exist in the list to be able to load from them.
 	
 Using checkpoint in level:
 	1. Locate the prefab that you created previously and drag it into hierarchy for a scene where it should be used.
