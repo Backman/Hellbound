@@ -53,6 +53,7 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 
 	//Called at the end of the "drink" animation
 	public void onDoorPoisonDrunk(GameObject thisObject, bool triggerOnlyForThis){
+		Messenger.Broadcast<bool>("set is poisoned", true);
 		StartCoroutine("startSickness", gameObject );
 	}
 
