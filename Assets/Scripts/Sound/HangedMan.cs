@@ -31,7 +31,7 @@ public class HangedMan : MonoBehaviour {
 
 	void Update()
 	{
-		m_pi += 0.0045f*m_Speed;
+		m_pi += 0.0045f * m_Speed;
 
 		if (m_pi >= Mathf.PI-0.005f && !m_ROnce) {
 			m_ROnce = true;
