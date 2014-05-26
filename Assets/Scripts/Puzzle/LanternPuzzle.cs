@@ -9,14 +9,8 @@ using System.Collections;
 /// </summary>
 
 public class LanternPuzzle : MonoBehaviour {
-	
-	private int lanternsPlaced = 0;
-	private UIPlayTween r_Tweener = null;
-	// Use this for initialization
 
-	void Awake(){
-		r_Tweener = gameObject.GetComponent<UIPlayTween>();
-	}
+	private int lanternsPlaced = 0;
 
 	void Start () {
 		Messenger.AddListener<GameObject, bool>("onPickupLantern", onPickupLantern);
@@ -44,7 +38,10 @@ public class LanternPuzzle : MonoBehaviour {
 			++lanternsPlaced;
 			PuzzleEvent.trigger("requestRemoveLanternFromInventory", obj, false);
 			if(lanternsPlaced == 2){
-				gameObject.GetComponent<Behaviour_DoorSimple>().unlockAndOpen();
+				Behaviour_DoorSimple[] doors = GetComponentsInChildren<Behaviour_DoorSimple>();
+				foreach(Behaviour_DoorSimple door in doors) {
+					door.unlockAndOpen();
+				}
 			}
 		}
 	}
