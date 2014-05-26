@@ -9,7 +9,7 @@ using System.Collections;
 /// </summary>
 
 public class PoisonDoorPuzzle : MonoBehaviour {
-
+	public FMOD_StudioEventEmitter m_MusicEmitter = null;
 	// Use this for initialization
 	void Start () {
 		Messenger.AddListener<GameObject, bool> ("onBottleRemove", onBottleRemove);
@@ -55,6 +55,9 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 	public void onDoorPoisonDrunk(GameObject thisObject, bool triggerOnlyForThis){
 		Messenger.Broadcast<bool>("set is poisoned", true);
 		StartCoroutine("startSickness", gameObject );
+		if(m_MusicEmitter != null) {
+			m_MusicEmitter.Play ();
+		}
 	}
 
 	//Will gradually apply sickness effect to the camera
