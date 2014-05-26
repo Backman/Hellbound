@@ -52,9 +52,14 @@ public class Behaviour_DoorSimple : Interactable {
 	[HideInInspector]
 	public bool m_Moving = false;
 	
+	public FMODAsset m_DoorOpenSound = null;
+	public FMODAsset m_DoorCloseSound = null;
+
 	protected HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[1];	//Delegate for passing the correct callback function to the animator
 	/**********************************************************************/
 	#endregion
+
+
 	protected override void Awake(){
 		base.Awake();
 
@@ -122,6 +127,9 @@ public class Behaviour_DoorSimple : Interactable {
 	#region Behaviours
 	public bool close(){
 		if( m_CurrentState == CurrentState.Open ){
+			if(m_DoorCloseSound != null) {
+				FMOD_StudioSystem.instance.PlayOneShot(m_DoorCloseSound, transform.position);
+			}
 			m_FSM.CurrentState.activate(this);
 			return true;
 		} else {
@@ -132,6 +140,9 @@ public class Behaviour_DoorSimple : Interactable {
 
 	public bool open(){
 		if( m_CurrentState == CurrentState.Closed ){
+			if(m_DoorOpenSound != null) {
+				FMOD_StudioSystem.instance.PlayOneShot(m_DoorOpenSound, transform.position);
+			}
 			m_FSM.CurrentState.activate(this);
 			return true;
 		} else {
