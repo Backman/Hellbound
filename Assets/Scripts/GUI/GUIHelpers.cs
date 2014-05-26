@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// as well as namespace definitions
 /// for GUI helpers for the project Hellbound.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 namespace MyGUI{
 
