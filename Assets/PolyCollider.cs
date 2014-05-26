@@ -304,8 +304,8 @@ public class PolyCollider : MonoBehaviour
 		return Color.white;
 	}
 
-	[ContextMenu("Generate Mesh Collider")]
-	public void generateMeshCollider() {
+	[ContextMenu("Generate 3DMesh Collider")]
+	public void generate3DMeshCollider() {
 		List<Vector2> vertices2D = new List<Vector2> ();
 		PolyCollider polyCollider = GetComponent<PolyCollider> ();
 		
@@ -345,4 +345,5 @@ public class PolyCollider : MonoBehaviour
 		
 		meshCollider.sharedMesh = msh;
 	}
+
 }

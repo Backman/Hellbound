@@ -12,16 +12,21 @@ public class RoomOccluderVolume : MonoBehaviour
 	void Start (){
 		Collider col = GetComponent<Collider> ();
 		if( col != null ){
+			RaycastHit hit = new RaycastHit();
+
 			foreach (GameObject obj in m_ParentsToLookThrough) {
 				foreach( Transform t in obj.GetComponentsInChildren<Transform>() ){
-					if( t.GetComponentInChildren<Transform>().childCount == 0 && col.bounds.Contains( t.position ) ){
+					Ray ray = new Ray( new Vector3( t.position.x, t.position.y + 100, t.position.z ), Vector3.down );
+					if( t.GetComponentInChildren<Transform>().childCount == 0 && col.Raycast(ray, out hit , 110) ){
 						m_Objects.Add( t.gameObject );
 					}
 				}
 			}
 		}
+		MeshCollider c = new MeshCollider ();
 
-		m_FrameChunk = Mathf.Max(m_Objects.Count / 30, 20);
+
+		m_FrameChunk = Mathf.Max(m_Objects.Count / 60, 30);
 	}	
 
 	public void show(){
