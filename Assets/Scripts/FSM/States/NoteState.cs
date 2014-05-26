@@ -7,7 +7,7 @@ using System.Collections;
 /// The state to inject into the FSM to 
 /// represent paper notes
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 [System.Serializable]
 public class NoteState : State<Behaviour_Note> 

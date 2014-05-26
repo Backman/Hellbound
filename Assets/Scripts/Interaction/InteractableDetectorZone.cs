@@ -5,7 +5,7 @@ using System.Collections;
 /// Interactable detector zone.
 /// This class handles the logic for the zone infront of the player that scans for interactable objects
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class InteractableDetectorZone : MonoBehaviour {
 

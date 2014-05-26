@@ -9,7 +9,7 @@ using System.Collections;
 /// a sprite will be displayed with text
 /// written on it.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class Behaviour_Note : Interactable {
 

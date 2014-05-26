@@ -20,7 +20,7 @@ public class PauseWindow {
 /// This class mostly acts as a relay which will
 /// call functions further down in the hierarcy.
 ///
-/// Created by Simon
+/// Created by Simon Jonasson
 /// 
 /// Modified by Peter, Arvid Backman
 /// </summary>

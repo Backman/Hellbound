@@ -6,7 +6,7 @@ using System.Collections;
 /// 
 /// The logic for the door barring the way to the pressure plate puzzle.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class PressurePlateDoor : MonoBehaviour {
 	private Interactable r_Key;
