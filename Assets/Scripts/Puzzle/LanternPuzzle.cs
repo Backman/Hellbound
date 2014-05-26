@@ -9,7 +9,7 @@ using System.Collections;
 /// </summary>
 
 public class LanternPuzzle : MonoBehaviour {
-	
+
 	private int lanternsPlaced = 0;
 
 	void Start () {
