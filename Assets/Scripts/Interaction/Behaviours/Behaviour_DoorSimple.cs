@@ -12,7 +12,7 @@ using System.Collections;
 /// Doors are "one shot" use only. Thus, after they have been opened
 /// they cannot be closed again.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class Behaviour_DoorSimple : Interactable {
 	#region Variables

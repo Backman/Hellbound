@@ -6,7 +6,7 @@ using System.Collections;
 /// The state machine wrapper for object that the player can pick up. This wrapper only gives the object
 /// the "pick up-able" property and nothing more.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class Behaviour_PickUp : Interactable {
 	[Tooltip("This field decides what name this item will be identified with.\nSince items are added to- and removed from- the inventory via name identifying," +

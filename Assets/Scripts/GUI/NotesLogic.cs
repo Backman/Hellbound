@@ -9,7 +9,7 @@ using System.Collections;
 /// The notes are displayed as UISprites with a UILabel
 /// ontop of them.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class NotesLogic : MonoBehaviour
 {

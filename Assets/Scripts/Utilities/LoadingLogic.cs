@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// This scirpt handles all logic associated with loading levels and displaying loading screens.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class LoadingLogic : MonoBehaviour {
 

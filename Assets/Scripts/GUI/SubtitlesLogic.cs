@@ -8,7 +8,7 @@ using System.Linq;
 /// Subtitle behaviour.
 /// All the logic for the subtitles system
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class SubtitlesLogic: MonoBehaviour {
 	
