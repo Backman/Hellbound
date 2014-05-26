@@ -23,6 +23,7 @@ public class Pair<T, U> {
 /// </summary>
 
 public class ScalePuzzle : MonoBehaviour {
+	public FMODAsset m_CubePlaceSound = null;
 	public List<GameObject> m_Cubes = new List<GameObject>();
 	public List<GameObject> m_EvilScalePlacedCubes = new List<GameObject>();
 	public List<GameObject> m_GoodScalePlacedCubes = new List<GameObject>();
@@ -181,6 +182,9 @@ public class ScalePuzzle : MonoBehaviour {
 				m_CurrentBlend -= 1.0f / 3.0f;
 				obj.SetActive(true);
 				obj.GetComponent<MeshFilter>().mesh = cubeMesh;
+				if(m_CubePlaceSound != null) {
+					FMOD_StudioSystem.instance.PlayOneShot(m_CubePlaceSound, obj.transform.position);
+				}
 				break;
 			}
 			idx++;
@@ -221,6 +225,9 @@ public class ScalePuzzle : MonoBehaviour {
 				
 				obj.SetActive(true);
 				obj.GetComponent<MeshFilter>().mesh = cubeMesh;
+				if(m_CubePlaceSound != null) {
+					FMOD_StudioSystem.instance.PlayOneShot(m_CubePlaceSound, obj.transform.position);
+				}
 				break;
 			}
 			idx++;

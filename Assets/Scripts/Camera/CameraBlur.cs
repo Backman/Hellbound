@@ -3,9 +3,10 @@ using System.Collections;
 /// <summary>
 /// Blur effect.
 /// 
-/// An image effect on the camera. Inspiered by Arvids PauseGameEffect.
+/// An image effect on the camera that makes the rendered image blurry. 
+/// Inspiered by Arvid Backman's PauseGameEffect.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 [ExecuteInEditMode]
 public class CameraBlur : MonoBehaviour {
