@@ -6,7 +6,7 @@ using UnityEditor;
 /// A more streamlined way of generating
 /// Interactables in the game.
 /// 
-/// Created by Simon 3/4 -14
+/// Created by Simon Jonasson 3/4 -14
 /// </summary>
 
 public class InteractableTool : EditorWindow {

@@ -7,7 +7,7 @@ using System.Collections;
 /// This state represents a simple door which is opened
 /// and can be swung close.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 [System.Serializable]
 public class SimpleDoorOpenedState : State<Behaviour_DoorSimple> {
