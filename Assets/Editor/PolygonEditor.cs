@@ -62,7 +62,7 @@ public class PolygonEditor : Editor
 
     #endregion
 
-    [MenuItem("TarHead/Level Editor/PolyCollider/PolyCollider Object %#t")]
+    [MenuItem("Custom/Level Editor/PolyCollider/PolyCollider Object %#t")]
     public static void GameObjectInit()
     {
         CreatePolyColliderObject();
@@ -71,10 +71,10 @@ public class PolygonEditor : Editor
     public static void CreatePolyColliderObject()
     {
         PolyCollider polyCollider = PolyCollider.CreateInstance();
-		GameObject polyParent = GameObject.Find("PolyColliders");
+		GameObject polyParent = GameObject.Find("OccludeLogic");
 		if(!polyParent)
 		{
-			polyParent = new GameObject("PolyColliders");
+			polyParent = new GameObject("OccludeLogic");
 		}
 		polyCollider.transform.parent = polyParent.transform;
         Selection.activeTransform = polyCollider.transform;
