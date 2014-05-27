@@ -304,7 +304,7 @@ public class PolyCollider : MonoBehaviour
 		return Color.white;
 	}
 
-	[ContextMenu("Generate 3DMesh Collider")]
+	[ContextMenu("Generate Occlusion Trigger")]
 	public void generate3DMeshCollider() {
 		List<Vector2> vertices2D = new List<Vector2> ();
 		PolyCollider polyCollider = GetComponent<PolyCollider> ();
@@ -344,6 +344,60 @@ public class PolyCollider : MonoBehaviour
 		MeshCollider meshCollider = gameObject.AddComponent<MeshCollider> ();
 		
 		meshCollider.sharedMesh = msh;
+		meshCollider.isTrigger = true;
+
+		// Add an outline drawer so the object is always visible in the editor
+		OutlineDrawer drawer = gameObject.AddComponent<OutlineDrawer> ();
+		drawer.m_Color = Color.green;
+
+		//Add the occluder trigger
+		gameObject.AddComponent<RoomOccluderTrigger> ();
+
+		//Remoce this script
+		DestroyImmediate (this);
+	}
+
+	[ContextMenu("Generate Room Volume")]
+	public void generate2DMeshCollider() {
+		List<Vector2> vertices2D = new List<Vector2> ();
+		PolyCollider polyCollider = GetComponent<PolyCollider> ();
+		
+		if (polyCollider == null)
+			return;
+		
+		foreach (Vector2 point in polyCollider._points) {
+			vertices2D.Add(point);
+		}
+		
+		// Use the triangulator to get indices for creating triangles
+		Triangulator tr = new Triangulator(vertices2D.ToArray());
+		int[] indices = tr.Triangulate();
+		
+		// Create the Vector3 vertices
+		Vector3[] vertices = new Vector3[vertices2D.Count];
+		for (int i=0; i<vertices.Length; i++) {
+			vertices[i] = new Vector3(vertices2D[i].x, 0.0f, vertices2D[i].y);
+		}
+		
+		// Create the mesh
+		Mesh msh = new Mesh();
+		msh.vertices = vertices;
+		msh.triangles = indices;
+		msh.RecalculateNormals();
+		msh.RecalculateBounds();
+		
+		// Set up game object with mesh;
+		MeshCollider meshCollider = gameObject.AddComponent<MeshCollider> ();
+		meshCollider.sharedMesh = msh;
+
+		// Add an outline drawer so the object is always visible in the editor
+		gameObject.AddComponent<OutlineDrawer> ();
+
+		//Add the room logic
+		gameObject.AddComponent<RoomOccluderVolume> ();
+
+		//Remoce this script
+		DestroyImmediate (this);
 	}
 
 }
