@@ -65,7 +65,7 @@ public class InputManager : MonoBehaviour {
 	void Update(){
 		/********************************** VERTICAL (Forward and Backward) ****************************************/
 		float verticalAxis = Input.GetAxis("Vertical");
-		if(verticalAxis > m_AxisDeadlock){
+		if(verticalAxis > m_AxisDeadlock || Input.GetKeyDown(KeyCode.W)){
 			// Handle forward button state change on press
 			if(m_ButtonState[Button.Forward] == ButtonState.None || m_ButtonState[Button.Forward] == ButtonState.Released || m_ButtonState[Button.Forward] == ButtonState.Releasing){
 				m_ButtonState[Button.Forward] = ButtonState.Pressed;
@@ -75,7 +75,7 @@ public class InputManager : MonoBehaviour {
 				m_ButtonState[Button.Forward] = ButtonState.Pressing;
 			}
 		}
-		else{
+		else if( (verticalAxis < m_AxisDeadlock && verticalAxis > -m_AxisDeadlock) || Input.GetKeyUp(KeyCode.W) ){
 			// Handle forward button state change on release
 			if(m_ButtonState[Button.Forward] == ButtonState.Pressed || m_ButtonState[Button.Forward] == ButtonState.Pressing){
 				m_ButtonState[Button.Forward] = ButtonState.Released;
@@ -85,7 +85,7 @@ public class InputManager : MonoBehaviour {
 			}
 		}
 		
-		if(verticalAxis < -m_AxisDeadlock){
+		if(verticalAxis < -m_AxisDeadlock || Input.GetKeyDown(KeyCode.S)){
 			// Handle backward button state change on press
 			if(m_ButtonState[Button.Backward] == ButtonState.None || m_ButtonState[Button.Backward] == ButtonState.Released || m_ButtonState[Button.Backward] == ButtonState.Releasing){
 				m_ButtonState[Button.Backward] = ButtonState.Pressed;
@@ -95,7 +95,7 @@ public class InputManager : MonoBehaviour {
 				m_ButtonState[Button.Backward] = ButtonState.Pressing;
 			}
 		}
-		else{
+		else if( (verticalAxis < m_AxisDeadlock && verticalAxis > -m_AxisDeadlock) || Input.GetKeyUp(KeyCode.S) ){
 			// Handle backward button state change on release
 			if(m_ButtonState[Button.Backward] == ButtonState.Pressed || m_ButtonState[Button.Backward] == ButtonState.Pressing){
 				m_ButtonState[Button.Backward] = ButtonState.Released;
@@ -109,7 +109,7 @@ public class InputManager : MonoBehaviour {
 		
 		/********************************** HORIZONTAL (Left and Right) ****************************************/
 		float horizontalAxis = Input.GetAxis("Horizontal");
-		if(horizontalAxis > m_AxisDeadlock){
+		if(horizontalAxis > m_AxisDeadlock || Input.GetKeyDown(KeyCode.D)){
 			// Handle forward button state change on press
 			if(m_ButtonState[Button.Right] == ButtonState.None || m_ButtonState[Button.Right] == ButtonState.Released || m_ButtonState[Button.Right] == ButtonState.Releasing){
 				m_ButtonState[Button.Right] = ButtonState.Pressed;
@@ -119,7 +119,7 @@ public class InputManager : MonoBehaviour {
 				m_ButtonState[Button.Right] = ButtonState.Pressing;
 			}
 		}
-		else{
+		else if( (horizontalAxis < m_AxisDeadlock && horizontalAxis > -m_AxisDeadlock) || Input.GetKeyUp(KeyCode.D) ){
 			// Handle forward button state change on release
 			if(m_ButtonState[Button.Right] == ButtonState.Pressed || m_ButtonState[Button.Right] == ButtonState.Pressing){
 				m_ButtonState[Button.Right] = ButtonState.Released;
@@ -129,7 +129,7 @@ public class InputManager : MonoBehaviour {
 			}
 		}
 		
-		if(horizontalAxis < -m_AxisDeadlock){
+		if(horizontalAxis < -m_AxisDeadlock || Input.GetKeyDown(KeyCode.A)){
 			// Handle backward button state change on press
 			if(m_ButtonState[Button.Left] == ButtonState.None || m_ButtonState[Button.Left] == ButtonState.Released || m_ButtonState[Button.Left] == ButtonState.Releasing){
 				m_ButtonState[Button.Left] = ButtonState.Pressed;
@@ -139,7 +139,7 @@ public class InputManager : MonoBehaviour {
 				m_ButtonState[Button.Left] = ButtonState.Pressing;
 			}
 		}
-		else{
+		else if( (horizontalAxis < m_AxisDeadlock && horizontalAxis > -m_AxisDeadlock) || Input.GetKeyUp(KeyCode.A) ){
 			// Handle backward button state change on release
 			if(m_ButtonState[Button.Left] == ButtonState.Pressed || m_ButtonState[Button.Left] == ButtonState.Pressing){
 				m_ButtonState[Button.Left] = ButtonState.Released;
