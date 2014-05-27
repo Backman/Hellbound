@@ -61,6 +61,7 @@ public class Game {
 	
 	public static void loadUsingCheckpointData(){
 		if(Application.CanStreamedLevelBeLoaded(m_CurrentGameData.levelToLoad)){
+
 			m_LoadingLevel = true;
 			Application.LoadLevel(m_CurrentGameData.levelToLoad);
 		} 
