@@ -1,8 +1,16 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 <<<<<<< HEAD:Assets/Resources/Models/Props/Architecture/Origin mesh/Materials/assets.mat.meta
 guid: 8bbc16f71f32cf947af457338bb9bb32
 =======
 guid: cdd410ae364cd294699608929f66a8ba
 >>>>>>> 98223b26aaa3671c41f3b10c24fe6a16f25ed9a6:Assets/Resources/Models/Props/Architecture/Walls/Soruce/Materials/Josef_20140513_1615_phong1__BACKUP.mat.meta
+=======
+<<<<<<< HEAD:Assets/Resources/Models/Props/Architecture/Walls/Soruce/Materials/Josef_20140513_1615_phong1__BACKUP.mat.meta
+guid: cdd410ae364cd294699608929f66a8ba
+=======
+guid: 8bbc16f71f32cf947af457338bb9bb32
+>>>>>>> 8ae06677fa8c87c7029ce920a4789c26a6eb7bdb:Assets/Resources/Models/Props/Architecture/Origin mesh/Materials/assets.mat.meta
+>>>>>>> ba4a868e16abf4103f84d0a87d6c5de2864e27a4
 NativeFormatImporter:
   userData: 

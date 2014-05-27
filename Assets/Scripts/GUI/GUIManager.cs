@@ -20,7 +20,7 @@ public class PauseWindow {
 /// This class mostly acts as a relay which will
 /// call functions further down in the hierarcy.
 ///
-/// Created by Simon
+/// Created by Simon Jonasson
 /// 
 /// Modified by Peter, Arvid Backman
 /// </summary>
@@ -122,6 +122,10 @@ public class GUIManager : Singleton<GUIManager> {
 	public void togglePause(){
 		m_GamePaused = !m_GamePaused;
 		pauseGame(m_GamePaused);
+		if (!m_GamePaused) {
+						UICamera.currentScheme = UICamera.ControlScheme.Controller;
+						UICamera.selectedObject = null;
+		} 
 	}
 
 	public void pauseGame(bool pause) {
@@ -140,7 +144,9 @@ public class GUIManager : Singleton<GUIManager> {
 
 	// Adds/Removes blur on the game view and shows/hides the PauseMenu UI widgets
 	private void fadePauseWindow(bool show){
+		if (show) m_PauseWindow.r_MainWindow.GetComponent<Menu>().show ();
 		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(show);
+		if(!show) m_PauseWindow.r_MainWindow.GetComponent<Menu>().dontShow();
 
 		PauseGameEffect pge = r_MainCamera.GetComponent(typeof( PauseGameEffect ) ) as PauseGameEffect;
 		if( pge != null ){
@@ -153,7 +159,6 @@ public class GUIManager : Singleton<GUIManager> {
 	}
 
 	public void pauseExit(){
-
 		togglePause ();
 		loadLevel (0, "");
 	}

@@ -10,12 +10,15 @@ using System.Collections.Generic;
 /// </summary>
 
 public class SmashWalls : MonoBehaviour {
+	public FMODAsset m_SmashSound;
 	public string m_LevelToLoad;
-	public string m_DeathText;
+	public string m_DeathText = "You suck";
 	public List<GameObject> m_Walls = new List<GameObject>();
-	public float m_Timer = 3.0f;
+	public float m_Timer = 0.0f;
 	public float m_DeadIn = 16f;
 
+
+	private int m_CurrentPlaySoundIndex = 0;
 	private int m_CurrentIndex = 0;
 	void Start() {
 		Messenger.AddListener<GameObject, bool>("onStartSmashWallsTimer", onStartSmashWallsTimer);
@@ -32,6 +35,11 @@ public class SmashWalls : MonoBehaviour {
 		StopCoroutine ("StartKilling");
 	}
 
+	public void playSound() {
+		FMOD_StudioSystem.instance.PlayOneShot(m_SmashSound, m_Walls[m_CurrentPlaySoundIndex].transform.position);
+		m_CurrentPlaySoundIndex += 2;
+	}
+
 	IEnumerator startKilling(){
 
 		float t = m_DeadIn;
@@ -40,6 +48,7 @@ public class SmashWalls : MonoBehaviour {
 			t -= Time.deltaTime;
 			yield return null;
 		}
+		Messenger.Broadcast("onScalePuzzleDeath");
 		GUIManager.Instance.loadLastCheckPoint(m_DeathText);
 	}
 

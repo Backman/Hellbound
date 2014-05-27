@@ -13,6 +13,9 @@ public class ThirdPersonController : MonoBehaviour {
 
 	public bool m_WalkByDefault = false;				// toggle for walking state
 	public bool m_LookInCameraDirection = true;			// should the character be looking in the same direction that the camera is facing
+
+	public FMOD_StudioEventEmitter m_LeftFoot = null;
+	public FMOD_StudioEventEmitter m_RightFoot = null;
 	
 	private Vector3 m_LookDirection;					// The position that the character should be looking towards
 	private ThirdPersonCharacter r_Character;			// A reference to the ThirdPersonCharacter on the object
@@ -24,9 +27,11 @@ public class ThirdPersonController : MonoBehaviour {
 	private bool m_LockedInput = false;
     private bool m_PauseGame = false;
 	private int m_LockCounter = 0;
+	private bool m_IsPoisoned = false;
 	// Use this for initialization
 	void Start () {
 		Messenger.AddListener<bool>("lock player input", lockInput);
+		Messenger.AddListener<bool>("set is poisoned", setIsPoisoned);
 		// get the transform of the main camera
 		if (Camera.main) {
 			r_Camera = Camera.main.transform;
@@ -34,7 +39,7 @@ public class ThirdPersonController : MonoBehaviour {
 			Debug.LogWarning("Warning: no main camera found. Third person character needs a Camera tagged \"MainCamera\", for camera-relative controls.");
 			// we use self-relative controls in this case, which probably isn't what the user wants, but hey, we warned them!
 		}
-
+		
 		r_Character = GetComponent<ThirdPersonCharacter>();	
 	}
 
@@ -54,6 +59,10 @@ public class ThirdPersonController : MonoBehaviour {
 		}
 	}
 
+	public void setIsPoisoned(bool value) {
+		m_IsPoisoned = value;
+	}
+	
 	// FixedUpdate is called in sync with physics
 	void FixedUpdate () {
 
@@ -88,11 +97,14 @@ public class ThirdPersonController : MonoBehaviour {
 			m_Move.Normalize();
 		}
 
-		// Walk/Run speed is modified by a key press.
-		bool walkToggle = Input.GetButton("Run");
-		float runAxis = Input.GetAxis("RunTrigger");
-		if(runAxis < -0.5f)
-			walkToggle = true;
+		bool walkToggle = false;
+		if(!m_IsPoisoned) {
+			// Walk/Run speed is modified by a key press.
+			walkToggle = Input.GetButton("Run");
+			float runAxis = Input.GetAxis("RunTrigger");
+			if(runAxis < -0.5f)
+				walkToggle = true;
+		}
 		// We select appropriate speed based on whether we're walking by default, and whether the walk/run toggle button is pressed:
 		float walkMultiplier = (m_WalkByDefault ? walkToggle ? 1.0f : 0.5f : walkToggle ? 0.5f : 1.0f);
 		m_Move *= walkMultiplier;
@@ -100,6 +112,16 @@ public class ThirdPersonController : MonoBehaviour {
 		m_LookDirection = m_LookInCameraDirection && r_Camera ? transform.position + r_Camera.forward * 100.0f : transform.position + transform.forward * 100.0f;
 
 		r_Character.move (m_Move, m_Crouched, m_LookDirection);
+	}
+
+	public void PlayFootstepSound(string leftorright)
+	{
+		if(leftorright == "Right"){
+			m_RightFoot.Play();
+		}
+		else{
+			m_LeftFoot.Play();
+		}
 	}
 }
 

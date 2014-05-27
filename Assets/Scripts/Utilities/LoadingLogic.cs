@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// This scirpt handles all logic associated with loading levels and displaying loading screens.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// </summary>
 public class LoadingLogic : MonoBehaviour {
 
@@ -24,6 +24,8 @@ public class LoadingLogic : MonoBehaviour {
 			Debug.LogError("Unable to find LoadingScreen");
 		} else {
 			r_LoadingScreenTweener = r_LoadingScreen.GetComponent( typeof( UITweener) ) as UITweener;
+			r_LoadingScreen.alpha = 1.0f;
+			StartCoroutine("fadeIn");
 		}
 
 		r_LoadingMessage = r_LoadingScreen.GetComponentInChildren( typeof (UILabel) ) as UILabel;
@@ -32,6 +34,20 @@ public class LoadingLogic : MonoBehaviour {
 		} else {
 			r_LoadingMessageTweener = r_LoadingMessage.GetComponent( typeof( UITweener ) ) as UITweener;
 		}
+	}
+
+	IEnumerator fadeIn() {
+		yield return new WaitForSeconds(0.5f);
+		r_LoadingScreenTweener.PlayReverse();
+		r_LoadingScreenTweener.ResetToBeginning();
+		r_LoadingScreenTweener.PlayReverse();
+	}
+
+	IEnumerator fadeOut() {
+		yield return new WaitForSeconds(0.5f);
+		r_LoadingScreenTweener.PlayForward();
+		r_LoadingScreenTweener.ResetToBeginning();
+		r_LoadingScreenTweener.PlayForward();
 	}
 
 	public void loadLevel( int sceneNumber, string loadMessage ){
@@ -50,14 +66,24 @@ public class LoadingLogic : MonoBehaviour {
 		
 		r_LoadingScreenTweener.PlayForward();
 		r_LoadingMessageTweener.PlayForward();
-		
-		yield return new WaitForSeconds( 4.0f );
-		
-		Application.LoadLevel( (int) args[0] );
+
+		yield return new WaitForSeconds( r_LoadingScreenTweener.duration );
+
+		bool hasPro = UnityEditorInternal.InternalEditorUtility.HasPro();
+		if(hasPro) {
+			AsyncOperation ao = Application.LoadLevelAsync((int)args[0]);
+
+			yield return ao;
+
+		} else {
+			Application.LoadLevel( (int) args[0] );
+		}
+
+		yield return new WaitForSeconds(1.0f);		
 		
 		r_LoadingScreenTweener.PlayReverse();
 		r_LoadingMessageTweener.PlayReverse();
-		
+
 		loadingMessage = "";
 	}
 
@@ -78,13 +104,22 @@ public class LoadingLogic : MonoBehaviour {
 		r_LoadingScreenTweener.PlayForward();
 		r_LoadingMessageTweener.PlayForward();
 
-		yield return new WaitForSeconds( 4.0f );
+		yield return new WaitForSeconds( r_LoadingScreenTweener.duration );
 
-		Application.LoadLevel( (string) args[0] );
+		bool hasPro = UnityEditorInternal.InternalEditorUtility.HasPro();
+		if(hasPro) {
+			AsyncOperation ao = Application.LoadLevelAsync((string)args[0]);
+
+			yield return ao;
+		} else {
+			Application.LoadLevel( (string) args[0] );
+		}
 		
-		//Game.load();
+		yield return new WaitForSeconds(1.0f);
+
 		r_LoadingScreenTweener.PlayReverse();
 		r_LoadingMessageTweener.PlayReverse();
+
 		loadingMessage = "";
 	}
 
@@ -99,9 +134,11 @@ public class LoadingLogic : MonoBehaviour {
 		r_LoadingMessageTweener.PlayForward();
 		Messenger.Broadcast<bool>("lock player input", true);
 		
-		yield return new WaitForSeconds( 4.0f );
+		yield return new WaitForSeconds( r_LoadingScreenTweener.duration );
 
 		Game.load();
+
+		yield return new WaitForSeconds(1.0f);
 
 		r_LoadingScreenTweener.PlayReverse();
 		r_LoadingMessageTweener.PlayReverse();

@@ -121,7 +121,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		if(m_OnGround){
 			handleGroundVelocities();
 		} else {
-			handleAirborneVelocities();
+			//handleAirborneVelocities();
 		}
 
 		updateAnimator();
@@ -194,7 +194,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 
 	void groundCheck(){
 		Ray ray = new Ray(transform.position + Vector3.up * 0.1f, - Vector3.up);
-		RaycastHit[] hits = Physics.RaycastAll(ray, 0.5f);
+		RaycastHit[] hits = Physics.RaycastAll(ray, 0.3f);
 		System.Array.Sort(hits, m_RayHitComparer);
 
 		if(m_Velocity.y < 5.0f){

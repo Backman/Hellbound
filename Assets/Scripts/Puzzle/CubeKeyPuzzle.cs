@@ -12,6 +12,9 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	private List<Behaviour_PickUp> m_Cubes = new List<Behaviour_PickUp>();
 	private int m_CubesPlaced = 0;
 
+	public FMODAsset m_DoorOpenSound = null;
+	public FMODAsset m_UseCubeSound = null;
+
 	public Color m_HighlightColor = Color.black;
 	public List<GameObject> availableCubesToPlace = new List<GameObject>();
 	public GameObject inspectCubesDummy;
@@ -208,6 +211,9 @@ public class CubeKeyPuzzle : MonoBehaviour {
 					tweenPos = TweenPosition.Begin(r_ObjectInFocus, 0.1f, newPos);
 					//tweenPos.PlayForward();
 					objectSelected = true;
+					if(m_UseCubeSound != null) {
+						FMOD_StudioSystem.instance.PlayOneShot(m_UseCubeSound, r_ObjectInFocus.transform.position);
+					}
 				}
 				else if( objectSelected ){
 					Vector3 newPos = r_ObjectInFocus.transform.localPosition;
@@ -215,6 +221,9 @@ public class CubeKeyPuzzle : MonoBehaviour {
 					tweenPos = TweenPosition.Begin(r_ObjectInFocus, 0.1f, newPos);
 					//tweenPos.PlayReverse();
 					objectSelected = false;
+					if(m_UseCubeSound != null) {
+						FMOD_StudioSystem.instance.PlayOneShot(m_UseCubeSound, r_ObjectInFocus.transform.position);
+					}
 				}
 			}
 			else if(InputManager.getButtonUp(InputManager.Button.Use)){
@@ -297,6 +306,9 @@ public class CubeKeyPuzzle : MonoBehaviour {
 					tweenPos = TweenPosition.Begin(r_ObjectInFocus, 0.1f, newPos);
 					//tweenPos.PlayReverse();
 					objectSelected = false;
+					if(m_UseCubeSound != null) {
+						FMOD_StudioSystem.instance.PlayOneShot(m_UseCubeSound, r_ObjectInFocus.transform.position);
+					}
 					break;
 				}
 				else if( !objectSelected ) {
@@ -306,6 +318,9 @@ public class CubeKeyPuzzle : MonoBehaviour {
 					tweenPos = TweenPosition.Begin(r_SecondObjectInFocus, 0.1f, newPos);
 					//tweenPos.PlayForward();
 					objectSelected = true;
+					if(m_UseCubeSound != null) {
+						FMOD_StudioSystem.instance.PlayOneShot(m_UseCubeSound, r_ObjectInFocus.transform.position);
+					}
 					tweenPos.AddOnFinished(onMovedOut);
 					m_CubesSwitching = true;
 					while(m_CubesSwitching){
@@ -411,7 +426,12 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	}
 	
 	public void onRequestOpenCubeDoor(GameObject obj, bool tr){
-		obj.transform.parent.gameObject.GetComponent<UIPlayTween>().Play(true);
+		if(m_DoorOpenSound != null) {
+			FMOD_StudioSystem.instance.PlayOneShot(m_DoorOpenSound, obj.transform.position);
+		}
+
+		obj.transform.Find ("spring1").GetComponent<UIPlayTween> ().Play (true);
+		obj.transform.Find ("spring2").GetComponent<UIPlayTween> ().Play (true);
 		obj.GetComponent<Interactable>().enabled = false;
 
 		zoomOut(gameObject, false);
