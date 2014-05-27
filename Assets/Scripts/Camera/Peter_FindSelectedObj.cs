@@ -10,6 +10,10 @@ public class Peter_FindSelectedObj : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		m_Selected = UICamera.selectedObject;
+		GameObject hovered = UICamera.hoveredObject;
+		if (hovered != null) {
+			UICamera.currentScheme = UICamera.ControlScheme.Controller;
+			UICamera.selectedObject = hovered;
+		}
 	}
 }
