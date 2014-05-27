@@ -24,6 +24,8 @@ public class LoadingLogic : MonoBehaviour {
 			Debug.LogError("Unable to find LoadingScreen");
 		} else {
 			r_LoadingScreenTweener = r_LoadingScreen.GetComponent( typeof( UITweener) ) as UITweener;
+			r_LoadingScreen.alpha = 1.0f;
+			StartCoroutine("fadeIn");
 		}
 
 		r_LoadingMessage = r_LoadingScreen.GetComponentInChildren( typeof (UILabel) ) as UILabel;
@@ -32,6 +34,20 @@ public class LoadingLogic : MonoBehaviour {
 		} else {
 			r_LoadingMessageTweener = r_LoadingMessage.GetComponent( typeof( UITweener ) ) as UITweener;
 		}
+	}
+
+	IEnumerator fadeIn() {
+		yield return new WaitForSeconds(0.5f);
+		r_LoadingScreenTweener.PlayReverse();
+		r_LoadingScreenTweener.ResetToBeginning();
+		r_LoadingScreenTweener.PlayReverse();
+	}
+
+	IEnumerator fadeOut() {
+		yield return new WaitForSeconds(0.5f);
+		r_LoadingScreenTweener.PlayForward();
+		r_LoadingScreenTweener.ResetToBeginning();
+		r_LoadingScreenTweener.PlayForward();
 	}
 
 	public void loadLevel( int sceneNumber, string loadMessage ){
