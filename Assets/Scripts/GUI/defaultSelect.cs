@@ -26,6 +26,7 @@ public class defaultSelect : MonoBehaviour {
 				condition = true;
 			}
 			if (condition){
+				UICamera.currentScheme = UICamera.ControlScheme.Controller;
 				UICamera.selectedObject = gameObject;
 			}
 		}
