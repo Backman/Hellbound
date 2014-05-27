@@ -429,7 +429,9 @@ public class CubeKeyPuzzle : MonoBehaviour {
 		if(m_DoorOpenSound != null) {
 			FMOD_StudioSystem.instance.PlayOneShot(m_DoorOpenSound, obj.transform.position);
 		}
-		obj.transform.parent.gameObject.GetComponent<UIPlayTween>().Play(true);
+
+		obj.transform.Find ("spring1").GetComponent<UIPlayTween> ().Play (true);
+		obj.transform.Find ("spring2").GetComponent<UIPlayTween> ().Play (true);
 		obj.GetComponent<Interactable>().enabled = false;
 
 		zoomOut(gameObject, false);
