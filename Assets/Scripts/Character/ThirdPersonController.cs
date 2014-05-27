@@ -13,6 +13,9 @@ public class ThirdPersonController : MonoBehaviour {
 
 	public bool m_WalkByDefault = false;				// toggle for walking state
 	public bool m_LookInCameraDirection = true;			// should the character be looking in the same direction that the camera is facing
+
+	public FMOD_StudioEventEmitter m_LeftFoot = null;
+	public FMOD_StudioEventEmitter m_RightFoot = null;
 	
 	private Vector3 m_LookDirection;					// The position that the character should be looking towards
 	private ThirdPersonCharacter r_Character;			// A reference to the ThirdPersonCharacter on the object
@@ -109,6 +112,16 @@ public class ThirdPersonController : MonoBehaviour {
 		m_LookDirection = m_LookInCameraDirection && r_Camera ? transform.position + r_Camera.forward * 100.0f : transform.position + transform.forward * 100.0f;
 
 		r_Character.move (m_Move, m_Crouched, m_LookDirection);
+	}
+
+	public void PlayFootstepSound(string leftorright)
+	{
+		if(leftorright == "Right"){
+			m_RightFoot.Play();
+		}
+		else{
+			m_LeftFoot.Play();
+		}
 	}
 }
 

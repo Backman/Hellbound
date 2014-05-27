@@ -127,6 +127,10 @@ public class GUIManager : Singleton<GUIManager> {
 	public void togglePause(){
 		m_GamePaused = !m_GamePaused;
 		pauseGame(m_GamePaused);
+		if (!m_GamePaused) {
+						UICamera.currentScheme = UICamera.ControlScheme.Controller;
+						UICamera.selectedObject = null;
+		} 
 	}
 
 	public void pauseGame(bool pause) {
