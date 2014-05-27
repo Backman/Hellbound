@@ -13,11 +13,16 @@ public class Peter_FindSelectedObj : MonoBehaviour {
 	void Update () {
 		m_Selected = UICamera.selectedObject;
 
+		bool condition = true;
 		GameObject hovered = UICamera.hoveredObject;
 		if (hovered != null) {
-			UICamera.currentScheme = UICamera.ControlScheme.Controller;
-			UICamera.selectedObject = hovered;
-		} else if (mouseSelected != null) {
+			if (hovered.GetComponent<UIKeyNavigation>() != null) {
+				UICamera.currentScheme = UICamera.ControlScheme.Controller;
+				UICamera.selectedObject = hovered;
+				condition = false;
+			} 
+		}
+		else if (mouseSelected != hovered && condition){
 			UICamera.selectedObject = null;
 		}
 		mouseSelected = hovered;
