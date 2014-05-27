@@ -59,10 +59,12 @@ public class FootStepSounds : MonoBehaviour {
 			
 			if(m_StandingOn.m_UseFootstepSurface){
 				m_Parameter.setValue(m_StandingOn.m_Surface);
+				Debug.Log("FSS: " + m_StandingOn.m_Surface);
 			}
 
 			else if (surfaceTexture != null) {
 				m_Parameter.setValue(surfaceTexture.m_SurfaceType);
+				Debug.Log("GDS: " + surfaceTexture.m_SurfaceType);
 			}
 		}
 	}
