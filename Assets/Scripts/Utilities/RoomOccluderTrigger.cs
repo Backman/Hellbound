@@ -53,13 +53,15 @@ public class RoomOccluderTrigger : MonoBehaviour{
 
 	void hide(List<RoomOccluderVolume> rooms){
 		foreach( RoomOccluderVolume room in rooms ){
-			room.hide();
+			if( room != null)
+				room.hide();
 		}
 	}
 
 	void show(List<RoomOccluderVolume> rooms){
 		foreach( RoomOccluderVolume room in rooms ){
-			room.show();
+			if( room != null)
+				room.show();
 		}
 	}
 }
