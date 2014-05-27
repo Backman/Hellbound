@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class SoundControl {
+public class SoundControl : MonoBehaviour {
 	/// <summary>
 	/// SoundControl handles the masterVolume and also the groupVolume (ie "Music", "Voice" and "SFX")
 	/// SoundControl is a singleton, meaning that only one can exist in the scene at any one time
@@ -86,12 +86,12 @@ public class SoundControl {
 	}
 
 
-	//public void Update(){
-	//	if(m_CurrentSpeakerMode != AudioSettings.speakerMode){
-	//		SetNewAduioSpeakerMode(m_CurrentSpeakerMode);
-	//	}
-	//	checkIfCorrect (true);
-	//}
+	public void Update(){
+		if(m_CurrentSpeakerMode != AudioSettings.speakerMode){
+			SetNewAduioSpeakerMode(m_CurrentSpeakerMode);
+		}
+		checkIfCorrect (true);
+	}
 
 
 	private void LoadVolume(){
