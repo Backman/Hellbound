@@ -9,7 +9,7 @@ using System.Reflection;
 /// Base class for all interactable objects in the game
 /// Each interactable overrides the functions it wishes to implement
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// 
 /// 
 /// 

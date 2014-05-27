@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// as well as namespace definitions
 /// for GUI helpers for the project Hellbound.
 /// 
-/// Created by Simon
+/// Created by Simon Jonasson
 /// 
 /// _minor_ editing by Anton Thorsell
 /// (basically anything that have to do with sounds)
