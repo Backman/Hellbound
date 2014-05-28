@@ -11,9 +11,7 @@ public class SoundControl : MonoBehaviour {
 	/// Anton Thorsell
 	/// </summary>
 
-	//The current instance is saved in the variable below
-	private static readonly SoundControl m_instance = new SoundControl();
-	public static SoundControl Instance { get { return m_instance; } }
+	private static SoundControl Instance = null;
 
 	public AudioSpeakerMode m_CurrentSpeakerMode;
 
@@ -33,6 +31,17 @@ public class SoundControl : MonoBehaviour {
 	private SoundControl()
 	{
 
+	}
+
+	public static SoundControl GetInstance()
+	{
+		if( !Instance )
+		{
+			GameObject container = new GameObject();
+			container.name = "SoundControl";
+			Instance = container.AddComponent(typeof(SoundControl)) as SoundControl;
+		}
+		return Instance;
 	}
 
 	// this variable will contain the volume controllers for the various groups of soundobjects
@@ -81,8 +90,15 @@ public class SoundControl : MonoBehaviour {
 	//since fmod already knows about every sound that exists in the scene
 	public void ChangeVolume(float newVolume, string tagToBeChanged)
 	{
-		m_Volume[tagToBeChanged].setFaderLevel (newVolume);
+		m_Volume[tagToBeChanged].setFaderLevel(newVolume);
 		SaveVolume ();
+	}
+
+	public float GetVolume (string tag)
+	{
+		float volume;
+		m_Volume[tag].getFaderLevel(out volume);
+		return volume;
 	}
 
 
