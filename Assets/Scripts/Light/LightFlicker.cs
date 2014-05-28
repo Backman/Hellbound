@@ -3,6 +3,20 @@ using System.Collections;
 
 public class LightFlicker : MonoBehaviour {
 
+	/// <summary>
+	/// LightFlicker was written by Anton Thorsell
+	/// 
+	/// Super simple script, all it needs is the component "Light" 
+	/// on the same gameobject this script is on.
+	/// 
+	/// All this script does is making a light flicker (read: pulse)
+	/// by calculating a sinus curve.
+	/// 
+	/// the editor can decide the AverageLight, speed and difference.
+	/// 
+	/// </summary>
+
+
 	private Light r_Light;
 	private float m_pi = 0f;
 

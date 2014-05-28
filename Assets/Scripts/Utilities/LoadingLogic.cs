@@ -135,8 +135,7 @@ public class LoadingLogic : MonoBehaviour {
 		Messenger.Broadcast<bool>("lock player input", true);
 		
 		yield return new WaitForSeconds( r_LoadingScreenTweener.duration );
-		
-		Messenger.Broadcast<bool>("lock player input", false);
+
 		Messenger.Cleanup ();
 		Game.load();
 
@@ -145,5 +144,6 @@ public class LoadingLogic : MonoBehaviour {
 		r_LoadingScreenTweener.PlayReverse();
 		r_LoadingMessageTweener.PlayReverse();
 		loadingMessage = "";
+		Messenger.Broadcast<bool>("lock player input", false);
 	}
 }
