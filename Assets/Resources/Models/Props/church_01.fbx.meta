@@ -1,0 +1,86 @@
+fileFormatVersion: 2
+guid: 9131583b34b596d42b79fcb095fc4749
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: assets5
+    100002: //RootNode
+    100004: polySurface107
+    100006: roof1
+    100008: roof_trim
+    100010: windows
+    400000: assets5
+    400002: //RootNode
+    400004: polySurface107
+    400006: roof1
+    400008: roof_trim
+    400010: windows
+    2300000: assets5
+    2300002: polySurface107
+    2300004: roof1
+    2300006: roof_trim
+    2300008: windows
+    3300000: assets5
+    3300002: polySurface107
+    3300004: roof1
+    3300006: roof_trim
+    3300008: windows
+    4300000: assets5
+    4300002: roof1
+    4300004: roof_trim
+    4300006: windows
+    4300008: polySurface107
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
