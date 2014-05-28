@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-//peter, anton, arvid
+//peter, Anton Thorsell, arvid
+
+/// <summary>
+/// HintsHandler 
+/// </summary>
+
 [System.Serializable]
 public class HintsText{
 	[SerializeField][Multiline]

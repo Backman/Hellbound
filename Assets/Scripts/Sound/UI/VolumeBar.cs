@@ -7,11 +7,11 @@ public class VolumeBar : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		GetComponent<UIScrollBar>().value = SoundControl.GetInstance().GetVolume (VolumeName);
+		GetComponent<UIScrollBar>().value = SoundControl.getInstance().GetVolume (VolumeName);
 	}
 
 	// Update is called once per frame
 	void Update () {
-		SoundControl.GetInstance().ChangeVolume (GetComponent<UIScrollBar>().value, VolumeName);
+		SoundControl.getInstance().ChangeVolume (GetComponent<UIScrollBar>().value, VolumeName);
 	}
 }
