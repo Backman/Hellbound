@@ -12,6 +12,8 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	private List<Behaviour_PickUp> m_Cubes = new List<Behaviour_PickUp>();
 	private int m_CubesPlaced = 0;
 
+	[Multiline]
+	public string m_HelpText;
 	public FMODAsset m_DoorOpenSound = null;
 	public FMODAsset m_UseCubeSound = null;
 
@@ -110,6 +112,9 @@ public class CubeKeyPuzzle : MonoBehaviour {
 
 		StartCoroutine( "inputLogic" );
 		Messenger.Broadcast("clear focus");
+
+		Messenger.Broadcast<string>("set help text", m_HelpText);
+		Messenger.Broadcast<bool>("enable help text", true);
 
 		PuzzleEvent.cancel("onUseOnly");
 		
@@ -262,6 +267,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 			while(!m_StopInputLogic){
 				if(InputManager.getButtonUp(InputManager.Button.Run) || released) {
 					if(InputManager.getButtonDown(InputManager.Button.Run)){
+						Messenger.Broadcast<bool>("enable help text", false);
 						zoomOut(gameObject, true);
 					}
 					released = true;
@@ -443,6 +449,7 @@ public class CubeKeyPuzzle : MonoBehaviour {
 		foreach(Behaviour_PickUp inter in m_Cubes) {
 			InventoryLogic.Instance.addItem (inter.m_ItemName, inter.m_ItemThumbnail);
 		}
-		Debug.Log("Open door!");
+		
+		Messenger.Broadcast<bool>("enable help text", false);
 	}
 }
