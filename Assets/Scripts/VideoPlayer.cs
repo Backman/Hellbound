@@ -12,6 +12,7 @@ public class VideoPlayer : MonoBehaviour {
 	bool m_Done = false;
 	AudioSource m_Audio;
 	AsyncOperation m_AsyncOperation = null;
+	public bool m_UseToLoadLevel = true;
 	// Use this for initialization
 	void Start () {
 		StartCoroutine("startVideo");
@@ -28,7 +29,10 @@ public class VideoPlayer : MonoBehaviour {
 			}
 			m_Audio.Play();
 		}
-		StartCoroutine("startLoadLevel");
+
+		if(m_UseToLoadLevel) {
+			StartCoroutine("startLoadLevel");
+		}
 	}
 
 	IEnumerator startLoadLevel() {
