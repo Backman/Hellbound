@@ -20,11 +20,12 @@ public class SettingsMenuControl : MonoBehaviour {//UISprite {
 	}
 	
 	public void show(){
-		foreach(SettingsMenuControl menuControl in m_Settings){
-			Debug.Log ("Hide setting menu: "+menuControl.name);
-			menuControl.setVisible(false);
+		if(gameObject.activeSelf != true){
+			foreach(SettingsMenuControl menuControl in m_Settings){
+				menuControl.setVisible(false);
+			}
+			setVisible(true);
 		}
-		setVisible(true);
 	}
 	
 	// Called by Unity

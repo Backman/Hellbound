@@ -4,11 +4,13 @@ using System.Collections.Generic;
 
 public class AlterSoundPlay : MonoBehaviour {
 	/// <summary>
-	/// Altersoundplay is to be placed on a collider (also requires a FMOD_StudioEventEmitter)
-	/// This script will start or stop playing sounds depending if the player entered the collider
+	/// AlterSoundPlay was written by Anton Thorsell
+	/// 
+	/// Altersoundplay is to be placed on a collider (also requires a pointer to an 
+	/// object with an FMOD_StudioEventEmitter)
+	/// This script will start or stop playing sounds depending if the player entered/exited the collider
 	/// You can also specify if the sound only should be played once (if so it will destroy itself when it is done)
 	/// 
-	/// Anton Thorsell
 	/// </summary>
 
 	public GameObject[] r_GameObjects;
