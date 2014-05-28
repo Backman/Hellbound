@@ -11,6 +11,8 @@ using System.Collections.Generic;
 public class CubeKeyPuzzle : MonoBehaviour {
 	private List<Behaviour_PickUp> m_Cubes = new List<Behaviour_PickUp>();
 	private int m_CubesPlaced = 0;
+	
+	public FMOD_StudioEventEmitter m_MusicEmitter;
 
 	[Multiline]
 	public string m_HelpText;
@@ -90,6 +92,16 @@ public class CubeKeyPuzzle : MonoBehaviour {
 			//tweenPos.to = pCube.transform.localPosition + Vector3.back * 0.3f;
 
 			m_PositionDictionary.Add (freeSpace, pCube);
+		}
+		bool allCubesPlaced = false;
+		foreach(bool value in m_CubePlaceUsed) {
+			allCubesPlaced = value;
+			if(!allCubesPlaced) {
+				break;
+			}
+		}
+		if(allCubesPlaced && m_MusicEmitter != null) {
+			m_MusicEmitter.Play();
 		}
 	}
 	
