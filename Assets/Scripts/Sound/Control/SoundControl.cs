@@ -38,9 +38,10 @@ public class SoundControl : MonoBehaviour {
 		
 		FMOD.GUID guid3;
 		FMOD.Studio.MixerStrip bus3;
-		
+		FMOD.RESULT res;
 		system.lookupID ("vca:/VCA_VO", out guid3);
-		system.getMixerStrip (guid3, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus3);
+		res = system.getMixerStrip (guid3, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus3);
+		Debug.Log ("Result: " + res.ToString ());
 		m_Volume.Add ("Voice", bus3);
 		
 		FMOD.GUID guid4;
@@ -76,14 +77,22 @@ public class SoundControl : MonoBehaviour {
 	//since fmod already knows about every sound that exists in the scene
 	public void ChangeVolume(float newVolume, string tagToBeChanged)
 	{
-		m_Volume[tagToBeChanged].setFaderLevel(newVolume);
+		Debug.Log (tagToBeChanged + " : " + newVolume + " : " + m_Volume);
+		FMOD.Studio.MixerStrip mixerStrip = null;
+		if (m_Volume.TryGetValue (tagToBeChanged, out mixerStrip)) {
+			if (mixerStrip != null) {
+				mixerStrip.setFaderLevel (newVolume);
+			}
+		}
 		SaveVolume ();
 	}
 
 	public float GetVolume (string tag)
 	{
-		float volume;
-		m_Volume[tag].getFaderLevel(out volume);
+		float volume = 0f;
+		if (m_Volume.ContainsKey (tag)) {
+			m_Volume [tag].getFaderLevel (out volume);
+		}
 		return volume;
 	}
 
