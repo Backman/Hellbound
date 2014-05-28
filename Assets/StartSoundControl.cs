@@ -8,11 +8,11 @@ public class StartSoundControl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		SoundControl.Instance.checkIfCorrect(true);
+		SoundControl.GetInstance().checkIfCorrect(true);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		SoundControl.Instance.ChangeVolume(Master, "Master");
+		SoundControl.GetInstance().ChangeVolume(Master, "Master");
 	}
 }

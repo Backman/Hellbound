@@ -18,11 +18,6 @@ public class PressurePlatePuzzle : MonoBehaviour {
 		Messenger.AddListener<GameObject, bool>("requestLowerCeiling", requestLowerCeiling);	
 		Messenger.AddListener<GameObject, bool>("requestStartRoof", requestStartRoof);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 	public void requestSetFireFormation(GameObject obj, bool tr){
 		Debug.Log("Set fire formation!");
@@ -88,17 +83,19 @@ public class PressurePlatePuzzle : MonoBehaviour {
 			}
 			if(interObj.gameObject == obj) interObj.setPuzzleState("good");
 		}
-		Debug.Log ("Callllling");
+
 		// Cancel event to prevent other logic with different condition to run
 		PuzzleEvent.cancel("onTriggerEnter");
 	}
 	
 	public void requestLowerCeiling(GameObject obj, bool tr){
+		Debug.Log ("requestLowerCeiling");
 		Messenger.Broadcast ("lower roof");
 		PuzzleEvent.cancel("onTriggerEnter");
 	}
 
 	public void requestStartRoof(GameObject obj, bool tr){
+		Debug.Log ("requestStartRoof");
 		Messenger.Broadcast ("start roof");
 		PuzzleEvent.cancel("onTriggerEnter");
 	}
