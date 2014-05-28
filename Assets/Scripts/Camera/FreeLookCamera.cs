@@ -198,7 +198,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	}
 
 	void DisableMeshRendererOnTarget(){
-		Transform benjamin = m_Target.FindChild("Benjamin");
+		Transform benjamin = m_Target.FindChild("Benjamin_v2");
 		//Renderer[] renderers = m_Target.GetComponentsInChildren<Renderer>();
 		benjamin.gameObject.SetActive(false);
 		/*foreach(Renderer m in renderers){
@@ -235,7 +235,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		m_Camera.transform.localRotation = Quaternion.Euler(Vector3.zero);
 	}
 	private IEnumerator activateBenjamin(){
-		Transform benjamin = m_Target.FindChild("Benjamin");
+		Transform benjamin = m_Target.FindChild("Benjamin_v2");
 		if(!benjamin.gameObject.activeSelf) {
 			yield return new WaitForSeconds( 0.1f);
 			benjamin.gameObject.SetActive(true);
