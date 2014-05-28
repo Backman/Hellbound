@@ -5,10 +5,22 @@ using System.Collections.Generic;
 public class FootStepSounds : MonoBehaviour {
 	
 	/// <summary>
-	/// FootstepsFront will need to be placed on the front collider on both feet
-	/// This script also requires an "FMOD_StudioEventEmitter", a collider and
-	/// pointers to the colliders on the back of the feet
-	/// Anton Thorsell
+	/// FootstepSounds was written by Anton Thorsell
+	/// 
+	/// The script FootstepSounds handles when the footstep sounds should play
+	/// and what type of footstep sounds that should be played
+	/// 
+	/// FootstepSounds with the help of the scripts footstepsurface, footstepHitBoxes and 
+	/// GetDominantTexture can figure out what type of footstep sound that should be played
+	/// (theese scripts are mandatory for footstepsounds)
+	/// 
+	/// note: the functions AttachFmodEmitter and TryGetParameterAgain
+	/// can in theory fix a few errors (if they appear) but do not do so.
+	/// This can either be beacuse of errors in FMOD (have had problems with fmod before)
+	/// or inproper use of how you attach FMOD_StudioEventEmitter to an object inside a script
+	/// 
+	/// 
+	/// 
 	/// </summary>
 	
 	//the sound emitter (the source of the sound)
@@ -22,7 +34,8 @@ public class FootStepSounds : MonoBehaviour {
 	//for example footsteps on wood or stone)
 	private FMOD.Studio.ParameterInstance m_Parameter;
 	
-	//the start acceses and saves a few "pointers" to the necessary scrips and variables
+	//the start access and saves a few "pointers" to the necessary scrips and variables
+
 	//(this is to provide shortcuts to what we want to access and/or change)
 	void Start(){
 		try{
@@ -83,7 +96,7 @@ public class FootStepSounds : MonoBehaviour {
 		}
 	}
 
-
+	//This function is obsolete and do not function the way i want
 	private void TryGetParameterAgain()
 	{
 		Debug.Log ("TryGetParameterAgain");
@@ -94,7 +107,8 @@ public class FootStepSounds : MonoBehaviour {
 			Debug.Log("Get parameter failed Again");
 		}
 	}
-
+	
+	//This function is obsolete and do not function the way i want
 	private void AttachFmodEmitter()
 	{
 		Debug.Log ("attachFMODEmitter");

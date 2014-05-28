@@ -12,10 +12,11 @@ using System.Reflection;
 /// Created by Simon Jonasson
 /// 
 /// 
+/// 
 /// Added eventsound to interactable, it will play a specifik sound
 /// if "EventSound" is added to the object
 /// 
-/// Anton Thorsell
+/// _minor_ editing by Anton Thorsell
 /// </summary>
 public abstract class Interactable : MonoBehaviour{
 
