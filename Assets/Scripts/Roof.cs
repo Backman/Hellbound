@@ -5,8 +5,8 @@ public class Roof : MonoBehaviour {
 	[SerializeField][Tooltip("The tween-player for lowering the roof")]
 	private UIPlayTween m_Tweener;
 
-	private enum Phase {Start, InMotion, Wait, Kill};
-	Phase m_Phase = Phase.Start;
+	public enum Phase {Start, InMotion, Wait, Kill};
+	public Phase m_Phase = Phase.Start;
 
 	// Use this for initialization
 	void Start () {
