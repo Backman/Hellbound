@@ -128,8 +128,8 @@ public class GUIManager : Singleton<GUIManager> {
 		m_GamePaused = !m_GamePaused;
 		pauseGame(m_GamePaused);
 		if (!m_GamePaused) {
-						UICamera.currentScheme = UICamera.ControlScheme.Controller;
-						UICamera.selectedObject = null;
+			UICamera.currentScheme = UICamera.ControlScheme.Controller;
+			UICamera.selectedObject = null;
 		} 
 	}
 
@@ -153,6 +153,9 @@ public class GUIManager : Singleton<GUIManager> {
 		m_PauseWindow.r_MainWindow.GetComponent<UIPlayTween>().Play(show);
 		if(!show) m_PauseWindow.r_MainWindow.GetComponent<Menu>().dontShow();
 
+		if(r_MainCamera == null) {
+			r_MainCamera = Camera.main;
+		}
 		PauseGameEffect pge = r_MainCamera.GetComponent(typeof( PauseGameEffect ) ) as PauseGameEffect;
 		if( pge != null ){
 			pge.StopCoroutine("pauseGame");
