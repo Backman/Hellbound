@@ -193,9 +193,4 @@ public class AlterSoundParameter : MonoBehaviour {
 
 		return returnThis;
 	}
-
-	void derp()
-	{
-
-	}
 }
