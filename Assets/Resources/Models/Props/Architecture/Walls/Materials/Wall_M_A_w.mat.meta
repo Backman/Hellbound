@@ -1,5 +1,6 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<< HEAD
 guid: 4936a86a0f93c8c49bb3662e62a79168
 =======
 <<<<<<< HEAD
@@ -8,5 +9,8 @@ guid: ac3979ee008aaf3428ddc72ae508df06
 guid: 2037bd749e7c1ef41aac81a052f13576
 >>>>>>> dc3536744a0dc18ee677d79db02ad744a3762ec1
 >>>>>>> 2c69e276ca2690bfbc7c85ee15ff031cf04774d9
+=======
+guid: 4936a86a0f93c8c49bb3662e62a79168
+>>>>>>> b95c565dbba07a2a23d44e329bed75736e4bed42
 NativeFormatImporter:
   userData: 

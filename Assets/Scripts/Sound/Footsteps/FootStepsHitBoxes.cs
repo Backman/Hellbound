@@ -5,7 +5,7 @@ public class FootStepsHitBoxes : MonoBehaviour {
 
 	/// <summary>
 	/// This script is to be placed on the colliders on the back of the foot(feet).
-	/// Actually there's barely anything here (but it is VITAL)
+	/// Actually there's barely anything here (but it is vital)
 	/// Anton Thorsell
 	/// </summary>
 
