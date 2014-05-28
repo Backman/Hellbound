@@ -267,7 +267,6 @@ static internal class Messenger {
 		Delegate d;
 		if (eventTable.TryGetValue(eventType, out d)) {
 			Callback<T, U> callback = d as Callback<T, U>;
-			
 			if (callback != null) {
 				callback(arg1, arg2);
 			} else {
@@ -306,7 +305,6 @@ public sealed class MessengerHelper : MonoBehaviour {
 	
 	//Clean up eventTable every time a new level loads.
 	public void OnDisable() {
-		Debug.Log("CleanUp");
 		Messenger.Cleanup();
 	}
 }
