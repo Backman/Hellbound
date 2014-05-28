@@ -69,7 +69,7 @@ public class LoadingLogic : MonoBehaviour {
 
 		yield return new WaitForSeconds( r_LoadingScreenTweener.duration );
 
-		bool hasPro = UnityEditorInternal.InternalEditorUtility.HasPro();
+		bool hasPro = Application.HasProLicense ();
 		if(hasPro) {
 			AsyncOperation ao = Application.LoadLevelAsync((int)args[0]);
 
@@ -106,7 +106,7 @@ public class LoadingLogic : MonoBehaviour {
 
 		yield return new WaitForSeconds( r_LoadingScreenTweener.duration );
 
-		bool hasPro = UnityEditorInternal.InternalEditorUtility.HasPro();
+		bool hasPro = Application.HasProLicense ();
 		if(hasPro) {
 			AsyncOperation ao = Application.LoadLevelAsync((string)args[0]);
 
