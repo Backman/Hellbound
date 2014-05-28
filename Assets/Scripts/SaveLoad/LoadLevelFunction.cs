@@ -3,6 +3,7 @@ using System.Collections;
 //peter
 public class LoadLevelFunction : MonoBehaviour {
 	public string SceneName;
+	public GameObject[] stuffsToshutdown;
 	[TooltipAttribute("This variable changes the behaviour of this script to load levels via their level index instead of their level name.\n" +
 					  "A levels index is decided by the number next to it after it has been added in the Build Settings menue (File -> Build Settings...)")]
 	public bool UseLevelIndexInstead = false;
@@ -53,6 +54,9 @@ public class LoadLevelFunction : MonoBehaviour {
 		} else {
 			Debug.LogError("Error! No PauseGameEffect present. Are you using the correct PlayerController?\nIf you are, the PlayerController prefab is blue while you are in edit mode, otherwize it is red");
 		}*/
+		foreach (GameObject each in stuffsToshutdown) {
+			each.SetActive(false);
+		}
 		LoadLevel ();
 	}
 }

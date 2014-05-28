@@ -13,6 +13,7 @@ public class OnClickPlay : MonoBehaviour {
 	
 	void OnClick()
 	{
-		FMOD_StudioSystem.instance.PlayOneShot (m_Path, transform.position);
+		Debug.Log ("a");
+		FMOD_StudioSystem.instance.PlayOneShot (m_Path, Camera.main.transform.position);
 	}
 }
