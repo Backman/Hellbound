@@ -23,7 +23,12 @@ public class PauseWindow {
 /// Created by Simon Jonasson
 /// 
 /// Modified by Peter, Arvid Backman
+/// 
+///  _minor_ editing by Anton Thorsell
+/// (basically anything that have to do with sounds)
+/// 
 /// </summary>
+
 public class GUIManager : Singleton<GUIManager> {
 	public PauseWindow m_PauseWindow;
 	[SerializeField]
@@ -203,7 +208,7 @@ public class GUIManager : Singleton<GUIManager> {
 	/// <param name="text">Text.</param>
 	/// <param name="button">Button.</param>
 	/// <param name="lockMovement">If set to <c>true</c> lock movement.</param>
-	public void simpleShowText(string text, string button = "Examine", bool lockMovement = true){
+	public bool simpleShowText(string text, string button = "Examine", bool lockMovement = true){
 		if( !m_Examining ){
 			m_Examining = true;
 			object[] args = new object[5];
@@ -214,9 +219,13 @@ public class GUIManager : Singleton<GUIManager> {
 			args[4] = false;
 			
 			StartCoroutine("examine", args);
+			Debug.Log("tuuue");
+			return true;
 		}
 		else {
 			Debug.Log("Bussy examining");
+			Debug.Log("alllse");
+			return false;
 		}
 	}
 	

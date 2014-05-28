@@ -36,7 +36,7 @@ public class LockedInteractable : Interactable {
 	
 	public override void activate ()
 	{
-		base.activate ();
+		//base.activate ();
 		bool all = true;
 
 		//Check if all needed items is in inventory.
@@ -53,7 +53,9 @@ public class LockedInteractable : Interactable {
 			}
 			m_FSM.changeState<OpenedState>();
 		} else {
-			GUIManager.Instance.simpleShowText(m_LockedText, "Use");
+			if(GUIManager.Instance.simpleShowText(m_LockedText, "Use")){
+				base.activate ();
+			}
 		}
 
 		PuzzleEvent.trigger("onOpenInteractable", gameObject, false);

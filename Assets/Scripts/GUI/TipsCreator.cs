@@ -4,12 +4,23 @@ using System.Collections.Generic;
 //anton
 //peter
 public class TipsCreator : MonoBehaviour {
+
+	/// <summary>
+	/// TipsCreator was written by Anton Thorsell
+	/// 
+	/// The Script TipsCreator will first find _all_ gameObjects of the type
+	/// HintsHandler and extract all hints (class HintText)
+	/// 
+	/// thereafter it will create one button per hint that was previously extracted
+	/// 
+	/// </summary>
+
 	public GameObject r_Prefab;
 
 	void Start(){
-		HintsHandler TH = GameObject.Find ("TipsHandler").GetComponent<HintsHandler>();
+		//HintsHandler TH = GameObject.Find ("TipsHandler").GetComponent<HintsHandler>();
 		List<HintsText> hints = new List<HintsText>();
-		foreach (HintsHandler eachHH in  GameObject.FindObjectsOfType<HintsHandler> ()) {
+		foreach (HintsHandler eachHH in GameObject.FindObjectsOfType<HintsHandler> ()) {
 			foreach(HintsText hintText in eachHH.m_Hints){
 				hints.Add(hintText);
 			}
