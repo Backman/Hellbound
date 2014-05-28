@@ -23,6 +23,10 @@ public class Pair<T, U> {
 /// </summary>
 
 public class ScalePuzzle : MonoBehaviour {
+	public FMOD_StudioEventEmitter m_MusicEmitter = null;
+	public string m_Parameter;
+	public float m_DeathParameter;
+	public float m_CompleteParameter;
 	public FMODAsset m_CubePlaceSound = null;
 	public List<GameObject> m_Cubes = new List<GameObject>();
 	public List<GameObject> m_EvilScalePlacedCubes = new List<GameObject>();
@@ -39,7 +43,7 @@ public class ScalePuzzle : MonoBehaviour {
 	private List<Vector3> m_PlacedCubePositions = new List<Vector3>();
 	private List<bool> m_CubePlaceUsed = new List<bool>();
 	private GameObject r_ObjectInFocus;
-
+	private FMOD.Studio.ParameterInstance m_ParameterInstance;
 	FreeLookCamera r_FreeLookCamera;
 
 	private bool m_ExaminatingCube = false;
@@ -55,6 +59,10 @@ public class ScalePuzzle : MonoBehaviour {
 	void Start () {
 		Messenger.AddListener<GameObject, bool>("onRequestStartScalePuzzle", onRequestStartScalePuzzle);
 		Messenger.AddListener<GameObject, bool>("openLockedDoor", openLockedDoor);
+		Messenger.AddListener("onScalePuzzleDeath", onScalePuzzleDeath);
+		if(m_MusicEmitter != null) {
+			m_ParameterInstance = m_MusicEmitter.getParameter(m_Parameter);
+		}
 		foreach(GameObject cube in m_Cubes){
 			m_PlacedCubePositions.Add(cube.transform.localPosition);
 			m_CubePlaceUsed.Add(true);
@@ -63,9 +71,8 @@ public class ScalePuzzle : MonoBehaviour {
 		r_FreeLookCamera = Camera.main.transform.parent.transform.parent.gameObject.GetComponent<FreeLookCamera>();
 	}
 	
-	// Update is called once per frame
-	void Update(){
-	
+	public void onScalePuzzleDeath() {
+		m_ParameterInstance.setValue(m_DeathParameter);
 	}
 	
 	public void onRequestStartScalePuzzle(GameObject obj, bool tr){
@@ -77,7 +84,9 @@ public class ScalePuzzle : MonoBehaviour {
 		}
 
 		Messenger.Broadcast("clear focus");
-
+		if(m_MusicEmitter != null) {
+			m_MusicEmitter.Play();
+		}
 		r_FreeLookCamera.setFreeCameraPosition(inspectCubesDummy.transform.position, inspectCubesDummy.transform.localRotation.eulerAngles);
 		r_FreeLookCamera.setFreeCameraEnabled(true);
 		StartCoroutine("inputLogic");
@@ -299,12 +308,15 @@ public class ScalePuzzle : MonoBehaviour {
 						PuzzleEvent.trigger("onScalePuzzleCleared", gameObject, false);
 						Messenger.Broadcast<bool>("lock player input", false);
 						StopCoroutine("updateAnimator");
-
 						r_FreeLookCamera.resetCameraTransform();
 						r_FreeLookCamera.setFreeCameraEnabled(false);
 
 						puzzleActive = false;
 						GetComponent<Interactable>().enabled = false;
+
+						if(m_ParameterInstance != null) {
+							m_ParameterInstance.setValue(m_CompleteParameter);
+						}
 						break;
 					}
 					else{
