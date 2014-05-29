@@ -21,10 +21,16 @@ public class SettingsMenuControl : MonoBehaviour {//UISprite {
 	
 	public void show(){
 		if(gameObject.activeSelf != true){
+			List<SettingsMenuControl> newList = new List<SettingsMenuControl> ();
+
 			foreach(SettingsMenuControl menuControl in m_Settings){
-				menuControl.setVisible(false);
+				if( menuControl != null ){
+					menuControl.setVisible(false);
+					newList.Add( menuControl );
+				}
 			}
 			setVisible(true);
+			m_Settings = newList;
 		}
 	}
 	
