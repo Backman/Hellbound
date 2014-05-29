@@ -56,6 +56,8 @@ public class Behaviour_DoorSimple : Interactable {
 	public FMODAsset m_DoorCloseSound = null;
 
 	protected HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[3];	//Delegate for passing the correct callback function to the animator
+	private bool m_InUse = false;
+	private bool m_Animating = false;
 	/**********************************************************************/
 	#endregion
 
@@ -91,7 +93,11 @@ public class Behaviour_DoorSimple : Interactable {
 	}
 	
 	public override void activate(){
-		Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callbacks);
+		m_InUse = ( m_Animating | GUIManager.Instance.IsShowingText );
+
+		if( !m_InUse ){
+			Messenger.Broadcast ("activate animation", m_FSM.CurrentState.m_AnimationClip, m_Callbacks);
+		}
 	}
 	
 	public override void examine ()	{
@@ -115,9 +121,10 @@ public class Behaviour_DoorSimple : Interactable {
 		movementDone();
 		Messenger.Broadcast("update focus");
 	}
-
+	#region Callbacks
 	//This callback will be called at the beginning of the animation
 	void beginCallback(){
+		m_Animating = true;
 		PuzzleEvent.trigger ("onUseInstant", gameObject, true);
 	}
 
@@ -133,7 +140,9 @@ public class Behaviour_DoorSimple : Interactable {
 	//This callback will be triggered on the last frame of the animation
 	void endCallback(){
 		PuzzleEvent.trigger ("onUseEnd", gameObject, true);
+		m_Animating = false;
 	}
+	#endregion
 
 	#region Behaviours
 	public bool close(){

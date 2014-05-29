@@ -231,6 +231,8 @@ public class GUIManager : Singleton<GUIManager> {
 			return false;
 		}
 	}
+
+	public bool IsShowingText{ get { return m_Examining; } }
 	
 	/// <summary>
 	/// Shows the subtitles.
