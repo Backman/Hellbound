@@ -33,15 +33,16 @@ public class DistanceCulling : MonoBehaviour {
 	private delegate void MyDelegate();
 	MyDelegate activate, deactivate;
 
-	// Use this for initialization
+
 	void Start () {
-		r_Player = GameObject.FindGameObjectWithTag ("Player").transform;
-		m_SqrCullDistance = m_CullDistance * m_CullDistance; 
+		r_Player = GameObject.FindGameObjectWithTag ("Player").transform;	//Keep a reference to the player, it is slow to look it up all the time
+		m_SqrCullDistance = m_CullDistance * m_CullDistance; 				//We use squared distances to avoid using sqauare roots.
 
 		#if UNITY_EDITOR
 		m_LastCullDistance = m_CullDistance;
 		#endif
 
+		//Depending on CullMode, we assign the delegates different behaviours
 		switch( m_CullMode ){
 		case CullMode.Render:
 			activate += activateChildRenderers;
@@ -52,31 +53,31 @@ public class DistanceCulling : MonoBehaviour {
 			deactivate += deactivateChildObjects;
 			break;
 		}
-		StartCoroutine ("checkDist");
+		StartCoroutine ("checkDist");	//It is unnecessary to do distance culling every frame. 
+										//Instead, this coroutine will perform the distance culling two secunds
 	}
 
 #if UNITY_EDITOR
 	void Update(){
-		if( m_LastCullDistance != m_CullDistance ){	//If someone changed CullDistance in the Editor
+		if( m_LastCullDistance != m_CullDistance ){	//If someone changed CullDistance in the Editor. In release, the cull distance cannot be changed and thus, we don't need this update.
 			m_SqrCullDistance = m_CullDistance * m_CullDistance;
 			m_LastCullDistance = m_CullDistance;
 		}
 	}
 #endif
-
+	
 	IEnumerator checkDist(){
 		yield return new WaitForSeconds (Random.Range (0.1f, 1.5f));
 
-		loadChildResources ();
+		loadChildResources ();	
 
+		//We use squared distances to avoid using square roots, since roots are slow
 		while (true) {
-			if( (r_Player.position - transform.position).sqrMagnitude > m_SqrCullDistance && m_ChildRendererActive ){	//if the player is closer than m_CullDist
-				Debug.Log("Deactivating renderers " + gameObject.name); 
+			if( (r_Player.position - transform.position).sqrMagnitude > m_SqrCullDistance && m_ChildRendererActive ){	//If the player is closer than m_CullDist
 				deactivate();
 				m_ChildRendererActive = false;
 			}
-			else if( (r_Player.position - transform.position).sqrMagnitude < m_SqrCullDistance && !m_ChildRendererActive ){	//if the player is further away than m_CullDist
-				Debug.Log("Activating renderers " + gameObject.name);
+			else if( (r_Player.position - transform.position).sqrMagnitude < m_SqrCullDistance && !m_ChildRendererActive ){	//If the player is further away than m_CullDist
 				activate();
 				m_ChildRendererActive = true;
 			}
@@ -85,6 +86,8 @@ public class DistanceCulling : MonoBehaviour {
 		}
 	}
 
+	//We don't want to look up all entitys that we want to affect each time we do the culling.
+	//Instead, we store references to all the entitys on startup, and use the references later
 	void loadChildResources(){
 		switch( m_CullMode ){
 
@@ -116,12 +119,13 @@ public class DistanceCulling : MonoBehaviour {
 		}
 	}
 
+	//Enable all objects
 	void activateChildObjects(){ 
 		foreach( GameObject obj in r_ChildObject ){
 			obj.SetActive( true );
 		}
 	}
-
+	//Disable all objects
 	void deactivateChildObjects() { 
 		foreach( GameObject obj in r_ChildObject ){
 			obj.SetActive( false );
