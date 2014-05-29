@@ -14,6 +14,9 @@ public class VolumeBar : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+	}
+
+	public void onChange(){
 		SoundControl.getInstance().ChangeVolume (GetComponent<UIScrollBar>().value, VolumeName);
 		if(VolumeName == "Master")AudioListener.volume = GetComponent<UIScrollBar> ().value;
 	}
