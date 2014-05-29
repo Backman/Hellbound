@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// Close cube puzzle door.
@@ -14,7 +15,7 @@ public class CloseCubePuzzleDoor : MonoBehaviour {
 	private bool m_Enabled = false;
 	private bool m_Used    = false;
 	[SerializeField][Tooltip("The tweener of the cube key door")]
-	private UIPlayTween r_Tweener;
+	private List<UIPlayTween> r_Tweeners = new List<UIPlayTween>();
 	public FMODAsset m_CloseDoorSound = null;
 	public void enableThis(){
 		m_Enabled = true;
@@ -22,11 +23,15 @@ public class CloseCubePuzzleDoor : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col){
 		if( col.tag == "Player" && !m_Used){
-			r_Tweener.playDirection = AnimationOrTween.Direction.Reverse;
-			if(m_CloseDoorSound != null) {
-				FMOD_StudioSystem.instance.PlayOneShot(m_CloseDoorSound, r_Tweener.transform.position);
+			foreach(UIPlayTween tweener in r_Tweeners) {
+				tweener.playDirection = AnimationOrTween.Direction.Reverse;
+				tweener.Play(true);
 			}
-			r_Tweener.Play(true);
+			if(m_CloseDoorSound != null) {
+				if(r_Tweeners.Count > 0) {
+					FMOD_StudioSystem.instance.PlayOneShot(m_CloseDoorSound, r_Tweeners[0].transform.position);
+				}
+			}
 			m_Used = true;
 		}
 	}
