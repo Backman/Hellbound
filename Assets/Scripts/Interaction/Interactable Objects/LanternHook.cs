@@ -12,7 +12,7 @@ public class LanternHook : Interactable {
 	public StateMachine<LanternHook> m_FSM;
 	public bool m_IsOpen = false;
 
-	HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[1];
+	HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[3];
 	// Use this for initialization
 	protected override void Start () {
 		base.Start();
@@ -20,7 +20,10 @@ public class LanternHook : Interactable {
 		m_FSM = new StateMachine<LanternHook>(this, m_LockedState);
 		m_FSM.addState(m_OpenedState);
 
-		m_Callbacks[0] = new HbClips.animationCallback (activateCallback);
+
+		m_Callbacks[0] = new HbClips.animationCallback (beginCallback);		
+		m_Callbacks[1] = new HbClips.animationCallback (activateCallback);
+		m_Callbacks[2] = new HbClips.animationCallback (endCallback);
 	}
 	
 	public override void activate ()
@@ -40,9 +43,19 @@ public class LanternHook : Interactable {
 		m_FSM.CurrentState.examine (this);
 	}
 
+	//This callback will be called at the beginning of the animation
+	void beginCallback(){
+		PuzzleEvent.trigger ("onUseInstant", gameObject, true);
+	}
+
 	void activateCallback(){
 		base.activate ();
 		PuzzleEvent.trigger("onUse", gameObject, true);
 		m_FSM.CurrentState.activate (this);
+	}
+
+	//This callback will be triggered on the last frame of the animation
+	void endCallback(){
+		PuzzleEvent.trigger ("onUseEnd", gameObject, true);
 	}
 }
