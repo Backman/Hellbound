@@ -8,9 +8,10 @@ using System.Collections;
 
  public class GraveyardLanternLogic : MonoBehaviour {
 	[HideInInspector] [SerializeField] GameObject m_Lantern;
+	public float m_Intensity = 5.0f;
 	void Start() {
 		Messenger.AddListener<GameObject, bool>("pickUpLantern", pickUpLantern);
-		if (Application.loadedLevelName.Contains ("Graveyard_v")) {
+		if (Application.loadedLevelName.Contains ("Graveyard_part1")) {
 			m_Lantern = GameObject.Find("lantern_belt");
 			if(m_Lantern != null) {
 				m_Lantern.SetActive(false);
@@ -25,7 +26,7 @@ using System.Collections;
 			if(m_Lantern != null) {
 				m_Lantern.SetActive(true);
 			}
-			GetComponent<Light>().intensity = 3.0f;
+			GetComponent<Light>().intensity = m_Intensity;
 			Messenger.Broadcast("clear focus");
 		}
 	}

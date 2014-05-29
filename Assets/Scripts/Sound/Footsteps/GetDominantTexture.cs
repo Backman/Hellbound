@@ -51,7 +51,7 @@ public class GetDominantTexture : MonoBehaviour {
 	void OnTriggerEnter(Collider other){
 		if (other.GetComponent<Terrain>() != null) {			
 			UpdateTerrain(other.GetComponent<Terrain>());			
-			m_SurfaceType = GetMostDominantTexture(gameObject.transform.position);				
+			m_SurfaceType = GetMostDominantTexture(gameObject.transform.position);
 		}
 	}
 	

@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+//anton
 public class OnClickPlay : MonoBehaviour {
-
 	/// <summary>
 	/// This can be placed on buttons
 	/// This is a REALLY small script, basically it plays a sound when the event "OnClick" happens
@@ -14,6 +13,7 @@ public class OnClickPlay : MonoBehaviour {
 	void OnClick()
 	{
 		Debug.Log ("a");
-		FMOD_StudioSystem.instance.PlayOneShot (m_Path, Camera.main.transform.position);
+		var reff = FMOD_StudioSystem.instance; 
+		reff.PlayOneShot (m_Path, Camera.main.transform.position);
 	}
 }
