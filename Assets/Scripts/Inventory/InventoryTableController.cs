@@ -24,7 +24,7 @@ public class InventoryTableController : MonoBehaviour {
 		m_DoReposition = true;
 	}
 
-	void LateUpdate(){
+	void Update(){
 		if( m_DoReposition ){
 			r_Table.Reposition();
 			m_DoReposition = false;

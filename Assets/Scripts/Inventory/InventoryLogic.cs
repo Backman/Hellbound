@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class InventoryLogic{
 	private static InventoryLogic m_Instance;
-	private List<string>   m_Items   = new List<string>();
+	private Dictionary<string, List<GameObject>> m_Items = new Dictionary<string, List<GameObject>>();
 	private UITable		   r_Table;
 
 	private InventoryLogic(){
@@ -27,8 +27,7 @@ public class InventoryLogic{
 			Debug.LogError("Invalid item passed!");
 			return false;
 		}
-		
-		m_Items.Add(itemName);
+
 		addItemToTable( itemName, itemSprite );
 		//TODO: Check if part of combine item
 		//TODO: Do logic if item is part of combie
@@ -37,19 +36,23 @@ public class InventoryLogic{
 	}
 
 	public void removeItem( string itemName ){
-		if( m_Items.Contains( itemName ) ){
-			m_Items.Remove( itemName );
-			removeItemFromTable( itemName );
+		if( m_Items.ContainsKey(itemName) ){
+			GameObject lastObj = m_Items[itemName][m_Items[itemName].Count - 1];
+			m_Items[itemName].Remove(lastObj);
+			if(m_Items[itemName].Count == 0){
+				m_Items.Remove(itemName);
+			}
+			removeItemFromTable(lastObj);
 		} else {
 			Debug.LogError("No item of that name ");
 		} 
 	}
 
 	public bool containsItem( string itemName ){
-		return m_Items.Contains( itemName );
+		return m_Items.ContainsKey( itemName );
 	}
 	
-	public List<string> getItems(){
+	public Dictionary<string, List<GameObject>> getItems(){
 		return m_Items;
 	}
 
@@ -63,21 +66,26 @@ public class InventoryLogic{
 		sprite.gameObject.transform.parent = r_Table.transform;
 		sprite.gameObject.transform.localScale = Vector3.one;
 
+		if(!m_Items.ContainsKey(itemName)){
+			m_Items.Add(itemName, new List<GameObject>());
+		}
+		m_Items[itemName].Add(sprite.gameObject);
+
 		InventoryTableController.reposition ();
 	}
 
-	private void removeItemFromTable( string itemName ){
+	private void removeItemFromTable(GameObject item){
 		bool itemRemoved = false;
 		foreach( Transform child in r_Table.transform ){
-			if (child.name == itemName){
-				GameObject.DestroyImmediate( child.gameObject );
+			if (child.gameObject == item){
+				GameObject.Destroy( child.gameObject );
 				itemRemoved = true;
 				break;
 			}
 		}
 
 		if( !itemRemoved ){
-			Debug.LogError("No child: " + itemName + " found in itemTable" );
+			//Debug.LogError("No child: " + itemName + " found in itemTable" );
 		}
 		InventoryTableController.reposition();
 	}

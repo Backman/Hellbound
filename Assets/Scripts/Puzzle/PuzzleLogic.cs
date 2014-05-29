@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// By: Aleksi Lindeman
+/// </summary>
 [System.Serializable]
 public class EventData{
 	[SerializeField] string m_Name;
@@ -28,6 +31,9 @@ public class EventData{
 	}
 }
 
+/// <summary>
+/// By: Aleksi Lindeman
+/// </summary>
 [System.Serializable]
 public class ObjectState {
 	//[SerializeField] bool m_IsThisObject;
@@ -67,6 +73,7 @@ public class ObjectState {
 /// <summary>
 /// Unity is unable to serialize list of lists, so a class is needed to hold a list,
 /// and then create a list of an instance of that class.
+/// By: Aleksi Lindeman
 /// </summary>
 [System.Serializable]
 public class ObjectStates {
@@ -76,6 +83,9 @@ public class ObjectStates {
 	}
 }
 
+/// <summary>
+/// By: Aleksi Lindeman
+/// </summary>
 [System.Serializable]
 public class TriggerData{
 	[SerializeField] string m_EventName;
@@ -103,6 +113,9 @@ public class TriggerData{
 	}
 }
 
+/// <summary>
+/// By: Aleksi Lindeman
+/// </summary>
 [System.Serializable]
 public class PuzzleLogicImp {
 	[SerializeField] List<EventData> m_Events = new List<EventData>();
@@ -138,6 +151,9 @@ public class PuzzleLogicImp {
     }
 }
 
+/// <summary>
+/// By: Aleksi Lindeman
+/// </summary>
 public class PuzzleEvent{
 	private static Dictionary<string, bool> m_EventCancelState = new Dictionary<string, bool>();
 	public static void cancel(string eventName){
@@ -165,8 +181,12 @@ public class PuzzleEvent{
 	}
 }
 
+/// <summary>
+/// By: Aleksi Lindeman
+/// </summary>
 public class PuzzleLogic : MonoBehaviour{
     [SerializeField] PuzzleLogicImp m_Logic;
+	private Dictionary<string, List<Messenger.Callback<GameObject, bool>>> m_CallbackFuncs = new Dictionary<string, List<Messenger.Callback<GameObject, bool>>>();
 	public PuzzleLogicImp getLogic(){
 		if (m_Logic == null){
 			m_Logic = new PuzzleLogicImp();
@@ -179,8 +199,7 @@ public class PuzzleLogic : MonoBehaviour{
 		foreach(EventData eventData in m_Logic.getEvents()){
 			int idx = index;
 			//Debug.Log(gameObject.name + " is adding listner "+eventData.getName() );
-
-			Messenger.AddListener<GameObject, bool>(eventData.getName(),
+			Messenger.Callback<GameObject, bool> callbackFunc = 
 				delegate(GameObject obj, bool triggerOnlyForMe){
 					//string requiredState = m_Logic.getEvent(idx).getRequiredObjectState();
 					bool doCall = true;
@@ -193,14 +212,14 @@ public class PuzzleLogic : MonoBehaviour{
 						doCall = false;
 					}
 					/*
-					Interactable interObj = obj.GetComponent<Interactable>();
-					if(m_Logic.getEvent(idx).getName() == "onUseWith"){
-						Debug.Log("State: "+interObj.getPuzzleState()+", expected: "+requiredState);
-					}
-					if(interObj != null && requiredState.Length > 0 && requiredState != interObj.getPuzzleState()){
-						doCall = false;
-					}
-					*/
+						Interactable interObj = obj.GetComponent<Interactable>();
+						if(m_Logic.getEvent(idx).getName() == "onUseWith"){
+							Debug.Log("State: "+interObj.getPuzzleState()+", expected: "+requiredState);
+						}
+						if(interObj != null && requiredState.Length > 0 && requiredState != interObj.getPuzzleState()){
+							doCall = false;
+						}
+						*/
 					if(doCall){
 						List<ObjectState> objectStates = m_Logic.getObjectStates(idx);
 						TriggerData triggerData = m_Logic.getTriggerData(idx);
@@ -222,19 +241,33 @@ public class PuzzleLogic : MonoBehaviour{
 						}
 						if(doCall){
 							/*
-							Interactable thisInterObj = gameObject.GetComponent<Interactable>();
-							if(thisInterObj != null && triggerData.getNewObjectState().Length > 0){
-								thisInterObj.setPuzzleState(triggerData.getNewObjectState());
-							}
-							*/
+								Interactable thisInterObj = gameObject.GetComponent<Interactable>();
+								if(thisInterObj != null && triggerData.getNewObjectState().Length > 0){
+									thisInterObj.setPuzzleState(triggerData.getNewObjectState());
+								}
+								*/
 							if(triggerData.getName().Length > 0 && !PuzzleEvent.isEventCancelled(triggerData.getName())){
 								Messenger.Broadcast<GameObject, bool>(triggerData.getName(), gameObject, false);
 							}
 						}
 					}
-				}
-			);
+				};
+			if(!m_CallbackFuncs.ContainsKey(eventData.getName())){
+				m_CallbackFuncs.Add(eventData.getName(), new List<Messenger.Callback<GameObject, bool>>());
+			}
+			m_CallbackFuncs[eventData.getName()].Add(callbackFunc);
+			Messenger.AddListener<GameObject, bool>(eventData.getName(), callbackFunc);
 			++index;
 		}
     }
+
+	void OnDestroy() {
+		foreach(KeyValuePair<string, List<Messenger.Callback<GameObject, bool>>> entry in m_CallbackFuncs){
+			foreach(Messenger.Callback<GameObject, bool> callbackFunc in entry.Value){
+				Messenger.RemoveListener<GameObject, bool>(entry.Key, callbackFunc);
+			}
+		}
+		m_CallbackFuncs.Clear();
+		print("Script was destroyed");
+	}
 }

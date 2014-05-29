@@ -20,23 +20,21 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 	}
 
 	public void onDrinkAntidote(GameObject antidote, bool tr){
+		Messenger.Broadcast ("clear focus");
 		Interactable inter = antidote.GetComponent<Interactable>();
 		inter.setPuzzleState("unavailable");
 		antidote.SetActive (false);
-		Debug.Log("You drank antidote!");
 		StartCoroutine("stopSickness");
-		Messenger.Broadcast ("clear focus");
 		Messenger.Broadcast<bool>("set is poisoned", false);
 	}
 	
 	public void onDrinkPoison(GameObject poison, bool tr){
+		Messenger.Broadcast ("clear focus");
 		Interactable inter = poison.GetComponent<Interactable>();
 		inter.setPuzzleState("unavailable");
 		poison.SetActive (false);
-		GUIManager.Instance.loadLastCheckPoint(m_DeathText);
-		Debug.Log("You drank poison!");
-		Messenger.Broadcast ("clear focus");
 		Messenger.Broadcast<bool>("set is poisoned", false);
+		GUIManager.Instance.loadLastCheckPoint(m_DeathText);
 	}
 
 	public void openDoor(GameObject door, bool tr) {

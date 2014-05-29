@@ -9,7 +9,7 @@ public class Checkpoint : MonoBehaviour {
 	public void saveStates(){
 		List<string> inventoryItems = Game.getGameData().inventoryItems;
 		inventoryItems.Clear();
-		foreach(string item in InventoryLogic.Instance.getItems()){
+		foreach(string item in InventoryLogic.Instance.getItems().Keys){
 			inventoryItems.Add(item);
 		}
 		//inventoryItems.Add("CubeKeyA");

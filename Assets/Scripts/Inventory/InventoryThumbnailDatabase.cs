@@ -34,6 +34,7 @@ public class InventoryThumbnailDatabase : MonoBehaviour {
 	private static InventoryThumbnailDatabase Instance = null;
 	
 	void Awake(){
+		DontDestroyOnLoad(gameObject);
 		Instance = this;
 	}
 	
