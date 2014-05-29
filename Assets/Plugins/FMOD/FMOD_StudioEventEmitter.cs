@@ -44,6 +44,9 @@ public class FMOD_StudioEventEmitter : MonoBehaviour
 	public FMOD.Studio.ParameterInstance getParameter(string name)
 	{
 		FMOD.Studio.ParameterInstance param = null;
+		if(evt == null) {
+			CacheEventInstance ();
+		}
 		ERRCHECK (evt.getParameter (name, out param));
 		return param;
 	}
@@ -71,6 +74,9 @@ public class FMOD_StudioEventEmitter : MonoBehaviour
 	
 	void CacheEventInstance()
 	{
+		if(evt != null) {
+			return;
+		}
 		if (asset != null)
 		{
 			evt = FMOD_StudioSystem.instance.GetEvent(asset.id);				

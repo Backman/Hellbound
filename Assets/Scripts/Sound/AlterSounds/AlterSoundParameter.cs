@@ -72,7 +72,7 @@ public class AlterSoundParameter : MonoBehaviour {
 			else if (!m_UseFade && !m_Inside){
 				m_Inside = true;
 				foreach(FMOD.Studio.ParameterInstance p in r_ParameterCollection){
-					if(r_ParameterCollection != null){
+					if(p != null){
 						p.setValue(m_InsideParameter);
 					}
 				}

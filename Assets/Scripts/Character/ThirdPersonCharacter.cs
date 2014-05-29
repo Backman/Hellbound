@@ -56,6 +56,9 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		set { m_LookDirection = value; }
 	}
 	void Start () {
+		Screen.lockCursor  = true;
+		Screen.showCursor  = false;
+
 		Messenger.AddListener<HbClips.Animation, HbClips.animationCallback[]> ("activate animation", playAnimationClip);
 		Messenger.AddListener ("drank poison", drankPoison);
 

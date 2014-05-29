@@ -186,6 +186,7 @@ public class PuzzleEvent{
 /// </summary>
 public class PuzzleLogic : MonoBehaviour{
     [SerializeField] PuzzleLogicImp m_Logic;
+	private static List<PuzzleLogic> puzzleLogics = new List<PuzzleLogic>();
 	private Dictionary<string, List<Messenger.Callback<GameObject, bool>>> m_CallbackFuncs = new Dictionary<string, List<Messenger.Callback<GameObject, bool>>>();
 	public PuzzleLogicImp getLogic(){
 		if (m_Logic == null){
@@ -194,10 +195,12 @@ public class PuzzleLogic : MonoBehaviour{
 		return m_Logic;
     }
     
-    void Start(){
+    void Awake(){
     	int index = 0;
 		foreach(EventData eventData in m_Logic.getEvents()){
 			int idx = index;
+			if(eventData.getName() == "onCheckpointLoaded")
+				Debug.Log("Add event: onCheckpointLoaded");
 			//Debug.Log(gameObject.name + " is adding listner "+eventData.getName() );
 			Messenger.Callback<GameObject, bool> callbackFunc = 
 				delegate(GameObject obj, bool triggerOnlyForMe){
@@ -259,15 +262,25 @@ public class PuzzleLogic : MonoBehaviour{
 			Messenger.AddListener<GameObject, bool>(eventData.getName(), callbackFunc);
 			++index;
 		}
+		puzzleLogics.Add(this);
     }
 
 	void OnDestroy() {
+		 removeEvents();
+	}
+
+	public void removeEvents(){
 		foreach(KeyValuePair<string, List<Messenger.Callback<GameObject, bool>>> entry in m_CallbackFuncs){
 			foreach(Messenger.Callback<GameObject, bool> callbackFunc in entry.Value){
 				Messenger.RemoveListener<GameObject, bool>(entry.Key, callbackFunc);
 			}
 		}
 		m_CallbackFuncs.Clear();
-		print("Script was destroyed");
+	}
+
+	public static void cleanupPuzzleEvents(){
+		foreach(PuzzleLogic puzzleLogic in PuzzleLogic.puzzleLogics){
+			puzzleLogic.removeEvents();
+		}
 	}
 }

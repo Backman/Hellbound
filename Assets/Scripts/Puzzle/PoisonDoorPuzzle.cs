@@ -51,14 +51,17 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 	//Called at the end of the "drink" animation
 	public void onBottleRemove(GameObject obj, bool tr){
 		Debug.Log ("3");
-		GameObject.Destroy (r_Bottle.gameObject);
-		GameObject.Destroy (obj);
+		//GameObject.Destroy (r_Bottle.gameObject);
+		//GameObject.Destroy (obj);
+		r_Bottle.gameObject.SetActive(false);
+		obj.SetActive(false);
 	}
 
 	//Called at the end of the "drink" animation
 	public void onDoorPoisonDrunk(GameObject thisObject, bool triggerOnlyForThis){
 		Messenger.Broadcast<bool>("set is poisoned", true);
 		StartCoroutine("startSickness", gameObject );
+		Debug.Log ("Starting Sickness..");
 		if(m_MusicEmitter != null) {
 			m_MusicEmitter.Play ();
 		}

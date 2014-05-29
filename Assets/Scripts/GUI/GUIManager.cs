@@ -136,10 +136,12 @@ public class GUIManager : Singleton<GUIManager> {
 	public void pauseGame(bool pause) {
 		if (pause) {
 			Time.timeScale = 0.0000001f;
+			Screen.showCursor = true;
 			fadePauseWindow(true);
 
 		} else {
 			Time.timeScale = 1.0f;
+			Screen.showCursor = false;
 			fadePauseWindow(false);
 
 			Messenger.Broadcast("reset pause window");

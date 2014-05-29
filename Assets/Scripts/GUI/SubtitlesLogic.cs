@@ -85,16 +85,18 @@ public class SubtitlesLogic: MonoBehaviour {
 
 			GameObject GO = (GameObject)args[7];
 
-			if(GO.GetComponent<FMOD_StudioEventEmitter>() != null)
+			if(GO != null && GO.GetComponent<FMOD_StudioEventEmitter>() != null)
 			{
 				Destroy(GO.GetComponent<FMOD_StudioEventEmitter>());
+			} 
+
+			if(GO != null) {
+				FMOD_StudioEventEmitter SEE = GO.AddComponent<FMOD_StudioEventEmitter>();
+			
+				SEE.path = (string)args[6];
+			
+				SEE.Play();
 			}
-			
-			FMOD_StudioEventEmitter SEE = GO.AddComponent<FMOD_StudioEventEmitter>();
-			
-			SEE.path = (string)args[6];
-			
-			SEE.Play();
 		}
 
 		foreach( UILabel label in r_SubtitlesLabels ){

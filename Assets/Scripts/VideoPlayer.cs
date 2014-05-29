@@ -15,6 +15,8 @@ public class VideoPlayer : MonoBehaviour {
 	public bool m_UseToLoadLevel = true;
 	// Use this for initialization
 	void Start () {
+		Screen.showCursor = true;
+		Screen.lockCursor = false;
 		if(m_FadeWindowTweener != null) {
 			m_FadeWindowTweener.PlayReverse();
 			m_FadeWindowTweener.ResetToBeginning();
@@ -45,16 +47,15 @@ public class VideoPlayer : MonoBehaviour {
 		if(string.IsNullOrEmpty(m_FirstLevel)) {
 			yield break;
 		}
-		
-		Debug.Log ("Loading started!");
+
 		m_AsyncOperation = Application.LoadLevelAsync(m_FirstLevel);
 		m_AsyncOperation.allowSceneActivation = false;
 
-		while(m_AsyncOperation.progress < 0.9f) {
-			m_Done = true;
+		while(m_AsyncOperation.progress < 0.8f) {
+			yield return null;
 		}
+		m_Done = true;
 
-		Debug.Log ("Loading completed!");
 	}
 
 	IEnumerator waitForVideo() {

@@ -182,7 +182,6 @@ public class ScalePuzzle : MonoBehaviour {
 
 	IEnumerator updateAnimator() {
 		while(true) {
-			Debug.Log ("Updating Animator: " + m_CurrentBlend);
 			m_ScaleAnimator.SetFloat("Balance", m_CurrentBlend, 0.3f, Time.deltaTime);
 
 			yield return null;

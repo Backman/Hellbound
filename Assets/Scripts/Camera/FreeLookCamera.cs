@@ -221,7 +221,13 @@ public class FreeLookCamera : PivotBasedCameraRig {
 	
 	public void setFreeCameraEnabled(bool enabled){
 		m_FreeCameraEnabled = enabled;
-		if(!enabled) m_Zoomed = false;
+		CameraCollision camCollision = GetComponent<CameraCollision>();
+		if(!enabled && camCollision != null) {
+			m_Zoomed = false;
+			camCollision.enabled = true;
+		} else if(enabled && camCollision != null) {
+			camCollision.enabled = false;
+		}
 	}
 	
 	public void setFreeCameraPosition(Vector3 pos, Vector3 rot){

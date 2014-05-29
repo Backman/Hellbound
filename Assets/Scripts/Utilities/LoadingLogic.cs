@@ -58,6 +58,7 @@ public class LoadingLogic : MonoBehaviour {
 		args[1] = loadMessage;
 		StartCoroutine( "loadLevelWithNumber_CR", args );
 
+		PuzzleLogic.cleanupPuzzleEvents();
 		Messenger.Cleanup ();
 	}
 
@@ -94,7 +95,8 @@ public class LoadingLogic : MonoBehaviour {
 		args[0] = levelName;
 		args[1] = loadMessage;
 		StartCoroutine( "loadLevel_CR", args );
-		
+
+		PuzzleLogic.cleanupPuzzleEvents();
 		Messenger.Cleanup ();
 	}
 
@@ -136,6 +138,7 @@ public class LoadingLogic : MonoBehaviour {
 		
 		yield return new WaitForSeconds( r_LoadingScreenTweener.duration );
 
+		PuzzleLogic.cleanupPuzzleEvents();
 		Messenger.Cleanup ();
 		Game.load();
 
