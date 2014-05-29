@@ -10,6 +10,8 @@ using System.Collections;
 
 public class PoisonDoorPuzzle : MonoBehaviour {
 	public FMOD_StudioEventEmitter m_MusicEmitter = null;
+
+	private Transform r_Bottle;
 	// Use this for initialization
 	void Start () {
 		Messenger.AddListener<GameObject, bool> ("onBottleRemove", onBottleRemove);
@@ -25,29 +27,31 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 
 	//Called at the beginning of the "drink" animation
 	public void onMoveBottleToHand(GameObject obj, bool tr) {
-
+		Debug.Log ("1");
 		Messenger.Broadcast ("clear focus");
 
 		Interactable inter = obj.GetComponent<Interactable> ();
 		inter.setPuzzleState("inUse");
+		obj.collider.enabled = false;
 
 		//Move the bottle to the players hand
-		obj.collider.enabled = false;
-		obj.transform.parent = GameObject.FindGameObjectWithTag("RightMiddleFinger").transform;
-		obj.transform.rotation = new Quaternion(0,0,0,0);
-		obj.transform.localPosition = Vector3.zero;
+		r_Bottle = obj.transform.GetChild (0).transform;
+		r_Bottle.parent = GameObject.FindGameObjectWithTag("RightMiddleFinger").transform;
+		r_Bottle.transform.localRotation = Quaternion.Euler (-23.90005f, -137.1001f, -27.20001f);
+		r_Bottle.transform.localPosition = new Vector3 (-0.004753934f, -0.07229548f, -0.08756122f);
 
 	}
 	//Called at the peak of the "drink" animation
 	public void onDrinkDoorPoison(GameObject obj, bool tr) {
-
+		Debug.Log ("2");
 		Interactable inter = obj.GetComponent<Interactable> ();
 		inter.setPuzzleState ("used");
 	}
 
 	//Called at the end of the "drink" animation
 	public void onBottleRemove(GameObject obj, bool tr){
-
+		Debug.Log ("3");
+		GameObject.Destroy (r_Bottle.gameObject);
 		GameObject.Destroy (obj);
 	}
 
