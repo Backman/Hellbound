@@ -77,10 +77,10 @@ public class FootStepSounds : MonoBehaviour {
 			else if (surfaceTexture != null) {
 				//modified by peter
 				float temp;
-				if(surfaceTexture.m_SurfaceType < 3){
+				if(surfaceTexture.m_SurfaceType < 2){
 					temp = surfaceTexture.m_SurfaceType;
 				}
-				else temp = 3;
+				else temp = 2;
 				m_Parameter.setValue(temp);
 			}
 		}
@@ -88,7 +88,7 @@ public class FootStepSounds : MonoBehaviour {
 
 	public void PlayFootstepSound()
 	{
-
+	
 			m_Emitter.Play();
 	}
 	
