@@ -1299,7 +1299,7 @@ namespace Studio
             return FMOD_Studio_MixerStrip_GetFaderLevel(rawPtr, out volume);
         }
         public RESULT setFaderLevel(float volume)
-        {
+        {	
             return FMOD_Studio_MixerStrip_SetFaderLevel(rawPtr, volume);
         }
         public RESULT getPaused(out bool paused)

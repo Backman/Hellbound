@@ -18,11 +18,11 @@ public class RoomOccluderTrigger : MonoBehaviour{
 					  "Hide: The listed rooms will be hidden, all other rooms will be shown.")]
 	public TriggerType m_TriggerType = TriggerType.Show;
 
-	public List<RoomOccluderVolume> m_Rooms = new List<RoomOccluderVolume>();
-	private List<RoomOccluderVolume> m_OtherRooms = new List<RoomOccluderVolume>();
+	public List<RoomOccluderVolume> m_Rooms = new List<RoomOccluderVolume>();		//Rooms that will be assigned the behaviour chosen from m_TriggerType
+	private List<RoomOccluderVolume> m_OtherRooms = new List<RoomOccluderVolume>(); //All other rooms which will be assigned the opposite of m_TriggerType
 
 	
-
+	//Separates all rooms into two lists by first finding all rooms and then removing the rooms that are already in the m_Rooms list
 	void Start(){
 		//Fill m_OtherRooms with all room that are not listen in m_Rooms
 		RoomOccluderVolume[] rooms = GameObject.FindObjectsOfType<RoomOccluderVolume> ();
@@ -33,14 +33,14 @@ public class RoomOccluderTrigger : MonoBehaviour{
 		}
 	}
 
+
 	void OnTriggerEnter(Collider col){
 		if( col.tag == "Player" ){
-			Debug.Log("Player entered "+gameObject.name);
-
 			doAction();
 		}
 	}
 
+	//Performes the designated actions on all rooms
 	void doAction(){
 		if (m_TriggerType == TriggerType.Hide) {
 			hide (m_Rooms);
@@ -51,6 +51,7 @@ public class RoomOccluderTrigger : MonoBehaviour{
 		}
 	}
 
+	//Hides all Renderers of the passed rooms
 	void hide(List<RoomOccluderVolume> rooms){
 		foreach( RoomOccluderVolume room in rooms ){
 			if( room != null)
@@ -58,6 +59,7 @@ public class RoomOccluderTrigger : MonoBehaviour{
 		}
 	}
 
+	//Shows all Renderers of the passed rooms
 	void show(List<RoomOccluderVolume> rooms){
 		foreach( RoomOccluderVolume room in rooms ){
 			if( room != null)

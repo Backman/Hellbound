@@ -378,18 +378,20 @@ public class ThirdPersonCharacter : MonoBehaviour {
 			r_Callbacks = callbacks;
 			return true;
 		} else {
-			Debug.LogError("Error. Invalid callback method detected in ThirdPersonCharacter");
+			Debug.LogWarning("Warning. Attempted to store an invalid callback. Skipping");
 			return false;
 		}
 	}
 
+	//Calls the callback function at index
 	private void doCallback(int index){
 		if (r_Callbacks.Length > index &&  r_Callbacks[index] != null && r_Callbacks[index].Method != null) {
 			r_Callbacks[index]();
 		} else {
-			Debug.LogError("Error! Invalid callback stored in r_Callbacks at index " + index);
+			Debug.LogWarning("Warning. Invalid callback in r_Callbacks at index "+index);
 		}
 	}
+	//Calls all callbacks in order
 	private void doCallbacks(){
 		for( int i = 0; i < r_Callbacks.Length; i++ ){
 			doCallback(i);

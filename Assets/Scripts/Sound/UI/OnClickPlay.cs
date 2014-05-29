@@ -12,7 +12,6 @@ public class OnClickPlay : MonoBehaviour {
 	
 	void OnClick()
 	{
-		Debug.Log ("a");
 		var reff = FMOD_StudioSystem.instance; 
 		reff.PlayOneShot (m_Path, Camera.main.transform.position);
 	}

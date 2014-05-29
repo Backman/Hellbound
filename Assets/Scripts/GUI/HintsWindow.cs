@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class HintsWindow : MonoBehaviour {
 	private int m_LabelCount;
+	private bool m_Init = false;
+	private string m_CurrLevel = "";
 
 	public UITable m_Table;
 	public HintObject r_Hint;
@@ -13,8 +15,27 @@ public class HintsWindow : MonoBehaviour {
 	//	r_Hint = m_Table.GetComponentInChildren<HintObject>();
 	//}
 
-	void Start() {
-		Messenger.Broadcast<HintsWindow>("add hints", this);
+	void OnEnable() {
+		if( m_CurrLevel != Application.loadedLevelName ){
+			m_Init = false;
+			m_CurrLevel = Application.loadedLevelName;
+		}
+	}
+
+	void LateUpdate(){
+		if( !m_Init ){
+			m_Init = true;
+			clearHints();
+			Messenger.Broadcast<HintsWindow>("add hints", this);
+		}
+	}
+
+	private void clearHints(){
+		var t = m_Table.children;
+		foreach( Transform trans in t ){
+			Destroy( trans.gameObject );
+		}
+		m_LabelCount = 0;
 	}
 
 	public void addHint(HintsText hintsText) {

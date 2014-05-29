@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// Spawns a specific GameObject at a position
 /// when a GameObject with a specific tag enters it's collision box.
-/// By Arvid Backman
+/// By Arvid Backman, edited by Simon Jonason
 /// </summary>
 
 public class SpawnObject : MonoBehaviour {
@@ -36,6 +36,7 @@ public class SpawnObject : MonoBehaviour {
 		}
 	}
 
+	//This name is misleading. We don't spawn objects, we simply reenable them
 	IEnumerator spawnObject() {
 		yield return new WaitForSeconds(m_Delay);
 

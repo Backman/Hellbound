@@ -76,10 +76,14 @@ public class SoundControl : MonoBehaviour {
 	//since fmod already knows about every sound that exists in the scene
 	public void ChangeVolume(float newVolume, string tagToBeChanged)
 	{
+
 		FMOD.Studio.MixerStrip mixerStrip = null;
+
 		if (m_Volume.TryGetValue (tagToBeChanged, out mixerStrip)) {
 			if (mixerStrip != null) {
-				mixerStrip.setFaderLevel (newVolume);
+				if(newVolume!=null){
+					mixerStrip.setFaderLevel (newVolume);
+				}
 			}
 		}
 		SaveVolume ();
@@ -87,9 +91,12 @@ public class SoundControl : MonoBehaviour {
 
 	public float GetVolume (string tag)
 	{
-		float volume = 0f;
+		float volume = 1f;
 		if (m_Volume.ContainsKey (tag)) {
 			m_Volume [tag].getFaderLevel (out volume);
+		}
+		else{
+			Debug.LogWarning("GetVolume: Tag missing");
 		}
 		return volume;
 	}
