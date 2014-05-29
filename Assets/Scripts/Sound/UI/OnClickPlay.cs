@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+//anton
 public class OnClickPlay : MonoBehaviour {
 	/// <summary>
 	/// This can be placed on buttons
