@@ -41,6 +41,7 @@ public class CameraBlur : MonoBehaviour {
 	}
 
 	void Update(){
+
 		material.SetFloat ("_BlurSize", m_AppliedBlurAmount * 0.01f);
 	}
 

@@ -55,7 +55,7 @@ public class Behaviour_DoorSimple : Interactable {
 	public FMODAsset m_DoorOpenSound = null;
 	public FMODAsset m_DoorCloseSound = null;
 
-	protected HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[1];	//Delegate for passing the correct callback function to the animator
+	protected HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[3];	//Delegate for passing the correct callback function to the animator
 	/**********************************************************************/
 	#endregion
 
@@ -85,8 +85,9 @@ public class Behaviour_DoorSimple : Interactable {
 			m_FSM.changeState<SimpleDoorOpenedState>();
 			break;
 		}
-		
-		m_Callbacks[0] = new HbClips.animationCallback (activateCallback);	//Assign the callback func
+		m_Callbacks[0] = new HbClips.animationCallback (beginCallback);	
+		m_Callbacks[1] = new HbClips.animationCallback (activateCallback);	//Assign the callback func
+		m_Callbacks[2] = new HbClips.animationCallback (endCallback);
 	}
 	
 	public override void activate(){
@@ -115,6 +116,11 @@ public class Behaviour_DoorSimple : Interactable {
 		Messenger.Broadcast("update focus");
 	}
 
+	//This callback will be called at the beginning of the animation
+	void beginCallback(){
+		PuzzleEvent.trigger ("onUseInstant", gameObject, true);
+	}
+
 	void activateCallback(){
 		PuzzleEvent.trigger("onUseDoor", gameObject, true);
 		if( !(m_Used & m_OneShot) && m_UsableByPlayer && !m_Moving  ){
@@ -122,6 +128,11 @@ public class Behaviour_DoorSimple : Interactable {
 			m_FSM.CurrentState.activate(this);
 			//PuzzleEvent.trigger("onUseDoor", gameObject, true);
 		}
+	}
+
+	//This callback will be triggered on the last frame of the animation
+	void endCallback(){
+		PuzzleEvent.trigger ("onUseEnd", gameObject, true);
 	}
 
 	#region Behaviours

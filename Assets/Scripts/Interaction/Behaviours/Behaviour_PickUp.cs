@@ -21,13 +21,15 @@ public class Behaviour_PickUp : Interactable {
 	
 	public KeyState m_State;	
 	private StateMachine<Behaviour_PickUp> m_FSM;
-	HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[1];
+	HbClips.animationCallback[] m_Callbacks = new HbClips.animationCallback[3];
 
 	void Start () {
 		base.Start ();
 		m_FSM = new StateMachine<Behaviour_PickUp>(this, m_State);
-		
-		m_Callbacks[0] = new HbClips.animationCallback (activateCallback);	//Assign the correct callback func
+
+		m_Callbacks[0] = new HbClips.animationCallback (beginCallback);
+		m_Callbacks[1] = new HbClips.animationCallback (activateCallback);	//Assign the correct callback func
+		m_Callbacks[2] = new HbClips.animationCallback (endCallback);
 	}
 
 	/// <summary>
@@ -47,9 +49,19 @@ public class Behaviour_PickUp : Interactable {
 		Debug.Log ("Hej " + gameObject.name);
 	}
 
+	//This callback will be called at the beginning of the animation
+	void beginCallback(){
+		PuzzleEvent.trigger ("onUseInstant", gameObject, true);
+	}
+
 	void activateCallback(){
 		base.activate ();
 		PuzzleEvent.trigger ("onPickUpInteractable", gameObject, true);
 		m_FSM.CurrentState.activate( this );
+	}
+
+	//This callback will be triggered on the last frame of the animation
+	void endCallback(){
+		PuzzleEvent.trigger ("onUseEnd", gameObject, true);
 	}
 }
