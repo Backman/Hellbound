@@ -15,6 +15,11 @@ public class VideoPlayer : MonoBehaviour {
 	public bool m_UseToLoadLevel = true;
 	// Use this for initialization
 	void Start () {
+		if(m_FadeWindowTweener != null) {
+			m_FadeWindowTweener.PlayReverse();
+			m_FadeWindowTweener.ResetToBeginning();
+			m_FadeWindowTweener.PlayReverse();
+		}
 		StartCoroutine("startVideo");
 	}
 
@@ -32,6 +37,7 @@ public class VideoPlayer : MonoBehaviour {
 
 		if(m_UseToLoadLevel) {
 			StartCoroutine("startLoadLevel");
+			StartCoroutine("waitForVideo");
 		}
 	}
 
@@ -47,8 +53,6 @@ public class VideoPlayer : MonoBehaviour {
 		while(m_AsyncOperation.progress < 0.9f) {
 			m_Done = true;
 		}
-
-		yield return StartCoroutine("waitForVideo");
 
 		Debug.Log ("Loading completed!");
 	}
@@ -88,7 +92,7 @@ public class VideoPlayer : MonoBehaviour {
 					m_EscapeLabel.gameObject.SetActive(true);
 				}
 				if(InputManager.getButton(InputManager.Button.Pause)) {
-					m_Video.Stop ();
+					StartCoroutine("fadeWindow");
 				}
 			}
 		}
