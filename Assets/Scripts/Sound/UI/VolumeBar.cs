@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+//peter
 [RequireComponent(typeof(UIScrollBar))]
 public class VolumeBar : MonoBehaviour {
 
