@@ -16,6 +16,7 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 	void Start () {
 		Messenger.AddListener<GameObject, bool>("onDrinkAntidote", onDrinkAntidote);
 		Messenger.AddListener<GameObject, bool>("onDrinkPoison", onDrinkPoison);
+		Messenger.AddListener<GameObject, bool> ("onQueuePoisonAnimation", onQueuePoisonAnimation);
 		Messenger.AddListener<GameObject, bool>("openDoor", openDoor);
 	}
 
@@ -27,13 +28,18 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 		StartCoroutine("stopSickness");
 		Messenger.Broadcast<bool>("set is poisoned", false);
 	}
+
+	public void onQueuePoisonAnimation(GameObject poison, bool tr){
+		Messenger.Broadcast ("drank poison");
+
+		Messenger.Broadcast ("clear focus");
+	}
 	
 	public void onDrinkPoison(GameObject poison, bool tr){
 		Messenger.Broadcast ("clear focus");
 		Interactable inter = poison.GetComponent<Interactable>();
 		inter.setPuzzleState("unavailable");
 		poison.SetActive (false);
-		Messenger.Broadcast<bool>("set is poisoned", false);
 		GUIManager.Instance.loadLastCheckPoint(m_DeathText);
 	}
 

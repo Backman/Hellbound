@@ -57,6 +57,7 @@ public class ThirdPersonCharacter : MonoBehaviour {
 	}
 	void Start () {
 		Messenger.AddListener<HbClips.Animation, HbClips.animationCallback[]> ("activate animation", playAnimationClip);
+		Messenger.AddListener ("drank poison", drankPoison);
 
 		r_Animator = GetComponentInChildren<Animator>();
 		r_Collider = collider as CapsuleCollider;
@@ -393,6 +394,10 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		for( int i = 0; i < r_Callbacks.Length; i++ ){
 			doCallback(i);
 		}
+	}
+
+	private void drankPoison(){
+		r_Animator.SetBool ("DrankPoison", true);
 	}
 
 	/// <summary>
