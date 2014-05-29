@@ -39,6 +39,8 @@ public class ScalePuzzle : MonoBehaviour {
 	public GameObject m_RightScale;
 	public GameObject inspectCubesDummy;
 	public float m_RotationSpeed = 3.0f;
+	[Multiline]
+	public string m_HelpText;
 
 	private List<Vector3> m_PlacedCubePositions = new List<Vector3>();
 	private List<bool> m_CubePlaceUsed = new List<bool>();
@@ -69,12 +71,15 @@ public class ScalePuzzle : MonoBehaviour {
 		}
 		m_ScaleAnimator = GetComponentInChildren<Animator>();
 		r_FreeLookCamera = Camera.main.transform.parent.transform.parent.gameObject.GetComponent<FreeLookCamera>();
+		Debug.Log ("Free look camera: " + r_FreeLookCamera);
 	}
 	
 	public void onScalePuzzleDeath() {
-		m_ParameterInstance.setValue(m_DeathParameter);
+		Messenger.Broadcast<bool> ("enable help text", false);
+		if (m_ParameterInstance != null) {
+			m_ParameterInstance.setValue (m_DeathParameter);
+		}
 	}
-	
 	public void onRequestStartScalePuzzle(GameObject obj, bool tr){
 		foreach(GameObject cube in m_Cubes){
 			cube.SetActive(true);
@@ -91,6 +96,8 @@ public class ScalePuzzle : MonoBehaviour {
 		r_FreeLookCamera.setFreeCameraEnabled(true);
 		StartCoroutine("inputLogic");
 		StartCoroutine("updateAnimator");
+		Messenger.Broadcast<bool> ("enable help text", true);
+		Messenger.Broadcast<string> ("set help text", m_HelpText);
 	}
 
 	public void openLockedDoor(GameObject go, bool tr) {
@@ -313,6 +320,7 @@ public class ScalePuzzle : MonoBehaviour {
 
 						puzzleActive = false;
 						GetComponent<Interactable>().enabled = false;
+						Messenger.Broadcast<bool> ("enable help text", false);
 
 						if(m_ParameterInstance != null) {
 							m_ParameterInstance.setValue(m_CompleteParameter);
