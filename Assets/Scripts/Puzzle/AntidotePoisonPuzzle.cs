@@ -44,7 +44,6 @@ public class AntidotePoisonPuzzle : MonoBehaviour {
 	}
 
 	public void openDoor(GameObject door, bool tr) {
-		Debug.Log ("Open door");
 		door.GetComponent<Behaviour_DoorSimple>().unlockAndOpen();
 	}
 

@@ -120,9 +120,6 @@ public class GUIManager : Singleton<GUIManager> {
 			inventory();
 		}
 	}
-	void OnDestroy(){
-		Debug.Log ("Sadface from GUI");
-	}
 
 	public void togglePause(){
 		m_GamePaused = !m_GamePaused;
@@ -135,12 +132,14 @@ public class GUIManager : Singleton<GUIManager> {
 
 	public void pauseGame(bool pause) {
 		if (pause) {
-			Time.timeScale = 0.0000001f;
+			Screen.lockCursor = false;
 			Screen.showCursor = true;
+			Time.timeScale = 0.0000001f;
 			fadePauseWindow(true);
 
 		} else {
 			Time.timeScale = 1.0f;
+			Screen.lockCursor = true;
 			Screen.showCursor = false;
 			fadePauseWindow(false);
 
@@ -224,12 +223,9 @@ public class GUIManager : Singleton<GUIManager> {
 			args[4] = false;
 			
 			StartCoroutine("examine", args);
-			Debug.Log("tuuue");
 			return true;
 		}
 		else {
-			Debug.Log("Bussy examining");
-			Debug.Log("alllse");
 			return false;
 		}
 	}

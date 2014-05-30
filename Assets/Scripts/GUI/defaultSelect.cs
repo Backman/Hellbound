@@ -17,7 +17,6 @@ public class defaultSelect : MonoBehaviour {
 		   InputManager.getButtonDown(InputManager.Button.Use) ||
 		   Input.GetKeyDown(KeyCode.Return) || 
 		   Input.GetKeyDown(KeyCode.Escape)){
-			Debug.Log("Pressed button!");
 			bool condition = false;
 			if(UICamera.selectedObject != null){
 				if(!(UICamera.selectedObject.GetComponent<UIKeyNavigation>() != null)){

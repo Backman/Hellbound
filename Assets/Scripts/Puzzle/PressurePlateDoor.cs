@@ -28,7 +28,6 @@ public class PressurePlateDoor : MonoBehaviour {
 	}
 
 	public void requestRemovalKey(GameObject obj, bool tr){
-		Debug.Log("Removing key");
 		if( r_Key.getPuzzleState() == "pickedUp" ){
 			Behaviour_PickUp pickUp = r_Key.GetComponent(typeof (Behaviour_PickUp) ) as Behaviour_PickUp;
 

@@ -27,7 +27,6 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 
 	//Called at the beginning of the "drink" animation
 	public void onMoveBottleToHand(GameObject obj, bool tr) {
-		Debug.Log ("1");
 		Messenger.Broadcast ("clear focus");
 
 		Interactable inter = obj.GetComponent<Interactable> ();
@@ -43,16 +42,12 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 	}
 	//Called at the peak of the "drink" animation
 	public void onDrinkDoorPoison(GameObject obj, bool tr) {
-		Debug.Log ("2");
 		Interactable inter = obj.GetComponent<Interactable> ();
 		inter.setPuzzleState ("used");
 	}
 
 	//Called at the end of the "drink" animation
 	public void onBottleRemove(GameObject obj, bool tr){
-		Debug.Log ("3");
-		//GameObject.Destroy (r_Bottle.gameObject);
-		//GameObject.Destroy (obj);
 		r_Bottle.gameObject.SetActive(false);
 		obj.SetActive(false);
 	}
@@ -61,7 +56,6 @@ public class PoisonDoorPuzzle : MonoBehaviour {
 	public void onDoorPoisonDrunk(GameObject thisObject, bool triggerOnlyForThis){
 		Messenger.Broadcast<bool>("set is poisoned", true);
 		StartCoroutine("startSickness", gameObject );
-		Debug.Log ("Starting Sickness..");
 		if(m_MusicEmitter != null) {
 			m_MusicEmitter.Play ();
 		}

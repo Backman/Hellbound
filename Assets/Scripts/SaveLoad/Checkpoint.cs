@@ -12,15 +12,11 @@ public class Checkpoint : MonoBehaviour {
 		foreach(string item in InventoryLogic.Instance.getItems().Keys){
 			inventoryItems.Add(item);
 		}
-		//inventoryItems.Add("CubeKeyA");
-		//Debug.Log("Inventory items: "+inventoryItems.Count);
 		
 		List<SerializablePair<int, string>> interactableStateData = Game.getGameData().interactableStates;
 		interactableStateData.Clear();
 		int idx = 0;
 		foreach(Interactable inter in GameObject.FindObjectsOfType<Interactable>()){
-			//Debug.Log("Saving: "+inter+", state: "+inter.getPuzzleState());
-			//Debug.Log("id: "+idx);
 			interactableStateData.Add(new SerializablePair<int, string>(idx++, inter.getPuzzleState()));
 		}
 	}
@@ -33,7 +29,6 @@ public class Checkpoint : MonoBehaviour {
 			Game.createSavegame();
 		}
 		if(col.tag == "Player" && !Game.hasCheckpointBeenUsed(gameObject.GetComponent<Checkpoint>())){
-			Debug.Log("Save checkpoint "+getUniqueID());
 			
 			Vector3 pos = gameObject.transform.position;
 			pos.y += 1.0f;

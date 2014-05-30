@@ -8,7 +8,6 @@ public class CleanUpOldUI : MonoBehaviour {
 		Screen.lockCursor = false;
 		GameObject obj = GameObject.FindGameObjectWithTag ("UIRoot");
 		if (obj != null) {
-			Debug.Log("Old UIRoot found. Queueing for destruction");
 			GameObject.Destroy(obj);
 		}
 	}

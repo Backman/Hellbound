@@ -101,7 +101,6 @@ public class ThirdPersonCharacter : MonoBehaviour {
 		if(move.magnitude > 1.0f){
 			move.Normalize();
 		}
-		//Debug.Log ("Move: " + move);
 		m_MoveInput = move;
 		m_CrouchInput = crouch;
 		m_LookDirection = lookDirection;

@@ -105,7 +105,6 @@ public class FootStepSounds : MonoBehaviour {
 	//This function is obsolete and do not function the way i want
 	private void TryGetParameterAgain()
 	{
-		Debug.Log ("TryGetParameterAgain");
 		AttachFmodEmitter ();
 		try{
 			m_Parameter = m_Emitter.getParameter("Surface");
@@ -117,7 +116,6 @@ public class FootStepSounds : MonoBehaviour {
 	//This function is obsolete and do not function the way i want
 	private void AttachFmodEmitter()
 	{
-		Debug.Log ("attachFMODEmitter");
 		if(GetComponents<FMOD_StudioEventEmitter>().Length != 0)
 		{
 			foreach(FMOD_StudioEventEmitter see in GetComponents<FMOD_StudioEventEmitter>())

@@ -71,7 +71,6 @@ public class ScalePuzzle : MonoBehaviour {
 		}
 		m_ScaleAnimator = GetComponentInChildren<Animator>();
 		r_FreeLookCamera = Camera.main.transform.parent.transform.parent.gameObject.GetComponent<FreeLookCamera>();
-		Debug.Log ("Free look camera: " + r_FreeLookCamera);
 	}
 	
 	public void onScalePuzzleDeath() {
@@ -85,7 +84,7 @@ public class ScalePuzzle : MonoBehaviour {
 			cube.SetActive(true);
 		}
 		for(int i = 0; i < m_Cubes.Count; ++i){
-			//InventoryLogic.Instance.removeItem("cube key");
+			InventoryLogic.Instance.removeItem("CubeKey" + (i+1));
 		}
 
 		Messenger.Broadcast("clear focus");
@@ -327,7 +326,6 @@ public class ScalePuzzle : MonoBehaviour {
 						break;
 					}
 					else{
-						Debug.Log("You failed noob!");
 						yield return StartCoroutine("removeFromScale");
 						r_ObjectInFocus = getFirstCube(ref m_CurrentIndex);
 						r_ObjectInFocus.renderer.material.color = m_HighlightColor;
@@ -475,7 +473,7 @@ public class ScalePuzzle : MonoBehaviour {
 						idx++;
 					}
 				}
-				Debug.Log ("available cubes: " + idx);
+
 				if(cubes) {
 					r_ScaleInFocus.renderer.material.color = originColor;
 					break;

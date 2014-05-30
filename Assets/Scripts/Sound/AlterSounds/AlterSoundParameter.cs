@@ -123,7 +123,7 @@ public class AlterSoundParameter : MonoBehaviour {
 			foreach (FMOD.Studio.ParameterInstance p in r_ParameterCollection) {
 				p.setValue(current);
 			}
-			Debug.Log(current);
+
 			yield return new WaitForSeconds(0.01f);
 		}
 
@@ -159,7 +159,7 @@ public class AlterSoundParameter : MonoBehaviour {
 			foreach (FMOD.Studio.ParameterInstance p in r_ParameterCollection) {
 				p.setValue(current);
 			}
-			Debug.Log(current);
+
 			yield return new WaitForSeconds(0.01f);
 		}
 

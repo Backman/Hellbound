@@ -146,10 +146,7 @@ public class FreeLookCamera : PivotBasedCameraRig {
 		*/
 		float camRot = transform.localRotation.eulerAngles.y;
 		float playerRot = playerTransform.localRotation.eulerAngles.y;
-		//Debug.Log("camRot: "+camRot+", playerRot: "+playerRot);
 		float rot = (camRot - playerRot) % 360.0f;
-		//Debug.Log ("Look angle: " + (((m_LookAngle % 360.0f)+360)%360) + ", Rotation: " + camRot);
-		//Debug.Log("Rotation: "+rot);
 		// Rotate the character to face the camera direction
 		if (Mathf.Abs(rot) > m_LookAngleMax && Mathf.Abs(rot) < 360.0f - m_LookAngleMax) {
 			m_LookAngle = playerRot-rot + (180.0f);

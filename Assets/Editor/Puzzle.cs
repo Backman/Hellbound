@@ -16,7 +16,7 @@ public class Puzzle : Editor {
 	
 	public override void OnInspectorGUI(){
         PuzzleLogicImp logic = (target as PuzzleLogic).getLogic();
-        //Debug.Log(logic.GetHashCode());
+
         if (logic != null){
             List<EventData> events = logic.getEvents();
             NGUIEditorTools.SetLabelWidth(80f);
@@ -46,7 +46,6 @@ public class Puzzle : Editor {
             }
             GUI.backgroundColor = Color.white;
 
-            //Debug.Log(events.Count + " index: " + mIndex);
 
             if (events.Count > 0 && mIndex > 0)
             {

@@ -222,7 +222,6 @@ public class CubeKeyPuzzle : MonoBehaviour {
 
 			if( InputManager.getButtonDown(InputManager.Button.Use) && !waitForRelease){
 				if( !objectSelected ) {
-					Debug.Log ("Activating object: " + r_ObjectInFocus.name);
 					Vector3 newPos = r_ObjectInFocus.transform.localPosition;
 					newPos.z -= 0.3f;
 					tweenPos = TweenPosition.Begin(r_ObjectInFocus, 0.1f, newPos);
@@ -330,7 +329,6 @@ public class CubeKeyPuzzle : MonoBehaviour {
 					break;
 				}
 				else if( !objectSelected ) {
-					Debug.Log ("Activating object: " + r_SecondObjectInFocus.name);
 					Vector3 newPos = r_SecondObjectInFocus.transform.localPosition;
 					newPos.z -= 0.3f;
 					tweenPos = TweenPosition.Begin(r_SecondObjectInFocus, 0.1f, newPos);
@@ -373,7 +371,6 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	}
 
 	void onMovedOut(){
-		//Debug.Log("Tween finished!");
 		r_SecondObjectInFocus.GetComponent<TweenPosition>().RemoveOnFinished(new EventDelegate(onMovedOut));
 		Vector3 newPos = r_SecondObjectInFocus.transform.localPosition;
 		newPos.z -= 0.5f;
@@ -382,7 +379,6 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	}
 	
 	void onMovedOutFurther(){
-		//Debug.Log("Tween finished2!");
 		r_SecondObjectInFocus.GetComponent<TweenPosition>().RemoveOnFinished(new EventDelegate(onMovedOutFurther));
 		
 		Vector3 pos = r_ObjectInFocus.transform.localPosition;
@@ -401,7 +397,6 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	}
 	
 	void onCubesSwitchedPos(){
-		//Debug.Log("Tween finished3!");
 		r_SecondObjectInFocus.GetComponent<TweenPosition>().RemoveOnFinished(new EventDelegate(onCubesSwitchedPos));
 		
 		Vector3 pos = r_ObjectInFocus.transform.localPosition;
@@ -415,25 +410,20 @@ public class CubeKeyPuzzle : MonoBehaviour {
 	}
 	
 	void onCubesFinishedSwitchingPos(){
-		//Debug.Log("Tween finished4!");
 		int i = 0;
 		int index = 0;
 		int index2 = 0;
 		foreach(GameObject obj in m_PositionDictionary.Values){
 			if(obj == r_ObjectInFocus){
-				Debug.Log("Obj1 index: "+i);
 				index = i;
 			}
 			else if(obj == r_SecondObjectInFocus){
-				Debug.Log("Obj2 index: "+i);
 				index2 = i;
 			}
 			++i;
 		}
 		m_PositionDictionary[index] = r_SecondObjectInFocus;
 		m_PositionDictionary[index2] = r_ObjectInFocus;
-		Debug.Log("new obj1 index: "+index);
-		Debug.Log("new obj2 index: "+index2);
 		
 		r_SecondObjectInFocus.GetComponent<TweenPosition>().RemoveOnFinished(new EventDelegate(onCubesFinishedSwitchingPos));
 		m_CubesSwitching = false;

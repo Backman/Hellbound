@@ -36,7 +36,6 @@ public abstract class Interactable : MonoBehaviour{
 	protected virtual void Awake() {
 		m_EventSound = gameObject.GetComponent<EventSound> ();
 		if (m_EventSound == null) {
-			Debug.Log ("No event sound. Creating a new one!");
 			m_EventSound = gameObject.AddComponent<EventSound>();
 		}
 	}
@@ -72,7 +71,6 @@ public abstract class Interactable : MonoBehaviour{
 	
 	public virtual void gainFocus(){
 		//Apply light
-		Debug.Log("Gaining focus: " + gameObject.name );
 		Messenger.Broadcast<GameObject> ("onFocus", gameObject);
 
 		if (m_EventSound != null) {
@@ -85,7 +83,6 @@ public abstract class Interactable : MonoBehaviour{
 	
 	public virtual void loseFocus(){
 		//Remove light
-		Debug.Log("Leaving focus: " + gameObject.name );
 		Messenger.Broadcast ("leaveFocus");
 
 		if (m_EventSound != null) {

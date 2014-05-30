@@ -29,7 +29,6 @@ public class OutlinesToTarget : MonoBehaviour {
 	}
 
 	public void onFocus(GameObject obj) {
-		Debug.Log ("outlines ON");
 		List<GameObject> all = new List<GameObject>();
 		all.Add (obj.gameObject);
 		searchchild (all, obj.transform);
@@ -84,7 +83,6 @@ public class OutlinesToTarget : MonoBehaviour {
 	}
 
 	public void leaveFocus(){
-		Debug.Log ("outlines OFF");
 		foreach(GameObject each in m_Target){
 			Destroy(each);
 		}

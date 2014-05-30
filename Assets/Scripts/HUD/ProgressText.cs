@@ -30,7 +30,6 @@ public class ProgressText : MonoBehaviour {
 		float timePassed = Time.time - m_ProgressStartTime;
 		float progress = timePassed / m_ProgressDuration;
 		progress = Mathf.Min(1.0f, progress);
-		//Debug.Log ("Progress: "+progress);
 		m_Label.text = m_FullText.Substring(0, (int)(progress * m_FullText.Length));
 	}
 	

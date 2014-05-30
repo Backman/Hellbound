@@ -31,7 +31,6 @@ public class Game {
 	/// Creates a new savegame file. Overrides if it already exists
 	/// </summary>
 	public static void createSavegame(){
-		Debug.Log("Create new savegame!");
 		GameData gameData = new GameData();
 		gameData.save(m_CurrentSavegame);
 		m_CurrentGameData = gameData;
@@ -74,7 +73,6 @@ public class Game {
 	public static void load(bool loadCheckpointData = true){
 		m_CurrentGameData = GameData.load(m_CurrentSavegame);
 		if(m_CurrentGameData != null){
-			Debug.Log("Attempting to load from checkpoint: "+m_CurrentGameData.currentCheckpointID);
 			if(loadCheckpointData){
 				loadUsingCheckpointData();
 			}

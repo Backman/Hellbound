@@ -35,7 +35,6 @@ public class PointToMove : MonoBehaviour {
 				r_Character.move (move, false, head);
 
 				if (collider.bounds.Contains (mTargets [0].transform.position)) {
-					Debug.Log ("point reached");
 					if (Loop && mTargets.Count != 1) {
 							mTargets.Add (mTargets [0]);
 					}

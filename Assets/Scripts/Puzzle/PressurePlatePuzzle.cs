@@ -20,7 +20,6 @@ public class PressurePlatePuzzle : MonoBehaviour {
 	}
 
 	public void requestSetFireFormation(GameObject obj, bool tr){
-		Debug.Log("Set fire formation!");
 		Interactable[] interactableObjects = gameObject.GetComponentsInChildren<Interactable>();
 		foreach(Interactable interObj in interactableObjects){
 			string name = interObj.name;
@@ -37,7 +36,6 @@ public class PressurePlatePuzzle : MonoBehaviour {
 	}
 
 	public void requestSetEarthFormation(GameObject obj, bool tr){
-		Debug.Log("Set earth formation!");
 		Interactable[] interactableObjects = gameObject.GetComponentsInChildren<Interactable>();
 		foreach(Interactable interObj in interactableObjects){
 			string name = interObj.name;
@@ -54,7 +52,6 @@ public class PressurePlatePuzzle : MonoBehaviour {
 	}
 
 	public void requestSetWindFormation(GameObject obj, bool tr){
-		Debug.Log("Set wind formation!");
 		Interactable[] interactableObjects = gameObject.GetComponentsInChildren<Interactable>();
 		foreach(Interactable interObj in interactableObjects){
 			string name = interObj.name;
@@ -71,7 +68,6 @@ public class PressurePlatePuzzle : MonoBehaviour {
 	}
 	
 	public void requestSetWaterFormation(GameObject obj, bool tr){
-		Debug.Log("Set water formation!");
 		Interactable[] interactableObjects = gameObject.GetComponentsInChildren<Interactable>();
 		foreach(Interactable interObj in interactableObjects){
 			string name = interObj.name;
@@ -89,13 +85,11 @@ public class PressurePlatePuzzle : MonoBehaviour {
 	}
 	
 	public void requestLowerCeiling(GameObject obj, bool tr){
-		Debug.Log ("requestLowerCeiling");
 		Messenger.Broadcast ("lower roof");
 		PuzzleEvent.cancel("onTriggerEnter");
 	}
 
 	public void requestStartRoof(GameObject obj, bool tr){
-		Debug.Log ("requestStartRoof");
 		Messenger.Broadcast ("start roof");
 		PuzzleEvent.cancel("onTriggerEnter");
 	}

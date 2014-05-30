@@ -10,7 +10,6 @@ public class LeftFootTarget : MonoBehaviour {
 		RaycastHit hitInfo;
 		if(Physics.Raycast(origin, direction, out hitInfo)){
 			m_TargetPosition = hitInfo.point;
-			//Debug.Log("Foot hit: "+hitInfo.transform.gameObject.name);
 		}
 	}
 	

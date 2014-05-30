@@ -45,10 +45,6 @@ public class Behaviour_PickUp : Interactable {
 		m_FSM.CurrentState.examine (this);
 	}
 
-	private void log( ){
-		Debug.Log ("Hej " + gameObject.name);
-	}
-
 	//This callback will be called at the beginning of the animation
 	void beginCallback(){
 		PuzzleEvent.trigger ("onUseInstant", gameObject, true);

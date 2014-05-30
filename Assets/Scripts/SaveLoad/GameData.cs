@@ -100,7 +100,6 @@ public class GameData : ISerializable{
 	
 	public static GameData load(string path){
 		if(File.Exists(path)){
-			//Debug.Log("LOAD: File exists: "+path);
 			Stream stream = File.Open(path, FileMode.Open);
 			BinaryFormatter bformatter = new BinaryFormatter();
 			GameData gameData = (GameData)bformatter.Deserialize(stream);
@@ -113,7 +112,6 @@ public class GameData : ISerializable{
 			//gameData.save(path);
 			
 			//return gameData;
-			//Debug.Log("LOAD: File does not exist: "+path);
 			return null;
 		}
 	}

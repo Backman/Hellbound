@@ -199,9 +199,7 @@ public class PuzzleLogic : MonoBehaviour{
     	int index = 0;
 		foreach(EventData eventData in m_Logic.getEvents()){
 			int idx = index;
-			if(eventData.getName() == "onCheckpointLoaded")
-				Debug.Log("Add event: onCheckpointLoaded");
-			//Debug.Log(gameObject.name + " is adding listner "+eventData.getName() );
+
 			Messenger.Callback<GameObject, bool> callbackFunc = 
 				delegate(GameObject obj, bool triggerOnlyForMe){
 					//string requiredState = m_Logic.getEvent(idx).getRequiredObjectState();

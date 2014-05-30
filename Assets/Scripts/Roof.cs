@@ -18,7 +18,6 @@ public class Roof : MonoBehaviour {
 
 	public void startRoof(){
 		if( m_Phase == Phase.Start ){
-			Debug.Log("Starting roof");
 			m_Tweener.Play(true);
 			m_Phase = Phase.InMotion;
 		} else {
@@ -37,7 +36,6 @@ public class Roof : MonoBehaviour {
 
 	public void lowerRoof(){
 		if( m_Phase == Phase.Wait ) {
-			Debug.Log("Killing player");
 			m_Tweener.Play(true);
 			m_Phase = Phase.InMotion;
 		} else {
