@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class ScalePuzzleDoor : MonoBehaviour {
+	public FMODAsset m_DoorSound = null;
 	private UIPlayTween m_Tweener;
 
 	void Awake() {
@@ -19,6 +20,9 @@ public class ScalePuzzleDoor : MonoBehaviour {
 
 	void scalePuzzleCleared(GameObject obj, bool tr){
 		if (m_Tweener != null) {
+			if(m_DoorSound != null) {
+				FMOD_StudioSystem.instance.PlayOneShot(m_DoorSound, transform.position);
+			}
 			m_Tweener.Play(true);
 		}
 	}

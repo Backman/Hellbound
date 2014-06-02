@@ -11,7 +11,11 @@ public class OutlinesToTarget : MonoBehaviour {
 	public Shader m_Shader;
 	public Color m_OutlineColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);
 	[Range(0.0f, 0.03f)] public float m_OutlineWidth;
+	public float m_FadeTimer = 1.0f;
+	private float m_DeltaTime;
+	private float m_CurrentOutlineWidth;
 	private Material m_Material;
+	private bool m_IsFocused = false;
 	// Use this for initialization
 	void Start () {
 		Messenger.AddListener<GameObject> ("onFocus", onFocus);
@@ -19,6 +23,20 @@ public class OutlinesToTarget : MonoBehaviour {
 		m_Material = new Material(m_Shader);
 		m_Material.SetFloat ("_Outline", m_OutlineWidth);
 		m_Material.SetColor("_OutlineColor", m_OutlineColor);
+
+		m_CurrentOutlineWidth = m_OutlineWidth;
+		m_DeltaTime = 0.0f;
+		
+	}
+
+	void Update(){
+
+		if( m_IsFocused ){
+			m_DeltaTime += Time.deltaTime;
+			m_CurrentOutlineWidth = m_OutlineWidth * Mathf.Abs( Mathf.Sin( ( m_DeltaTime / m_FadeTimer ) * Mathf.PI ) );
+
+			m_Material.SetFloat ("_Outline", m_CurrentOutlineWidth);
+		}
 	}
 
 	private void searchchild(List<GameObject> allchilds, Transform trans){
@@ -29,6 +47,7 @@ public class OutlinesToTarget : MonoBehaviour {
 	}
 
 	public void onFocus(GameObject obj) {
+		m_IsFocused = true;
 		List<GameObject> all = new List<GameObject>();
 		all.Add (obj.gameObject);
 		searchchild (all, obj.transform);
@@ -83,6 +102,9 @@ public class OutlinesToTarget : MonoBehaviour {
 	}
 
 	public void leaveFocus(){
+		m_IsFocused = false;
+		m_DeltaTime = 0.0f;
+
 		foreach(GameObject each in m_Target){
 			Destroy(each);
 		}
