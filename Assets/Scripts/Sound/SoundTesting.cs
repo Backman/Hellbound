@@ -9,26 +9,14 @@ public class SoundTesting : MonoBehaviour {
 	/// Anton Thorsell
 	/// </summary>
 
-	public float volume = 0.5f;
-
-	public string Tag = "Master";
-
-	private SoundControl m_VC;
 
 	void Start()
 	{
-		m_VC = SoundControl.getInstance();
+
 	}
 
 	void Update () 
 	{
-		if(Input.GetKeyDown(KeyCode.O))
-		{
-			m_VC.ChangeVolume(volume, Tag);
-		}
-		if(Input.GetKeyDown(KeyCode.P))
-		{
-			m_VC.ChangeVolume(0f, "Master");
-		}
+
 	}
 }

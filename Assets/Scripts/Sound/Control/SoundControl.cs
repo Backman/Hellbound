@@ -15,6 +15,8 @@ public class SoundControl : MonoBehaviour {
 
 	private static SoundControl Instance = null;
 
+	private static Dictionary<string, float> s_Volume = new Dictionary<string, float>();
+
 	public AudioSpeakerMode m_CurrentSpeakerMode;
 
 	//we make the constructor private so only Volumecontrol can create a Volumecontrol
@@ -24,21 +26,21 @@ public class SoundControl : MonoBehaviour {
 		
 		FMOD.GUID guid1;
 		FMOD.Studio.MixerStrip bus1;
+		FMOD.RESULT res;
 		
 		system.lookupID("bus:/", out guid1);
-		system.getMixerStrip (guid1, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus1);
+		res = system.getMixerStrip (guid1, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus1);
 		m_Volume.Add ("Master", bus1);
 		
 		FMOD.GUID guid2;
 		FMOD.Studio.MixerStrip bus2;
 		
 		system.lookupID ("vca:/VCA_SFX", out guid2);
-		system.getMixerStrip (guid2, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus2);
+		res = system.getMixerStrip (guid2, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus2);
 		m_Volume.Add ("SFX", bus2);
 		
 		FMOD.GUID guid3;
 		FMOD.Studio.MixerStrip bus3;
-		FMOD.RESULT res;
 		system.lookupID ("vca:/VCA_VO", out guid3);
 		res = system.getMixerStrip (guid3, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus3);
 		m_Volume.Add ("Voice", bus3);
@@ -47,8 +49,21 @@ public class SoundControl : MonoBehaviour {
 		FMOD.Studio.MixerStrip bus4;
 		
 		system.lookupID ("vca:/VCA_Music", out guid4);
-		system.getMixerStrip (guid4, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus4);
+		res = system.getMixerStrip (guid4, FMOD.Studio.LOADING_MODE.BEGIN_NOW, out bus4);
 		m_Volume.Add ("Music", bus4);
+
+		if(!s_Volume.ContainsKey("Master")){
+			s_Volume.Add("Master", 1.0f);
+		}
+		if(!s_Volume.ContainsKey("SFX")){
+			s_Volume.Add("SFX", 1.0f);
+		}
+		if(!s_Volume.ContainsKey("Voice")){
+			s_Volume.Add("Voice", 1.0f);
+		}
+		if(!s_Volume.ContainsKey("Music")){
+			s_Volume.Add("Music", 1.0f);
+		}
 		
 		LoadVolume();
 	}
@@ -61,7 +76,6 @@ public class SoundControl : MonoBehaviour {
 			container = new GameObject();
 			container.name = "SoundControl";
 			Instance = container.AddComponent(typeof(SoundControl)) as SoundControl;
-			DontDestroyOnLoad(Instance);
 		}
 		return Instance;
 	}
@@ -76,14 +90,12 @@ public class SoundControl : MonoBehaviour {
 	//since fmod already knows about every sound that exists in the scene
 	public void ChangeVolume(float newVolume, string tagToBeChanged)
 	{
-
 		FMOD.Studio.MixerStrip mixerStrip = null;
-
-		if (m_Volume.TryGetValue (tagToBeChanged, out mixerStrip)) {
-			if (mixerStrip != null) {
-				if(newVolume!=null){
-					mixerStrip.setFaderLevel (newVolume);
-				}
+		if(m_Volume.TryGetValue(tagToBeChanged, out mixerStrip)){
+			if(mixerStrip != null) {
+				Debug.Log("newVolume on: " + tagToBeChanged + ", volume: " + newVolume);
+				s_Volume[tagToBeChanged] = newVolume;
+				mixerStrip.setFaderLevel(newVolume);
 			}
 		}
 		SaveVolume ();
@@ -93,7 +105,9 @@ public class SoundControl : MonoBehaviour {
 	{
 		float volume = 1f;
 		if (m_Volume.ContainsKey (tag)) {
-			m_Volume [tag].getFaderLevel (out volume);
+			volume = s_Volume[tag];
+			//m_Volume [tag].getFaderLevel (out volume);
+			Debug.Log("Volume: " + volume);
 		}
 		else{
 			Debug.LogWarning("GetVolume: Tag missing");
@@ -103,25 +117,37 @@ public class SoundControl : MonoBehaviour {
 
 
 	private void LoadVolume(){
-		ChangeVolume (PlayerPrefs.GetFloat ("Master", 1f), "Master");
-		ChangeVolume (PlayerPrefs.GetFloat ("SFX", 1f), "SFX");
-		ChangeVolume (PlayerPrefs.GetFloat ("Voice", 1f), "Voice");
-		ChangeVolume (PlayerPrefs.GetFloat ("Music", 1f), "Music");
+		ChangeVolume(s_Volume["Master"], "Master");
+		ChangeVolume(s_Volume["SFX"], "SFX");
+		ChangeVolume(s_Volume["Voice"], "Voice");
+		ChangeVolume(s_Volume["Music"], "Music");
+		/*
+		ChangeVolume (PlayerPrefs.GetFloat ("Master", m_MasterVolume), "Master");
+		ChangeVolume (PlayerPrefs.GetFloat ("SFX", m_SFXVolume), "SFX");
+		ChangeVolume (PlayerPrefs.GetFloat ("Voice", m_VoiceVolume), "Voice");
+		ChangeVolume (PlayerPrefs.GetFloat ("Music", m_MusicVolume), "Music");
+		*/
 	}
 
 
 	private void SaveVolume(){
+		/*
 		float setThis = 0f;
-		
 		m_Volume ["Master"].getFaderLevel(out setThis);
 		PlayerPrefs.SetFloat ("Master", setThis);
-		m_Volume ["SFX"].getFaderLevel(out setThis);
-		PlayerPrefs.SetFloat ("SFX", setThis);
-		m_Volume ["Voice"].getFaderLevel(out setThis);
-		PlayerPrefs.SetFloat ("Voice", setThis);
-		m_Volume ["Music"].getFaderLevel(out setThis);
-		PlayerPrefs.SetFloat ("Music", setThis);
 
+		float setThis1 = 0f;
+		m_Volume ["SFX"].getFaderLevel(out setThis1);
+		PlayerPrefs.SetFloat ("SFX", setThis1);
+
+		float setThis2 = 0f;
+		m_Volume ["Voice"].getFaderLevel(out setThis2);
+		PlayerPrefs.SetFloat ("Voice", setThis2);
+
+		float setThis3 = 0f;
+		m_Volume ["Music"].getFaderLevel(out setThis3);
+		PlayerPrefs.SetFloat ("Music", setThis3);
+		*/
 	}
 
 

@@ -9,7 +9,6 @@ public class VolumeBar : MonoBehaviour {
 	bool cond = false;
 	// Use this for initialization
 	void Awake () {
-		//Debug.Log(SoundControl.getInstance().GetVolume (VolumeName));
 		GetComponent<UIScrollBar>().value = SoundControl.getInstance().GetVolume (VolumeName);
 		if(VolumeName == "Master")AudioListener.volume = GetComponent<UIScrollBar> ().value;
 		cond = true;
@@ -21,7 +20,6 @@ public class VolumeBar : MonoBehaviour {
 
 	public void onChange(){
 		if (cond){
-			//Debug.Log("onChange!");
 			SoundControl.getInstance().ChangeVolume (GetComponent<UIScrollBar>().value, VolumeName);
 			if(VolumeName == "Master")AudioListener.volume = GetComponent<UIScrollBar> ().value;
 
