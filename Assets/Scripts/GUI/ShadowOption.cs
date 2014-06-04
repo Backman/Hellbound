@@ -17,7 +17,7 @@ public class ShadowOption : MonoBehaviour {
 	public void stuff(){
 		switch(GetComponent<UIPopupList>().value){
 			case "On":
-			QualitySettings.shadowDistance = 10;
+			QualitySettings.shadowDistance = 20;
 			break;
 			case "Off":
 			QualitySettings.shadowDistance = 0;

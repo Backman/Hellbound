@@ -136,7 +136,7 @@ public class ExamineLogic : MonoBehaviour {
 	/// </summary>
 	IEnumerator awaitInput( string button){
 		yield return null;
-		r_NextSprite.alpha = 1.0f;
+		if( r_NextSprite != null) r_NextSprite.alpha = 1.0f;
 		while( true ){
 			if( Input.GetButtonDown(button) ){
 				break;
@@ -144,7 +144,7 @@ public class ExamineLogic : MonoBehaviour {
 			yield return null;
 		}
 		yield return null;
-		r_NextSprite.alpha = 0.0f;
+		if( r_NextSprite != null) r_NextSprite.alpha = 0.0f;
 	}
 
 	/// <summary>

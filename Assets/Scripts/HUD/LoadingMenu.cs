@@ -8,6 +8,7 @@ public class LoadingMenu : MonoBehaviour {
 		// depending on if a valid savegame exists
 		if(Game.doesSavegameExist()){
 			Game.load();
+			GUIManager.Instance.togglePause();
 		}
 	}
 }

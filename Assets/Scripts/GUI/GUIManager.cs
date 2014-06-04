@@ -78,6 +78,7 @@ public class GUIManager : Singleton<GUIManager> {
 	private Camera r_MainCamera = null;
 
 	public void Awake(){
+		Debug.Log("Create UI");
 		DontDestroyOnLoad( gameObject );
 		
 		if( r_ExamineWindow == null ){
@@ -120,6 +121,8 @@ public class GUIManager : Singleton<GUIManager> {
 			inventory();
 		}
 	}
+
+	void OnDestroy(){ }
 
 	public void togglePause(){
 		m_GamePaused = !m_GamePaused;
@@ -170,6 +173,10 @@ public class GUIManager : Singleton<GUIManager> {
 	public void pauseExit(){
 		togglePause ();
 		loadLevel (0, "");
+	}
+
+	public void onDestroy(){
+		Debug.Log("Destrouy UI");
 	}
 
 	public void DestroyThis(){
@@ -266,7 +273,7 @@ public class GUIManager : Singleton<GUIManager> {
 		//Fetch the "NextSprite" among the ExaminWindows children
 		Transform t = r_ExamineWindow.transform;
 		UISprite sprite = t.FindChild("NextSprite").GetComponent<UISprite>();
-		sprite.alpha = 0.0f;
+		if( sprite != null ) sprite.alpha = 0.0f;
 		
 		//Fetch the "ExamineTextLabels" among the ExamineWindows children, then
 		//sort them
