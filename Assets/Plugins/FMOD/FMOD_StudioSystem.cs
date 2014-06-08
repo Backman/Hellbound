@@ -185,7 +185,16 @@ public class FMOD_StudioSystem : MonoBehaviour
 	
 	public void PlayOneShot(string path, Vector3 position)
 	{
-		PlayOneShot(path, position, 1.0f);
+		if( position != null ){
+			PlayOneShot(path, position, 1.0f);
+		}
+		else if( Camera.main != null ){
+			PlayOneShot(path, Camera.main.transform.position, 1.0f);
+		}
+		else{
+			Debug.LogWarning("Invalid FMOD position: " + gameObject.name);
+			PlayOneShot(path, Vector3.zero, 1.0f);
+		}
 	}
 	
 	void PlayOneShot(string path, Vector3 position, float volume)

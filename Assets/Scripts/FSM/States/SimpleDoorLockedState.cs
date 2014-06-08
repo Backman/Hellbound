@@ -1,6 +1,13 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Simple door locked state.
+/// 
+/// The state for a locked door.
+/// 
+/// Created by Simon Jonasson
+/// </summary>
 [System.Serializable]
 public class SimpleDoorLockedState : State<Behaviour_DoorSimple>
 {

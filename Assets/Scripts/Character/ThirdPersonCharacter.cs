@@ -8,6 +8,7 @@ using System.Collections;
 /// </summary>
 
 // By Arvid Backman 2014-04-03
+// Edited by Simon Jonasson (added the animation system, see region: Interact Animations)
 
 [System.Serializable]
 public class AdvancedSettings {

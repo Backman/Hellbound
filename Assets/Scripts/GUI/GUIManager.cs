@@ -175,10 +175,6 @@ public class GUIManager : Singleton<GUIManager> {
 		loadLevel (0, "");
 	}
 
-	public void onDestroy(){
-		Debug.Log("Destrouy UI");
-	}
-
 	public void DestroyThis(){
 		Destroy (gameObject);
 	}
@@ -328,7 +324,9 @@ public class GUIManager : Singleton<GUIManager> {
 		while(m_MonologeQueue.Count != 0){
 			
 			MyGUI.SubtitlesSettings useThis = (MyGUI.SubtitlesSettings)(m_MonologeQueue.Dequeue());
-			
+
+			if( useThis == null ) continue;
+
 			args[0] = useThis.Text;	
 			args[1] = useThis.DisplayTime;
 			args[2] = "awaitTime";	//Method for making text advance
@@ -345,7 +343,7 @@ public class GUIManager : Singleton<GUIManager> {
 			else{ 
 				args[5] = false;
 			} 
-			
+			Debug.Log("Nr queued dialogue: "+m_MonologeQueue.Count);
 			yield return StartCoroutine( m_Subtitles.showSubtitles( args ) );
 			StartCoroutine( m_Subtitles.clearLables() );
 			

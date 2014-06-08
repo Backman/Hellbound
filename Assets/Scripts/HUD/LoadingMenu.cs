@@ -7,8 +7,10 @@ public class LoadingMenu : MonoBehaviour {
 		// This check should also be used in StartMenu initialization to change UI 
 		// depending on if a valid savegame exists
 		if(Game.doesSavegameExist()){
+
+			if( Application.loadedLevel != 0 ) GUIManager.Instance.togglePause();
 			Game.load();
-			GUIManager.Instance.togglePause();
+
 		}
 	}
 }

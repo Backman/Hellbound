@@ -9,6 +9,7 @@ using System.Collections;
 /// This script is designed to be placed on the root object of a camera rig
 /// 
 /// By Arvid Backman
+/// edited by Simon Jonasson
 /// </summary>
 
 // Camera Rig

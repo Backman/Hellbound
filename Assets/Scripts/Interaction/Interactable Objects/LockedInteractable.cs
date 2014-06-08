@@ -2,6 +2,16 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Locked interactable.
+/// 
+/// Legacy script, no longer in use.
+/// 
+/// Was previusly used to regulate objects which could be locked/unlocked.
+/// Was obsolete by Alexis PuzzleLogic system
+/// 
+/// Created by Simon Jonasson
+/// </summary>
 public class LockedInteractable : Interactable {
 	public string m_LockedText = "I can't open this";
 	public LockedState m_LockedState;
